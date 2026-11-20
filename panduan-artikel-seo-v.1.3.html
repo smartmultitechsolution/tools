@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Panduan lengkap 25 struktur SEO untuk artikel: Keyword Utama, Search Intent, E-E-A-T, Local SEO, FAQ, Schema, dan lainnya.">
+  <title>Panduan 25 Struktur SEO</title>
+  <style>
+    :root {
+      --navy: #081a33;
+      --navy-2: #102b50;
+      --blue: #2563eb;
+      --cyan: #10bce5;
+      --gold: #f7b731;
+      --white: #ffffff;
+      --soft: #f3f7fc;
+      --text: #14213d;
+      --muted: #65758b;
+      --border: #dbe5f1;
+      --success: #138a50;
+      --danger: #c33b3b;
+      --shadow: 0 18px 48px rgba(8, 26, 51, .12);
+      --shadow2: 0 10px 10px rgba(8, 26, 51, .5);
+      --sidebar-width: 260px;
+      --sidebar-collapsed: 72px;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    html { 
+      scroll-behavior: smooth; 
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, rgba(10,21,145,80), rgba(167,30,197,80), rgba(10,21,145,80));
+      background-attachment: fixed;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding-top: 72px;
+      overflow-x: hidden;
+    }
+
+    button, input, select, textarea { 
+      font: inherit; 
+      font-size: 16px;
+    }
+    button { cursor: pointer; }
+
+    /* ==================== SIDEBAR ==================== */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 72px;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, #0a1a3a 0%, #0d2b5e 40%, #1a3a7a 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0 20px 20px 0;
+      z-index: 999;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+    }
+
+    .sidebar-header {
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sidebar-header .logo-text {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .sidebar-header .logo-text small {
+      display: block;
+      font-weight: 400;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0;
+    }
+
+    .sidebar-header .version-badge {
+      color: rgba(255,255,255,1);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .sidebar-nav {
+      padding: 12px 12px;
+      flex: 1;
+    }
+
+    .sidebar-nav .nav-label {
+      color: rgba(255,255,255,0.3);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 10px 6px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+    }
+
+    .sidebar-nav a.active {
+      background: rgba(37, 99, 235, 0.2);
+      color: var(--white);
+    }
+
+    .sidebar-nav a.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 24px;
+      border-radius: 0 4px 4px 0;
+      background: var(--blue);
+    }
+
+    .sidebar-nav .icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .sidebar-nav .badge {
+      margin-left: auto;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .sidebar-footer {
+      padding: 16px 18px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* SIDEBAR TOGGLE - Pindah ke kanan atas */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      right: 12px;
+      top: 78px;
+      z-index: 1001;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 12px;
+      background: #0d2b5e;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--white);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-toggle:hover {
+      background: #1a3a7a;
+      transform: scale(1.05);
+    }
+
+    .sidebar-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* MAIN CONTENT WITH SIDEBAR */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 10px 16px;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(219,229,241,.5);
+      box-shadow: 0 2px 20px rgba(8,26,51,.06);
+    }
+
+    .navbar-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-left: 0;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .navbar-brand img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .navbar-brand span {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .navbar-brand span small {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.7rem;
+      display: inline-block;
+    }
+
+    .navbar-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border: 1px solid rgba(8,26,51,.1);
+      border-radius: 999px;
+      background: var(--navy-2);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: var(--white);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      padding: 20px 12px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* ==================== GUIDE PAGE ==================== */
+    .guide {
+      padding: 24px 18px;
+      border: 1px solid rgba(219,229,241,.9);
+      border-radius: 20px;
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .guide-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 14px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .guide h2 {
+      margin: 0 0 6px;
+      color: var(--navy);
+      font-size: clamp(22px, 3.5vw, 36px);
+      letter-spacing: -.035em;
+    }
+
+    .guide-heading p {
+      max-width: 720px;
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .guide-tools {
+      display: flex;
+      gap: 6px;
+      flex: 0 0 auto;
+      flex-wrap: wrap;
+    }
+
+    .mini-btn {
+      padding: 7px 12px;
+      color: var(--navy);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 800;
+      transition: background .2s ease;
+    }
+
+    .mini-btn:active {
+      background: #dce5ef;
+    }
+
+    .guide-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    details.seo-item {
+      align-self: start;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: #fbfdff;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+
+    details.seo-item[open] {
+      border-color: #99c9ee;
+      box-shadow: 0 10px 28px rgba(8,26,51,.08);
+      background: #fff;
+    }
+
+    details.seo-item summary {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 58px;
+      padding: 11px 14px;
+      color: var(--navy);
+      list-style: none;
+      cursor: pointer;
+      font-weight: 850;
+      font-size: 14px;
+      -webkit-touch-callout: none;
+    }
+
+    details.seo-item summary::-webkit-details-marker { display: none; }
+
+    .num {
+      display: grid;
+      flex: 0 0 30px;
+      width: 30px;
+      height: 30px;
+      place-items: center;
+      color: #fff;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--blue), var(--cyan));
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .arrow {
+      margin-left: auto;
+      color: var(--blue);
+      transition: transform .2s ease;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    details[open] .arrow { transform: rotate(180deg); }
+
+    .seo-content {
+      padding: 0 14px 14px 50px;
+      color: #42526a;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .seo-content p { margin: 8px 0; }
+    .seo-content strong { color: var(--navy); }
+
+    .example, .warning {
+      margin-top: 8px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px;
+    }
+
+    .example {
+      color: #174766;
+      border-left: 4px solid var(--cyan);
+      background: #eaf9fd;
+    }
+
+    .warning {
+      color: #6a4212;
+      border-left: 4px solid var(--gold);
+      background: #fff8e8;
+    }
+
+    footer {
+      padding: 20px 16px 30px;
+      color: var(--white);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .footer-brand img {
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .footer-brand span {
+      font-weight: 700;
+      color: var(--white);
+      font-size: 1rem;
+    }
+
+    /* Mobile First - Responsive */
+    @media (max-width: 1024px) {
+      .guide-grid { 
+        grid-template-columns: 1fr; 
+      }
+      .guide-heading { 
+        align-items: flex-start; 
+        flex-direction: column; 
+      }
+      .navbar-tag { 
+        display: none; 
+      }
+      body { 
+        padding-top: 62px; 
+      }
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        top: 62px;
+        border-radius: 0 20px 20px 0;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        right: 12px;
+        top: 70px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container { 
+        padding: 16px 10px 30px; 
+      }
+      .guide { 
+        padding: 18px 12px; 
+        border-radius: 16px; 
+      }
+      .seo-content { 
+        padding: 0 10px 12px 40px; 
+        font-size: 13px;
+      }
+      .navbar-brand span small { 
+        display: none; 
+      }
+      .navbar-brand img { 
+        height: 28px; 
+      }
+      .navbar-brand span { 
+        font-size: 1rem; 
+      }
+      body { 
+        padding-top: 56px; 
+      }
+      details.seo-item summary { 
+        min-height: 50px; 
+        padding: 9px 12px; 
+        font-size: 13px;
+      }
+      .num { 
+        width: 26px; 
+        height: 26px; 
+        font-size: 10px;
+        flex: 0 0 26px;
+      }
+      .guide h2 { 
+        font-size: clamp(20px, 4vw, 28px); 
+      }
+      .guide-heading p { 
+        font-size: 13px; 
+      }
+      .sidebar {
+        top: 56px;
+        width: 280px;
+        border-radius: 0 20px 20px 0;
+      }
+      .sidebar-toggle {
+        top: 64px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container { 
+        padding: 12px 8px 24px; 
+      }
+      .navbar { 
+        padding: 8px 12px; 
+      }
+      .navbar-brand img { 
+        height: 24px; 
+      }
+      .navbar-brand span { 
+        font-size: 0.9rem; 
+      }
+      body { 
+        padding-top: 50px; 
+      }
+      .guide-tools { 
+        width: 100%; 
+      }
+      .mini-btn { 
+        flex: 1; 
+        text-align: center; 
+        padding: 6px 10px;
+        font-size: 11px;
+      }
+      .seo-content { 
+        padding: 0 8px 10px 34px; 
+        font-size: 12px;
+      }
+      .example, .warning { 
+        font-size: 12px; 
+        padding: 8px 10px;
+      }
+      details.seo-item summary { 
+        min-height: 44px; 
+        padding: 8px 10px; 
+        font-size: 12px;
+        gap: 8px;
+      }
+      .num { 
+        width: 22px; 
+        height: 22px; 
+        font-size: 9px;
+        flex: 0 0 22px;
+      }
+      .arrow { 
+        font-size: 16px; 
+      }
+      footer { 
+        font-size: 11px; 
+        padding: 16px 12px 24px;
+      }
+      .footer-brand img { 
+        height: 22px; 
+      }
+      .footer-brand span { 
+        font-size: 0.9rem; 
+      }
+      .guide { 
+        padding: 14px 10px; 
+        border-radius: 14px;
+      }
+      .guide-heading { 
+        gap: 10px; 
+      }
+      .guide h2 { 
+        font-size: clamp(18px, 4.5vw, 24px); 
+      }
+      .sidebar {
+        width: 260px;
+        top: 50px;
+        border-radius: 0 16px 16px 0;
+      }
+      .sidebar-toggle {
+        top: 58px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .navbar-brand span { 
+        font-size: 0.8rem; 
+      }
+      .navbar-brand img { 
+        height: 20px; 
+      }
+      .sidebar {
+        width: 240px;
+        border-radius: 0 14px 14px 0;
+      }
+    }
+
+    /* Touch-friendly improvements */
+    details.seo-item summary {
+      -webkit-touch-callout: none;
+      user-select: none;
+    }
+
+    button, .mini-btn {
+      touch-action: manipulation;
+    }
+
+    /* Overlay for sidebar on mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    @media (min-width: 1025px) {
+      .sidebar-overlay {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR TOGGLE - Posisi kanan atas -->
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-text">
+        Prompt Generator
+        <small><b>ARTIKEL SEO</b></small>
+      </div>
+      <span class="version-badge">V.1.3</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="https://adda.biz.id/Generator-Artikel-SEO-v1.3">
+        <span class="icon">📝</span>
+        Generator Prompt
+        <span class="badge">SEO</span>
+      </a>
+      <a href="https://adda.biz.id/panduan-Artikel-SEO-v1.3" class="active">
+        <span class="icon">📚</span>
+        Panduan SEO
+        <span class="badge">25</span>
+      </a>
+      <a href="https://adda.biz.id/glori-tools" target="_blank">
+        <span class="icon">🏠</span>
+        Home
+      </a>
+      <a href="https://adda.biz.id/Generator-Artikel-SEO-v1.3" id="logoutBtn">
+        <span class="icon">🚪</span>
+        Logout
+      </a>
+    </nav>
+    <div class="sidebar-footer"></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content" id="mainContent">
+    <!-- NAVBAR FIXED -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="#" class="navbar-brand">
+          <img src="https://adda.biz.id/uploads/Logo-AI.png" alt="AI Agency" loading="lazy">
+          <span>AI Agency</span>
+        </a>
+        <div class="navbar-tag">✦ Panduan 25 Struktur SEO</div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <section class="guide">
+        <div class="guide-heading">
+          <div>
+            <h2>Penjelasan 25 Struktur SEO</h2>
+            <p>Buka setiap bagian untuk memahami pengertian, fungsi, cara penerapan, contoh pada keyword "Paket Umroh Desember 2026", dan kesalahan yang perlu dihindari.</p>
+          </div>
+          <div class="guide-tools">
+            <button class="mini-btn" type="button" id="openAll">Buka semua</button>
+            <button class="mini-btn" type="button" id="closeAll">Tutup semua</button>
+          </div>
+        </div>
+
+        <div class="guide-grid">
+          <details class="seo-item">
+            <summary><span class="num">01</span>Keyword Utama<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> phrase/frasa pencarian utama yang menjadi fokus satu halaman.</p>
+              <p><strong>Fungsi:</strong> membantu Google dan pembaca memahami topik inti halaman.</p>
+              <p><strong>Cara:</strong> pilih satu frasa yang paling sesuai dengan produk dan maksud calon pembeli, lalu gunakan secara alami pada title, H1, pembukaan, beberapa subjudul, dan penutup.</p>
+              <div class="example"><strong>Contoh:</strong> Paket Umroh Desember 2026.</div>
+              <div class="warning"><strong>Hindari:</strong> memasukkan keyword pada setiap paragraf hingga tulisan terasa dipaksakan.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">02</span>Search Intent<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> tujuan sebenarnya di balik pencarian pengguna.</p>
+              <p><strong>Fungsi:</strong> menentukan informasi dan format yang harus tersedia agar halaman benar-benar menjawab kebutuhan pencari.</p>
+              <p><strong>Cara:</strong> identifikasi apakah pengguna ingin belajar, membandingkan, mencari lokasi, atau membeli. Keyword paket umroh bersifat komersial dan transaksional.</p>
+              <div class="example"><strong>Contoh kebutuhan:</strong> harga, tanggal berangkat, maskapai, hotel, fasilitas, legalitas, kursi, dan tombol konsultasi.</div>
+              <div class="warning"><strong>Hindari:</strong> hanya menjelaskan pengertian umroh tanpa menampilkan paket nyata.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">03</span>SEO Title<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> judul yang biasanya ditampilkan sebagai tautan utama pada hasil Google.</p>
+              <p><strong>Fungsi:</strong> menjelaskan isi halaman sekaligus menarik klik yang relevan.</p>
+              <p><strong>Cara:</strong> letakkan keyword utama mendekati awal, tambahkan informasi pembeda, dan usahakan tetap ringkas sekitar 55–60 karakter.</p>
+              <div class="example"><strong>Contoh:</strong> Paket Umroh Desember 2026: Harga dan Jadwal.</div>
+              <div class="warning"><strong>Hindari:</strong> judul terlalu panjang, clickbait, huruf kapital semua, atau klaim "termurah" tanpa bukti.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">04</span>URL atau Slug<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> alamat khusus halaman setelah nama domain.</p>
+              <p><strong>Fungsi:</strong> memberi petunjuk singkat mengenai isi halaman dan membuat URL mudah dibaca serta dibagikan.</p>
+              <p><strong>Cara:</strong> gunakan huruf kecil, tanda hubung, keyword inti, dan hilangkan kata yang tidak diperlukan.</p>
+              <div class="example"><strong>Contoh:</strong> /paket-umroh-desember-2026/</div>
+              <div class="warning"><strong>Hindari:</strong> /artikel?id=9281 atau slug yang terlalu panjang.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">05</span>Meta Description<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> ringkasan singkat halaman yang dapat muncul di bawah title pada hasil pencarian.</p>
+              <p><strong>Fungsi:</strong> meyakinkan pengguna bahwa halaman berisi jawaban yang mereka cari.</p>
+              <p><strong>Cara:</strong> tulis sekitar 140–160 karakter, sertakan keyword, manfaat konkret, dan CTA ringan.</p>
+              <div class="example"><strong>Contoh:</strong> Cek Paket Umroh Desember 2026, jadwal keberangkatan, harga, hotel, maskapai, fasilitas, dan ketersediaan kursi terbaru.</div>
+              <div class="warning"><strong>Hindari:</strong> menumpuk keyword atau menuliskan promo yang tidak tersedia di halaman.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">06</span>H1 Tunggal<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> judul utama yang terlihat di dalam halaman.</p>
+              <p><strong>Fungsi:</strong> menjadi penanda topik terpenting bagi pembaca dan mesin pencari.</p>
+              <p><strong>Cara:</strong> gunakan hanya satu H1 dan masukkan keyword utama secara wajar.</p>
+              <div class="example"><strong>Contoh H1:</strong> Paket Umroh Desember 2026.</div>
+              <div class="warning"><strong>Hindari:</strong> memakai H1 untuk logo, CTA, dan beberapa judul sekaligus.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">07</span>Paragraf Pembuka<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> bagian awal yang segera menjelaskan manfaat halaman.</p>
+              <p><strong>Fungsi:</strong> menahan perhatian pembaca dan menegaskan relevansi topik.</p>
+              <p><strong>Cara:</strong> sebut keyword secara alami dalam 100 kata pertama, jawab kebutuhan utama, lalu berikan alasan untuk membaca lebih lanjut.</p>
+              <div class="example"><strong>Contoh isi:</strong> tersedia pilihan jadwal awal, tengah, dan akhir Desember beserta harga dan fasilitas.</div>
+              <div class="warning"><strong>Hindari:</strong> pembukaan panjang tentang sejarah umroh sebelum menjawab harga dan jadwal.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">08</span>Heading H2<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> judul untuk bagian-bagian utama artikel.</p>
+              <p><strong>Fungsi:</strong> membagi pembahasan menjadi kelompok yang mudah dipindai dan dipahami.</p>
+              <p><strong>Cara:</strong> jadikan setiap kebutuhan besar pembaca sebagai H2.</p>
+              <div class="example"><strong>Contoh:</strong> Harga Paket, Jadwal Keberangkatan, Fasilitas, Syarat Pendaftaran, dan FAQ.</div>
+              <div class="warning"><strong>Hindari:</strong> membuat semua subjudul memakai H2 tanpa hierarki yang jelas.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">09</span>Heading H3<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> subbagian yang berada di bawah sebuah H2.</p>
+              <p><strong>Fungsi:</strong> merinci pembahasan besar menjadi pilihan atau langkah yang lebih spesifik.</p>
+              <p><strong>Cara:</strong> gunakan H3 untuk jenis paket, tahapan perjalanan, atau pertanyaan di dalam satu kelompok H2.</p>
+              <div class="example"><strong>Contoh:</strong> Paket Hemat, Paket Reguler, Paket VIP, dan Paket Umroh Plus.</div>
+              <div class="warning"><strong>Hindari:</strong> memakai H3 langsung setelah H1 tanpa H2 induk.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">10</span>Keyword Turunan<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> variasi pencarian yang masih sangat dekat dengan keyword utama.</p>
+              <p><strong>Fungsi:</strong> memperluas peluang halaman menjawab berbagai cara pengguna mencari topik yang sama.</p>
+              <p><strong>Cara:</strong> gunakan pada subjudul atau isi hanya ketika benar-benar relevan.</p>
+              <div class="example"><strong>Contoh:</strong> harga umroh Desember 2026, jadwal umroh Desember 2026, dan umroh akhir tahun 2026.</div>
+              <div class="warning"><strong>Hindari:</strong> membuat daftar keyword yang tidak menyatu dengan pembahasan.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">11</span>Keyword Semantik dan Entitas<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> istilah, tempat, objek, dan konsep yang secara alami berkaitan dengan topik.</p>
+              <p><strong>Fungsi:</strong> memberikan konteks lengkap sehingga mesin pencari memahami kedalaman pembahasan.</p>
+              <p><strong>Cara:</strong> bahas entitas yang memang terdapat dalam produk, bukan sekadar menyisipkan kata.</p>
+              <div class="example"><strong>Contoh:</strong> Makkah, Madinah, visa umroh, PPIU, hotel, maskapai, manasik, muthawif, quad, dan triple.</div>
+              <div class="warning"><strong>Hindari:</strong> memasukkan nama hotel atau maskapai yang tidak benar-benar digunakan.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">12</span>Topical Coverage<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> kelengkapan pembahasan terhadap kebutuhan pengguna dalam satu topik.</p>
+              <p><strong>Fungsi:</strong> membuat pembaca tidak perlu kembali ke Google untuk mencari informasi dasar yang belum dijawab.</p>
+              <p><strong>Cara:</strong> cakup harga, jadwal, hotel, penerbangan, fasilitas, biaya tambahan, syarat, itinerary, legalitas, dan pendaftaran.</p>
+              <div class="example"><strong>Contoh:</strong> bukan hanya berkata "paket tersedia", tetapi memberikan detail untuk mengambil keputusan.</div>
+              <div class="warning"><strong>Hindari:</strong> memperpanjang artikel dengan topik umum yang tidak membantu calon jamaah.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">13</span>Tabel Data<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> penyajian informasi terstruktur dalam baris dan kolom.</p>
+              <p><strong>Fungsi:</strong> memudahkan pembaca membandingkan data konkret dengan cepat.</p>
+              <p><strong>Cara:</strong> gunakan untuk harga quad/triple/double, tanggal, durasi, hotel, maskapai, dan ketersediaan.</p>
+              <div class="example"><strong>Contoh kolom:</strong> Tanggal | Durasi | Maskapai | Harga Mulai | Status Kursi.</div>
+              <div class="warning"><strong>Hindari:</strong> tabel lebar yang rusak di HP atau data harga yang tidak pernah diperbarui.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">14</span>Daftar Poin dan Featured Snippet<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> jawaban ringkas berbentuk poin, nomor, atau paragraf langsung.</p>
+              <p><strong>Fungsi:</strong> membantu pembaca memindai isi dan membuka peluang jawaban ditampilkan secara menonjol di Google.</p>
+              <p><strong>Cara:</strong> gunakan urutan langkah, daftar persyaratan, fasilitas, atau jawaban 40–60 kata setelah pertanyaan yang jelas.</p>
+              <div class="example"><strong>Contoh:</strong> "Apa saja fasilitas paket umroh?" diikuti daftar konkret.</div>
+              <div class="warning"><strong>Hindari:</strong> membuat semua isi menjadi bullet tanpa penjelasan dan konteks.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">15</span>FAQ SEO<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> kumpulan pertanyaan yang sering diajukan calon pelanggan beserta jawaban langsung.</p>
+              <p><strong>Fungsi:</strong> menjawab keraguan sebelum membeli dan memperluas cakupan pencarian long-tail.</p>
+              <p><strong>Cara:</strong> gunakan pertanyaan nyata dari pelanggan, pencarian Google, chat WhatsApp, dan tim penjualan.</p>
+              <div class="example"><strong>Contoh:</strong> Berapa DP? Apakah harga termasuk tiket? Bagaimana mengecek izin PPIU?</div>
+              <div class="warning"><strong>Hindari:</strong> FAQ buatan yang hanya mengulang promosi.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">16</span>E-E-A-T  (Experience, Expertise, Authoritativeness, Trustworthiness)<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> sinyal pengalaman, keahlian, otoritas, dan kepercayaan.</p>
+              <p><strong>Fungsi:</strong> membantu pembaca menilai apakah bisnis dan informasinya layak dipercaya, terutama karena umroh menyangkut dana dan ibadah.</p>
+              <p><strong>Cara:</strong> tampilkan penulis/reviewer, pengalaman nyata, profil travel, izin, alamat, kontak, prosedur, foto asli, dan kebijakan transparan.</p>
+              <div class="example"><strong>Contoh:</strong> nomor izin PPIU yang dapat diperiksa, nama pembimbing, serta dokumentasi keberangkatan asli.</div>
+              <div class="warning"><strong>Hindari:</strong> testimoni palsu, pengalaman rekaan, atau logo legalitas tanpa bukti.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">17</span>Local SEO<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> optimasi untuk pencarian yang terkait wilayah atau lokasi pelayanan.</p>
+              <p><strong>Fungsi:</strong> menarik calon jamaah yang ingin berangkat atau berkonsultasi dari kota tertentu.</p>
+              <p><strong>Cara:</strong> sebut lokasi secara alami, alamat kantor, area layanan, titik keberangkatan, Google Maps, dan profil bisnis.</p>
+              <div class="example"><strong>Contoh:</strong> Paket Umroh Desember 2026 dari Jakarta atau Bekasi.</div>
+              <div class="warning"><strong>Hindari:</strong> menulis puluhan nama kota pada satu halaman tanpa layanan nyata.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">18</span>Internal Link<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> tautan dari satu halaman menuju halaman lain dalam website yang sama.</p>
+              <p><strong>Fungsi:</strong> membantu pembaca menemukan informasi terkait, menyebarkan otoritas halaman, dan memperjelas hubungan antarkonten.</p>
+              <p><strong>Cara:</strong> letakkan anchor yang deskriptif di dalam kalimat dan arahkan ke halaman yang benar-benar relevan.</p>
+              <div class="example"><strong>Contoh:</strong> "Pelajari juga <em>cara memilih travel umroh resmi</em> sebelum mendaftar."</div>
+              <div class="warning"><strong>Hindari:</strong> anchor "klik di sini", link berlebihan, atau semua link menuju halaman yang sama.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">19</span>External Link<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> tautan menuju website lain yang menjadi sumber atau rujukan.</p>
+              <p><strong>Fungsi:</strong> mendukung klaim, memudahkan verifikasi, dan meningkatkan kepercayaan pembaca.</p>
+              <p><strong>Cara:</strong> prioritaskan sumber primer dan resmi seperti kanal pemerintah atau maskapai untuk aturan spesifik.</p>
+              <div class="example"><strong>Contoh:</strong> arahkan pengecekan legalitas PPIU ke kanal resmi pemerintah.</div>
+              <div class="warning"><strong>Hindari:</strong> menjadikan situs kompetitor sebagai sumber utama penawaran bisnis sendiri.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">20</span>Optimasi Gambar<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> pengaturan file gambar agar relevan, ringan, dapat diakses, dan mudah dipahami.</p>
+              <p><strong>Fungsi:</strong> memperkuat pengalaman pengguna, kepercayaan, kecepatan halaman, dan pencarian gambar.</p>
+              <p><strong>Cara:</strong> pakai foto asli, format WebP/AVIF, ukuran tepat, lazy loading, nama file deskriptif, serta alt text yang menjelaskan isi gambar.</p>
+              <div class="example"><strong>Contoh:</strong> paket-umroh-desember-2026.webp; alt: "Jamaah Paket Umroh Desember 2026 saat manasik".</div>
+              <div class="warning"><strong>Hindari:</strong> alt text penuh keyword atau gambar besar yang memperlambat halaman.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">21</span>Call to Action<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> ajakan konkret untuk melakukan langkah berikutnya.</p>
+              <p><strong>Fungsi:</strong> mengubah trafik menjadi konsultasi, lead, atau pendaftaran.</p>
+              <p><strong>Cara:</strong> sesuaikan CTA dengan tahap pembaca dan letakkan secara wajar di awal, tengah, dan akhir.</p>
+              <div class="example"><strong>Contoh:</strong> Cek jadwal dan ketersediaan kursi melalui WhatsApp.</div>
+              <div class="warning"><strong>Hindari:</strong> tombol terlalu banyak, janji palsu, atau CTA sebelum pembaca mendapatkan informasi penting.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">22</span>Schema Markup<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> data terstruktur yang menjelaskan jenis dan isi halaman kepada mesin pencari.</p>
+              <p><strong>Fungsi:</strong> memperjelas entitas, artikel, breadcrumb, bisnis, produk, penawaran, dan FAQ.</p>
+              <p><strong>Cara:</strong> gunakan JSON-LD seperti Article, BreadcrumbList, Organization/TravelAgency, Product/Service, Offer, dan FAQPage sesuai data yang benar-benar terlihat di halaman.</p>
+              <div class="example"><strong>Contoh:</strong> Offer berisi harga dan ketersediaan hanya jika datanya akurat serta diperbarui.</div>
+              <div class="warning"><strong>Hindari:</strong> schema berisi rating, harga, atau FAQ yang tidak tampil di halaman.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">23</span>Freshness dan Pembaruan<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> upaya menjaga informasi yang mudah berubah agar tetap akurat.</p>
+              <p><strong>Fungsi:</strong> mencegah pembaca menerima jadwal, harga, stok, atau kebijakan lama.</p>
+              <p><strong>Cara:</strong> tampilkan tanggal diperbarui dan audit harga, hotel, penerbangan, kursi, serta persyaratan secara rutin.</p>
+              <div class="example"><strong>Contoh:</strong> "Terakhir diperbarui: 25 Juli 2026".</div>
+              <div class="warning"><strong>Hindari:</strong> mengganti tanggal saja tanpa memperbarui isi.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">24</span>Kedalaman dan Keterbacaan<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> keseimbangan antara kelengkapan informasi dan kemudahan membaca.</p>
+              <p><strong>Fungsi:</strong> membantu pembaca memahami keputusan penting tanpa merasa dibebani tulisan panjang.</p>
+              <p><strong>Cara:</strong> gunakan paragraf pendek, heading jelas, bahasa awam, ruang kosong, tabel responsif, dan pembahasan yang fokus.</p>
+              <div class="example"><strong>Contoh:</strong> artikel 1.500 kata dapat lebih baik daripada 3.000 kata jika seluruh bagian menjawab kebutuhan pengguna.</div>
+              <div class="warning"><strong>Hindari:</strong> mengejar jumlah kata dengan pengulangan dan paragraf tidak relevan.</div>
+            </div>
+          </details>
+
+          <details class="seo-item">
+            <summary><span class="num">25</span>SEO Komersial dan Konversi<span class="arrow">⌄</span></summary>
+            <div class="seo-content">
+              <p><strong>Apa itu:</strong> penyusunan halaman agar mudah ditemukan sekaligus membantu calon pembeli mengambil keputusan.</p>
+              <p><strong>Fungsi:</strong> memastikan trafik yang datang tidak berhenti sebagai pembaca, tetapi dapat berubah menjadi calon pelanggan.</p>
+              <p><strong>Cara:</strong> tampilkan penawaran nyata, harga, manfaat, pembeda, bukti, proses, risiko, FAQ, kontak, dan CTA yang jelas.</p>
+              <div class="example"><strong>Contoh:</strong> setelah tabel jadwal, sediakan tombol "Tanyakan Kursi Tersedia" dengan pesan WhatsApp otomatis.</div>
+              <div class="warning"><strong>Hindari:</strong> artikel informatif tanpa identitas bisnis, harga, kontak, atau langkah pendaftaran.</div>
+            </div>
+          </details>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <div class="footer-brand">
+        <img src="https://adda.biz.id/uploads/Logo-AI-footer.png" alt="AI Agency" loading="lazy">
+        <span>AI Agency</span>
+      </div>
+      Panduan 25 Struktur SEO • <b>Terapkan sesuai kebutuhan artikel Anda</b>.
+    </footer>
+  </div>
+
+  <script>
+    // ==================== SIDEBAR FUNCTIONALITY ====================
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    // Close sidebar on link click (mobile)
+    sidebar.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          closeSidebar();
+        }
+      });
+    });
+
+    // Close sidebar on resize to desktop
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) {
+        closeSidebar();
+      }
+    });
+
+    // ==================== OPEN/CLOSE ALL ====================
+    document.getElementById('openAll').addEventListener('click', () => {
+      document.querySelectorAll('details.seo-item').forEach(item => item.open = true);
+    });
+
+    document.getElementById('closeAll').addEventListener('click', () => {
+      document.querySelectorAll('details.seo-item').forEach(item => item.open = false);
+    });
+  </script>
+
+
+
+
+
+</script>
+<!-- Anti Klik Kanan -->
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Block Keys -->
+<script>
+  document.onkeydown = function (e) {
+    // F12
+    if (e.key === "F12") return false;
+
+    // Ctrl+Shift+I / J / C
+    if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) {
+      return false;
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      return false;
+    }
+
+    // Ctrl+S (Save)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      return false;
+    }
+
+    // Ctrl+P (Print)
+    if (e.ctrlKey && (e.key === "p" || e.key === "P")) {
+      return false;
+    }
+    // Ctrl+A (All)
+    if (e.ctrlKey && (e.key === "a" || e.key === "A")) {
+      return false;
+    }
+
+  };
+</script>
+
+<!-- Anti Drag -->
+<script>
+  document.addEventListener("dragstart", e => e.preventDefault());
+</script>
+
+<!-- Anti Inspect Element + Anti Debug Mode -->
+<script>
+(function() {
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() {
+      window.location.href = "about:blank"; // Auto-close halaman
+    }
+  });
+
+  setInterval(() => {
+    console.log(element);
+  }, 1000);
+})();
+</script>
+
+<!-- Detect DevTools via Dimensions -->
+<script>
+setInterval(function() {
+  if (window.outerHeight - window.innerHeight > 200 ||
+      window.outerWidth - window.innerWidth > 200) {
+    window.location.href = "about:blank";
+  }
+}, 800);
+</script>
+
+<!-- JS Code Obfuscation (ringan) -->
+<script>
+  (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+</script>
+
+
+</body>
+</html>
