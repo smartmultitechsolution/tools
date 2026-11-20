@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+  <title>AI Agency · Tools Konten</title>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://grossmart.biz.id/uploads/Logo-SMK-Karya-Bangsa-removebg-preview.png">
+  <link rel="apple-touch-icon" href="https://adda.biz.id/uploads/fivicon-ai.png">
+  <!-- Font & icon library -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+    }
+
+    /* ===== PASSWORD OVERLAY ===== */
+    #passwordOverlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .password-box {
+      background: rgba(15, 30, 20, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 30px;
+      padding: 40px 35px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+      animation: fadeIn 0.5s ease;
+    }
+
+    .password-box .lock-icon {
+      font-size: 3.5rem;
+      color: #4caf7a;
+      margin-bottom: 15px;
+      display: block;
+    }
+
+    .password-box h2 {
+      color: #fff;
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .password-box p {
+      color: #8aaa99;
+      font-size: 0.95rem;
+      margin-bottom: 25px;
+    }
+
+    .password-box input {
+      width: 100%;
+      padding: 14px 18px;
+      border-radius: 60px;
+      border: 2px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    .password-box input:focus {
+      border-color: #4caf7a;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 20px rgba(76, 175, 122, 0.15);
+    }
+
+    .password-box input::placeholder {
+      color: #5a7a6a;
+    }
+
+    .password-box .btn-submit {
+      width: 100%;
+      padding: 14px;
+      border-radius: 60px;
+      border: none;
+      background: linear-gradient(135deg, #2e7d52, #4caf7a);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .password-box .btn-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(76, 175, 122, 0.3);
+    }
+
+    .password-box .btn-submit:active {
+      transform: scale(0.97);
+    }
+
+    .password-box .error-msg {
+      color: #ff6b6b;
+      font-size: 0.85rem;
+      margin-top: 12px;
+      display: none;
+      background: rgba(255, 0, 0, 0.1);
+      padding: 8px 16px;
+      border-radius: 30px;
+      border: 1px solid rgba(255, 0, 0, 0.2);
+    }
+
+    /* ===== DASHBOARD (awal disembunyikan) ===== */
+    .dashboard {
+      max-width: 1300px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      border-radius: 56px;
+      padding: 2.5rem 2rem;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.03);
+      transition: all 0.2s ease;
+      position: relative;
+      z-index: 1;
+      display: none;
+    }
+
+    body {
+      background: #0a1a12;
+      background-image: url('https://adda.biz.id/uploads/bg-daskboard.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      margin: 0;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* header */
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      gap: 1rem 1.5rem;
+    }
+
+    .dashboard-header h1 {
+      font-weight: 900;
+      font-size: 2rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-family: 'Impact', 'Arial Black', 'Franklin Gothic Heavy', sans-serif;
+      text-transform: uppercase;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      flex-wrap: wrap;
+    }
+
+    .dashboard-header h1 .gradient-text {
+      background: linear-gradient(135deg, #e8f5e9, #a5d6a7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .dashboard-header h1 .white-text {
+      color: #ffffff;
+      background: none;
+      -webkit-background-clip: unset;
+      background-clip: unset;
+    }
+
+    .dashboard-header h1 img {
+      height: 48px;
+      width: auto;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 4px;
+      transition: transform 0.2s ease;
+    }
+
+    .dashboard-header h1 img:hover {
+      transform: scale(1.05);
+    }
+
+    .status-badge {
+      background: rgba(76, 175, 122, 0.15);
+      backdrop-filter: blur(4px);
+      padding: 0.6rem 1.6rem;
+      border-radius: 60px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #b8e6cc;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 6px 14px rgba(0, 40, 20, 0.3);
+      white-space: nowrap;
+    }
+
+    .status-badge i {
+      color: #6ef0b0;
+      font-size: 0.7rem;
+    }
+
+    /* ===== NAVIGASI MENU SPA ===== */
+    .menu-navigation {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      flex-wrap: wrap;
+    }
+
+    .menu-btn {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #8aaa99;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .menu-btn i {
+      font-size: 1rem;
+      opacity: 0.7;
+    }
+
+    .menu-btn:hover {
+      background: rgba(255, 255, 255, 0.07);
+      color: #c8e6d0;
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .menu-btn.active {
+      background: rgba(76, 175, 122, 0.2);
+      border-color: rgba(76, 175, 122, 0.3);
+      color: #ffffff;
+      box-shadow: 0 4px 20px rgba(76, 175, 122, 0.15);
+    }
+
+    .menu-btn.active i {
+      opacity: 1;
+      color: #4caf7a;
+    }
+
+    /* ===== PAGE CONTAINER ===== */
+    .page-container {
+      display: block;
+    }
+
+    .page-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .page-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* grid tombol – default untuk SEO (5 kolom) */
+    .tombol-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 2rem 1.8rem;
+      justify-content: center;
+    }
+
+    /* grid khusus untuk halaman Konten (3 kolom) */
+    #pageKonten .tombol-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    /* kartu tombol */
+    .tombol-card {
+      background: rgba(15, 30, 20, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      border-radius: 40px;
+      padding: 1.5rem 1.2rem 1.8rem;
+      box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(255, 255, 255, 0.02);
+      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transform: scale(1);
+    }
+
+    .tombol-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 40px;
+      padding: 1px;
+      background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.08), transparent 70%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .tombol-card:hover {
+      transform: translateY(-10px) scale(1.02);
+      background: rgba(20, 45, 30, 0.8);
+      box-shadow: 0 30px 60px -12px #0a1a12, 0 0 0 1px rgba(76, 175, 122, 0.15);
+      border-color: rgba(76, 175, 122, 0.2);
+    }
+
+    .tombol-card:active {
+      transform: scale(0.96) translateY(-2px);
+      transition-duration: 0.08s;
+    }
+
+    /* area gambar */
+    .tombol-gambar {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: #0e1a14;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.6), 0 10px 20px -8px black;
+      margin-bottom: 1.2rem;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .tombol-gambar img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform 0.4s cubic-bezier(0.15, 0.75, 0.45, 1);
+      filter: brightness(0.85) saturate(1.1);
+      background: #0a1a12;
+    }
+
+    .tombol-card:hover .tombol-gambar img {
+      transform: scale(1.04);
+      filter: brightness(1) saturate(1.2);
+    }
+
+    .tombol-gambar .overlay-icon {
+      position: absolute;
+      bottom: 10px;
+      right: 14px;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      padding: 6px 12px 6px 10px;
+      border-radius: 60px;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      letter-spacing: 0.3px;
+      opacity: 0.8;
+      transition: 0.2s;
+    }
+
+    .tombol-card:hover .overlay-icon {
+      opacity: 1;
+      background: rgba(30, 100, 60, 0.7);
+    }
+
+    /* label tombol */
+    .tombol-label {
+      font-weight: 500;
+      font-size: 1.1rem;
+      color: #c8e6d0;
+      letter-spacing: -0.01em;
+      background: rgba(255, 255, 255, 0.02);
+      padding: 0.4rem 1.2rem;
+      border-radius: 60px;
+      display: inline-block;
+      backdrop-filter: blur(2px);
+      border: 1px solid rgba(255, 255, 255, 0.02);
+      transition: 0.2s;
+      margin-top: 0.2rem;
+    }
+
+    .tombol-card:hover .tombol-label {
+      color: white;
+      background: rgba(76, 175, 122, 0.15);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 12px rgba(0, 80, 40, 0.1);
+    }
+
+    .tombol-sub {
+      font-size: 0.7rem;
+      color: #7aaa88;
+      margin-top: 6px;
+      letter-spacing: 0.3px;
+      background: rgba(0, 0, 0, 0.2);
+      padding: 2px 12px;
+      border-radius: 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      backdrop-filter: blur(2px);
+    }
+
+    .tombol-sub i {
+      font-size: 0.6rem;
+      color: #6fbf8f;
+    }
+
+    /* card placeholder untuk SEO lainnya */
+    .tombol-card.seo-placeholder .tombol-gambar {
+      background: #0e1a14;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tombol-card.seo-placeholder .tombol-gambar .placeholder-icon {
+      font-size: 3.5rem;
+      color: #2a5a3a;
+      opacity: 0.6;
+    }
+
+    .tombol-card.seo-placeholder .tombol-label {
+      color: #5a8a6a;
+    }
+
+    .tombol-card.seo-placeholder .tombol-sub {
+      color: #3a6a4a;
+    }
+
+    /* efek glow interaktif */
+    .tombol-card::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.02), transparent 70%);
+      opacity: 0;
+      transition: opacity 0.5s;
+      pointer-events: none;
+    }
+
+    .tombol-card:hover::after {
+      opacity: 1;
+    }
+
+    /* footer */
+    .dashboard-footer {
+      margin-top: 2.8rem;
+      display: flex;
+      justify-content: center;
+      border-top: 1px solid rgba(255,255,255,0.03);
+      padding-top: 1.8rem;
+    }
+
+    .dashboard-footer span {
+      color: #ffffff;
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .dashboard-footer i {
+      color: #8ad4aa;
+      font-size: 1.1rem;
+    }
+
+    /* ===== RESPONSIF ===== */
+    @media (max-width: 1024px) {
+      .tombol-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+      }
+      
+      #pageKonten .tombol-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 0.8rem;
+      }
+
+      .dashboard {
+        padding: 1.5rem 1rem;
+        border-radius: 32px;
+      }
+
+      .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8rem;
+        margin-bottom: 2rem;
+      }
+
+      .dashboard-header h1 {
+        font-size: 1.4rem;
+        gap: 10px;
+      }
+
+      .dashboard-header h1 img {
+        height: 36px;
+      }
+
+      .status-badge {
+        font-size: 0.75rem;
+        padding: 0.4rem 1.2rem;
+        white-space: nowrap;
+      }
+
+      .menu-navigation {
+        gap: 0.4rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .menu-btn {
+        padding: 0.5rem 1.2rem;
+        font-size: 0.8rem;
+      }
+
+      .menu-btn i {
+        font-size: 0.8rem;
+      }
+
+      .tombol-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.2rem;
+        padding: 0 0.2rem;
+      }
+      
+      #pageKonten .tombol-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .tombol-card {
+        padding: 1rem 0.8rem 1.2rem;
+        border-radius: 28px;
+      }
+
+      .tombol-gambar {
+        border-radius: 18px;
+        aspect-ratio: 16/9;
+      }
+
+      .tombol-label {
+        font-size: 0.95rem;
+        padding: 0.3rem 1rem;
+      }
+
+      .tombol-sub {
+        font-size: 0.6rem;
+      }
+
+      .tombol-gambar .overlay-icon {
+        font-size: 0.6rem;
+        padding: 4px 10px 4px 8px;
+        bottom: 8px;
+        right: 10px;
+      }
+
+      .tombol-card.seo-placeholder .tombol-gambar .placeholder-icon {
+        font-size: 2.5rem;
+      }
+
+      .dashboard-footer {
+        margin-top: 2rem;
+        padding-top: 1.2rem;
+      }
+
+      .dashboard-footer span {
+        font-size: 0.9rem;
+        gap: 8px;
+      }
+
+      .dashboard-footer i {
+        font-size: 0.9rem;
+      }
+      
+      .password-box {
+        padding: 30px 20px;
+      }
+      
+      .password-box h2 {
+        font-size: 1.3rem;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .tombol-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      
+      #pageKonten .tombol-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .dashboard {
+        padding: 1rem 0.6rem;
+        border-radius: 24px;
+      }
+
+      .dashboard-header h1 {
+        font-size: 1.1rem;
+        gap: 6px;
+      }
+
+      .dashboard-header h1 img {
+        height: 28px;
+      }
+
+      .status-badge {
+        font-size: 0.65rem;
+        padding: 0.3rem 0.8rem;
+      }
+
+      .menu-btn {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.7rem;
+      }
+
+      .tombol-card {
+        padding: 0.8rem 0.5rem 1rem;
+        border-radius: 20px;
+      }
+
+      .tombol-gambar {
+        border-radius: 14px;
+        margin-bottom: 0.8rem;
+      }
+
+      .tombol-label {
+        font-size: 0.8rem;
+        padding: 0.2rem 0.8rem;
+      }
+
+      .tombol-sub {
+        font-size: 0.5rem;
+        padding: 1px 8px;
+      }
+
+      .tombol-card.seo-placeholder .tombol-gambar .placeholder-icon {
+        font-size: 2rem;
+      }
+
+      .dashboard-footer span {
+        font-size: 0.75rem;
+      }
+
+      .dashboard-footer i {
+        font-size: 0.75rem;
+      }
+      
+      .password-box {
+        padding: 25px 15px;
+      }
+      
+      .password-box .lock-icon {
+        font-size: 2.5rem;
+      }
+      
+      .password-box h2 {
+        font-size: 1.1rem;
+      }
+      
+      .password-box p {
+        font-size: 0.8rem;
+      }
+    }
+
+    .tombol-card:focus-visible {
+      outline: 3px solid #4caf7a;
+      outline-offset: 6px;
+    }
+
+    .tombol-card {
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <!-- ===== PASSWORD OVERLAY ===== -->
+  <div id="passwordOverlay">
+    <div class="password-box">
+      <i class="fas fa-lock lock-icon"></i>
+      <h2>Akses Terproteksi</h2>
+      <p>Masukkan password untuk melanjutkan</p>
+      <input type="password" id="passwordInput" placeholder="Masukkan password..." autofocus>
+      <button class="btn-submit" onclick="validatePassword()">
+        <i class="fas fa-unlock-alt" style="margin-right: 8px;"></i> Buka Dashboard
+      </button>
+      <div class="error-msg" id="errorMsg">
+        <i class="fas fa-exclamation-circle" style="margin-right: 6px;"></i> Password salah! Coba lagi.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DASHBOARD ===== -->
+  <div class="dashboard" role="main">
+    <div class="dashboard-header">
+      <h1>
+        <img src="https://grossmart.biz.id/uploads/Logo-SMK-Karya-Bangsa-removebg-preview.png" alt="Logo KB" loading="lazy">
+        <span>
+          <span class="gradient-text">KARYA BANGSA ·</span>
+          <span class="white-text" id="pageTitle">Tools Konten</span>
+        </span>
+      </h1>
+      <div class="status-badge" id="statusBadge">
+        <i class="fas fa-circle"></i> 
+        <span id="statusText">6 Tools Konten Kreator</span>
+        <i class="fas fa-chevron-right" style="font-size: 0.6rem; opacity: 0.6; margin-left: 6px;"></i>
+      </div>
+    </div>
+
+    <!-- ===== MENU NAVIGASI SPA ===== -->
+    <div class="menu-navigation">
+      <button class="menu-btn active" data-page="konten" id="menuKonten">
+        <i class="fas fa-pencil-alt"></i> Tools Konten
+      </button>
+      <button class="menu-btn" data-page="seo" id="menuSeo">
+        <i class="fas fa-chart-line"></i> Tools SEO
+      </button>
+    </div>
+
+    <!-- ===== PAGE CONTAINER ===== -->
+    <div class="page-container">
+
+      <!-- ===== PAGE KONTEN ===== -->
+      <div class="page-content active" id="pageKonten">
+        <div class="tombol-grid" id="tombolGrid">
+
+          <!-- 1. Generator Video -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://aistudio.google.com/apps/72519c5f-01c6-4333-ac9c-1704f05409c2?showPreview=true&showAssistant=true&fullscreenApplet=true" 
+               data-label="Generator Video">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Generator-Video.png" alt="Generator Video" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-video" style="margin-right: 6px; opacity: 0.7;"></i> Video</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> google.com</span>
+          </div>
+
+ <!-- 2. Generator Artikel SEO -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://adda.biz.id/Generator-Artikel-SEO-v1.3" 
+               data-label="Generator Artikel SEO">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Generator-Artikel-SEO.png" alt="Generator Artikel SEO" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-pen-fancy" style="margin-right: 6px; opacity: 0.7;"></i> Artikel SEO</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> adda.biz.id</span>
+          </div>
+
+
+          <!-- 3. Generator Landingpage -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://adda.biz.id/landingpage-generator-v1.3" 
+               data-label="Generator Landingpage">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Generator-Landingpage.png" alt="Generator Landingpage" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-file-code" style="margin-right: 6px; opacity: 0.7;"></i> Landingpage</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> adda.biz.id</span>
+          </div>
+
+         
+
+          <!-- 4. Generator Poster Iklan -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="	https://adda.biz.id/generator-poster-iklan-v1.3" 
+               data-label="Generator Poster Iklan">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Generator-Poster-Iklan.png" alt="Generator Poster Iklan" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-image" style="margin-right: 6px; opacity: 0.7;"></i> Poster Iklan</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> adda.biz.id</span>
+          </div>
+
+ <!-- 5. Generator Infografis (NEW) -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="	https://adda.biz.id/generator-Infografis-v.1.3" 
+               data-label="Generator Infografis">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/generator-infografis.png" alt="Generator Infografis" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-chart-pie" style="margin-right: 6px; opacity: 0.7;"></i> Infografis</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> adda.biz.id</span>
+          </div>
+
+          <!-- 6. Generate Carousel -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://adda.biz.id/generate-carousel-v.1.3" 
+               data-label="Generate Carousel">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/generate-carousel-1.png" alt="Generate Carousel" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-sliders-h" style="margin-right: 6px; opacity: 0.7;"></i> Carousel</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> adda.biz.id</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ===== PAGE SEO ===== -->
+      <div class="page-content" id="pageSeo">
+        <div class="tombol-grid" id="tombolGridSeo">
+          
+          <!-- Card 1: Keyword Tool -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://keywordtool.io" 
+               data-label="Keyword Tool">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Keyword-tool.png" alt="Keyword Tool" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-key" style="margin-right: 6px; opacity: 0.7;"></i> Keyword Tool</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> keywordtool.io</span>
+          </div>
+
+          <!-- Card 2: Rank Tracker -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://www.serprobot.com/serp-check" 
+               data-label="Rank Tracker">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Rank-Tracker.png" alt="Rank Tracker" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-chart-bar" style="margin-right: 6px; opacity: 0.7;"></i> Rank Tracker</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> serprobot.com</span>
+          </div>
+
+          <!-- Card 3: GSC Analyzer -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://adda.biz.id/analisa-gsc" 
+               data-label="GSC Analyzer">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/GSC-Analyzer.png" alt="GSC Analyzer" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-chart-pie" style="margin-right: 6px; opacity: 0.7;"></i> GSC Analyzer</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> adda.biz.id</span>
+          </div>
+
+          <!-- Card 4: SEO Analyzer -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://www.seoptimer.com/id/" 
+               data-label="SEO Analyzer">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/seo-analyze.png" alt="SEO Analyzer" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-robot" style="margin-right: 6px; opacity: 0.7;"></i> SEO Analyzer</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> seoptimer.com</span>
+          </div>
+
+          <!-- Card 5: Backlink Checker -->
+          <div class="tombol-card" tabindex="0" role="button" 
+               data-link="https://ahrefs.com/id/backlink-checker" 
+               data-label="Backlink Checker">
+            <div class="tombol-gambar">
+              <img src="https://adda.biz.id/uploads/Backlink-chacker.png" alt="Backlink Checker" loading="lazy">
+            </div>
+            <span class="tombol-label"><i class="fas fa-link" style="margin-right: 6px; opacity: 0.7;"></i> Backlink Checker</span>
+            <span class="tombol-sub"><i class="fas fa-external-link-alt"></i> ahrefs.com</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="dashboard-footer">
+      <span>
+        <i class="fas fa-mouse-pointer"></i> 
+        <span>klik kartu untuk membuka link</span>
+      </span>
+    </div>
+  </div>
+
+  <script>
+    // ===== PROTEKSI PASSWORD =====
+    function validatePassword() {
+        const input = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('errorMsg');
+        const password = 'karya123';
+        
+        if (input.value === password) {
+            document.getElementById('passwordOverlay').style.display = 'none';
+            document.querySelector('.dashboard').style.display = 'block';
+            return true;
+        } else {
+            errorMsg.style.display = 'block';
+            input.value = '';
+            input.focus();
+            return false;
+        }
+    }
+
+    // Enter key untuk submit password
+    document.getElementById('passwordInput').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            validatePassword();
+        }
+    });
+
+    // ===== FUNGSI NAVIGASI SPA =====
+    (function() {
+      const menuKonten = document.getElementById('menuKonten');
+      const menuSeo = document.getElementById('menuSeo');
+      const pageKonten = document.getElementById('pageKonten');
+      const pageSeo = document.getElementById('pageSeo');
+      const pageTitle = document.getElementById('pageTitle');
+      const statusText = document.getElementById('statusText');
+
+      function setActivePage(page) {
+        document.querySelectorAll('.menu-btn').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.page-content').forEach(p => p.classList.remove('active'));
+
+        if (page === 'konten') {
+          menuKonten.classList.add('active');
+          pageKonten.classList.add('active');
+          pageTitle.textContent = 'Tools Konten';
+          statusText.textContent = '6 Tools Konten Kreator';
+        } else if (page === 'seo') {
+          menuSeo.classList.add('active');
+          pageSeo.classList.add('active');
+          pageTitle.textContent = 'Tools SEO';
+          statusText.textContent = '5 Tools SEO Premium';
+        }
+      }
+
+      menuKonten.addEventListener('click', function() {
+        setActivePage('konten');
+      });
+
+      menuSeo.addEventListener('click', function() {
+        setActivePage('seo');
+      });
+
+      // ===== FUNGSI BUKA LINK =====
+      function openLink(url) {
+        if (!url || url === '#') return;
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      // Event listener untuk semua card
+      document.querySelectorAll('.tombol-card').forEach(card => {
+        const link = card.getAttribute('data-link');
+        if (!link || link === '#') {
+          return;
+        }
+
+        card.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openLink(link);
+        });
+
+        card.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openLink(link);
+          }
+        });
+
+        card.setAttribute('aria-label', `Buka ${card.getAttribute('data-label') || 'link'}`);
+      });
+
+      console.log('✨ AI Agency · SPA siap.');
+    })();
+  </script>
+
+  <!-- Anti Klik Kanan -->
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+
+  <!-- Block Keys -->
+  <script>
+    document.onkeydown = function (e) {
+      if (e.key === "F12") return false;
+      if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) return false;
+      if (e.ctrlKey && (e.key === "u" || e.key === "U")) return false;
+      if (e.ctrlKey && (e.key === "s" || e.key === "S")) return false;
+      if (e.ctrlKey && (e.key === "p" || e.key === "P")) return false;
+      if (e.ctrlKey && (e.key === "a" || e.key === "A")) return false;
+    };
+  </script>
+
+  <!-- Anti Drag -->
+  <script>
+    document.addEventListener("dragstart", e => e.preventDefault());
+  </script>
+
+  <!-- Anti Inspect Element + Anti Debug Mode -->
+  <script>
+  (function() {
+    const element = new Image();
+    Object.defineProperty(element, 'id', {
+      get: function() {
+        window.location.href = "about:blank";
+      }
+    });
+    setInterval(() => {
+      console.log(element);
+    }, 1000);
+  })();
+  </script>
+
+  <!-- Detect DevTools via Dimensions -->
+  <script>
+  setInterval(function() {
+    if (window.outerHeight - window.innerHeight > 200 ||
+        window.outerWidth - window.innerWidth > 200) {
+      window.location.href = "about:blank";
+    }
+  }, 800);
+  </script>
+
+  <!-- JS Code Obfuscation (ringan) -->
+  <script>
+    (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+  </script>
+
+</body>
+</html>
