@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Generator prompt untuk membuat artikel sesuai kaidah SEO, E-E-A-T, local SEO, FAQ, schema, dan search intent.">
+  <title>Generator Prompt Artikel SEO</title>
+  <style>
+    :root {
+      --navy: #081a33;
+      --navy-2: #102b50;
+      --blue: #2563eb;
+      --cyan: #10bce5;
+      --gold: #f7b731;
+      --white: #ffffff;
+      --soft: #f3f7fc;
+      --text: #14213d;
+      --muted: #65758b;
+      --border: #dbe5f1;
+      --success: #138a50;
+      --danger: #c33b3b;
+      --shadow: 0 18px 48px rgba(8, 26, 51, .12);
+      --shadow2: 0 10px 10px rgba(8, 26, 51, .5);
+      --sidebar-width: 260px;
+      --sidebar-collapsed: 72px;
+    }
+
+    * { 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent;
+    }
+    html { 
+      scroll-behavior: smooth; 
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        linear-gradient(135deg, rgba(10,21,145,80), rgba(167,30,197,80), rgba(10,21,145,80));
+      background-attachment: fixed;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding-top: 72px;
+      overflow-x: hidden;
+    }
+
+    button, input, select, textarea { 
+      font: inherit; 
+      font-size: 16px;
+    }
+    button { cursor: pointer; }
+
+    /* ==================== PASSWORD OVERLAY ==================== */
+    #passwordOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a1a3a 0%, #0d2b5e 50%, #1a3a7a 100%);
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    #passwordOverlay.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .password-box {
+      background: #0d2b5e;
+      border-radius: 16px;
+      padding: 40px 36px 36px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: fadeUp 0.5s ease;
+      position: relative;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px) scale(0.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .password-box .version {
+      position: absolute;
+      top: 14px;
+      right: 18px;
+      color: rgba(255,255,255,1);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .password-box .logo {
+      margin-bottom: 10px;
+      margin-top: 4px;
+    }
+
+    .password-box .logo img {
+      height: 48px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .password-box h2 {
+      color: var(--white);
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0 0 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .password-box .subtitle {
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      margin: 0 0 24px;
+      line-height: 1.5;
+    }
+
+    .password-box .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .password-box input {
+      width: 100%;
+      height: 48px;
+      padding: 0 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      background: #ffffff;
+      color: #000000;
+      font-size: 15px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      outline: none;
+    }
+
+    .password-box input::placeholder {
+      color: rgba(0,0,0,0.35);
+    }
+
+    .password-box input:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    .password-box input.error {
+      border-color: var(--danger);
+      box-shadow: 0 0 0 3px rgba(195,59,59,0.15);
+    }
+
+    .password-box .btn-unlock {
+      width: 100%;
+      height: 48px;
+      border: none;
+      border-radius: 10px;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      transition: background 0.2s ease, transform 0.15s ease;
+      cursor: pointer;
+    }
+
+    .password-box .btn-unlock:hover {
+      background: #1d4ed8;
+    }
+
+    .password-box .btn-unlock:active {
+      transform: scale(0.97);
+    }
+
+    .password-box .error-msg {
+      color: var(--danger);
+      font-size: 13px;
+      font-weight: 500;
+      min-height: 20px;
+      margin-top: 6px;
+    }
+
+    /* ==================== SIDEBAR ==================== */
+    .sidebar {
+      position: fixed;
+      left: 0;
+      top: 72px;
+      bottom: 0;
+      width: var(--sidebar-width);
+      background: linear-gradient(180deg, #0a1a3a 0%, #0d2b5e 40%, #1a3a7a 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-right: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0 20px 20px 0;
+      z-index: 999;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow-y: auto;
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .sidebar::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px;
+    }
+
+    .sidebar-header {
+      padding: 20px 18px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .sidebar-header .logo-text {
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+    }
+
+    .sidebar-header .logo-text small {
+      display: block;
+      font-weight: 400;
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0;
+    }
+
+    .sidebar-header .version-badge {
+      color: rgba(255,255,255,1);
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border: 1px solid rgba(255,255,255,1);
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .sidebar-nav {
+      padding: 12px 12px;
+      flex: 1;
+    }
+
+    .sidebar-nav .nav-label {
+      color: rgba(255,255,255,0.3);
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 10px 6px;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      color: rgba(255,255,255,0.6);
+      text-decoration: none;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--white);
+    }
+
+    .sidebar-nav a.active {
+      background: rgba(37, 99, 235, 0.2);
+      color: var(--white);
+    }
+
+    .sidebar-nav a.active::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 24px;
+      border-radius: 0 4px 4px 0;
+      background: var(--blue);
+    }
+
+    .sidebar-nav .icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .sidebar-nav .badge {
+      margin-left: auto;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--blue);
+      color: var(--white);
+      font-size: 10px;
+      font-weight: 700;
+    }
+
+    .sidebar-footer {
+      padding: 16px 18px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    /* SIDEBAR TOGGLE - Pindah ke kanan atas */
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      right: 12px;
+      top: 78px;
+      z-index: 1001;
+      width: 40px;
+      height: 40px;
+      border: none;
+      border-radius: 12px;
+      background: #0d2b5e;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: var(--white);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+
+    .sidebar-toggle:hover {
+      background: #1a3a7a;
+      transform: scale(1.05);
+    }
+
+    .sidebar-toggle:active {
+      transform: scale(0.95);
+    }
+
+    /* MAIN CONTENT WITH SIDEBAR */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* NAVBAR */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 10px 16px;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(219,229,241,.5);
+      box-shadow: 0 2px 20px rgba(8,26,51,.06);
+    }
+
+    .navbar-inner {
+      width: min(1180px, 100%);
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding-left: 0;
+    }
+
+    .navbar-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .navbar-brand img {
+      height: 32px;
+      width: auto;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+
+    .navbar-brand span {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--navy);
+      letter-spacing: -0.5px;
+      white-space: nowrap;
+    }
+
+    .navbar-brand span small {
+      font-weight: 400;
+      color: var(--muted);
+      font-size: 0.7rem;
+      display: inline-block;
+    }
+
+    .navbar-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border: 1px solid rgba(8,26,51,.1);
+      border-radius: 999px;
+      background: var(--navy-2);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      color: var(--white);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      padding: 20px 12px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .card {
+      padding: 24px 20px;
+      border: 1px solid rgba(219,229,241,.9);
+      border-radius: 20px;
+      background: rgba(255,255,255,.97);
+      box-shadow: var(--shadow);
+    }
+
+    .card h2 {
+      margin: 0 0 6px;
+      color: var(--navy);
+      font-size: 22px;
+      letter-spacing: -.02em;
+    }
+
+    .sub {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 14px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .field.full { grid-column: 1 / -1; }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--navy);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .required::after {
+      content: " *";
+      color: var(--danger);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      outline: none;
+      color: var(--text);
+      background: #fbfdff;
+      transition: .2s ease;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    input, select { 
+      height: 46px; 
+      padding: 0 12px; 
+    }
+    
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2365758b' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    textarea { 
+      min-height: 100px; 
+      padding: 12px 14px; 
+      resize: vertical; 
+      line-height: 1.55;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--blue);
+      background: var(--white);
+      box-shadow: 0 0 0 4px rgba(37,99,235,.09);
+    }
+
+    /* TOMBOL 1 BARIS */
+    .actions {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .btn-img {
+      display: block;
+      transition: transform .18s ease, filter .18s ease;
+      line-height: 0;
+      border-radius: 12px;
+      width: 100%;
+    }
+
+    .btn-img:active {
+      transform: scale(0.97);
+    }
+
+    .btn-img img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 12px;
+    }
+
+    .btn-light {
+      min-height: 44px;
+      padding: 10px 14px;
+      border: 0;
+      border-radius: 12px;
+      font-weight: 850;
+      transition: transform .18s ease, filter .18s ease;
+      color: var(--navy);
+      background: #eaf1f9;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .btn-light:active { 
+      transform: scale(0.97); 
+    }
+
+    .output-card {
+      position: sticky;
+      top: 82px;
+    }
+
+    .output-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .counter {
+      white-space: nowrap;
+      padding: 5px 10px;
+      border-radius: 999px;
+      color: #1d4e68;
+      background: #e9f9fd;
+      font-size: 11px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    #output {
+      min-height: 500px;
+      max-height: 65vh;
+      color: #dcecff;
+      border-color: #173e65;
+      background: #07182e;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 13px;
+      line-height: 1.62;
+      padding: 14px;
+    }
+
+    .status {
+      min-height: 20px;
+      margin: 10px 0 0;
+      color: var(--success);
+      font-size: 13px;
+      font-weight: 750;
+    }
+
+    .checklist {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .check {
+      padding: 12px 8px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .check span {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--success);
+      font-size: 16px;
+    }
+
+    footer {
+      padding: 20px 16px 30px;
+      color: var(--white);
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .footer-brand img {
+      height: 26px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .footer-brand span {
+      font-weight: 700;
+      color: var(--white);
+      font-size: 1rem;
+    }
+
+    /* Riwayat Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #0d2b5e;
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 800px;
+      width: 100%;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+      animation: fadeUp 0.3s ease;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      color: var(--white);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      padding-bottom: 12px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 28px;
+      cursor: pointer;
+      padding: 0 8px;
+      opacity: 0.6;
+      transition: opacity 0.2s;
+    }
+
+    .modal-close:hover {
+      opacity: 1;
+    }
+
+    .modal-body {
+      flex: 1;
+      overflow-y: auto;
+      color: var(--white);
+    }
+
+    .modal-body .riwayat-item {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      border-left: 3px solid var(--blue);
+    }
+
+    .modal-body .riwayat-item .riwayat-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 6px;
+    }
+
+    .modal-body .riwayat-item .riwayat-keyword {
+      font-weight: 700;
+      font-size: 16px;
+      color: var(--white);
+    }
+
+    .modal-body .riwayat-item .riwayat-preview {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-body .riwayat-item .riwayat-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 8px;
+    }
+
+    .modal-body .riwayat-item .riwayat-actions button {
+      padding: 4px 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--white);
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .modal-body .riwayat-item .riwayat-actions button:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .modal-body .empty-riwayat {
+      text-align: center;
+      padding: 40px 20px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .modal-body .empty-riwayat .icon {
+      font-size: 48px;
+      margin-bottom: 12px;
+    }
+
+    /* Mobile First - Responsive */
+    @media (max-width: 1024px) {
+      .layout {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .output-card { 
+        position: static; 
+      }
+      #output { 
+        min-height: 400px; 
+        max-height: 60vh;
+      }
+      .checklist { 
+        grid-template-columns: repeat(3, minmax(0, 1fr)); 
+      }
+      .navbar-tag { 
+        display: none; 
+      }
+      body { 
+        padding-top: 62px; 
+      }
+      .output-card { 
+        top: 72px; 
+      }
+      .sidebar {
+        transform: translateX(-100%);
+        width: 280px;
+        top: 62px;
+        border-radius: 0 20px 20px 0;
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .sidebar-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        right: 12px;
+        top: 70px;
+      }
+      .main-content {
+        margin-left: 0;
+      }
+      .modal-content {
+        max-width: 95%;
+        padding: 20px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .container { 
+        padding: 16px 10px 30px; 
+      }
+      .card { 
+        padding: 18px 14px; 
+        border-radius: 16px; 
+      }
+      .grid { 
+        grid-template-columns: 1fr; 
+        gap: 12px;
+      }
+      .field.full { 
+        grid-column: auto; 
+      }
+      .actions {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 6px;
+      }
+      .actions .btn-img { 
+        width: 100%; 
+      }
+      .actions .btn-img img { 
+        width: 100%; 
+        height: auto; 
+      }
+      .actions .btn-light { 
+        width: 100%; 
+        font-size: 13px;
+        min-height: 40px;
+        padding: 8px 12px;
+      }
+      .checklist { 
+        grid-template-columns: 1fr 1fr; 
+        gap: 6px;
+      }
+      .navbar-brand span small { 
+        display: none; 
+      }
+      .navbar-brand img { 
+        height: 28px; 
+      }
+      .navbar-brand span { 
+        font-size: 1rem; 
+      }
+      body { 
+        padding-top: 56px; 
+      }
+      .card h2 { 
+        font-size: 20px; 
+      }
+      .sub { 
+        font-size: 13px; 
+      }
+      input, select { 
+        height: 42px; 
+        font-size: 16px; 
+      }
+      textarea { 
+        font-size: 16px; 
+        min-height: 80px;
+      }
+      .counter { 
+        font-size: 10px; 
+        padding: 4px 8px;
+      }
+      #output { 
+        font-size: 12px; 
+        min-height: 350px;
+        padding: 12px;
+      }
+      .check { 
+        font-size: 10px; 
+        padding: 8px 6px;
+      }
+      .check span { 
+        font-size: 14px; 
+      }
+      .sidebar {
+        top: 56px;
+        width: 280px;
+        border-radius: 0 20px 20px 0;
+      }
+      .sidebar-toggle {
+        top: 64px;
+        right: 10px;
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        border-radius: 10px;
+      }
+      .modal-content {
+        padding: 16px;
+        max-height: 90vh;
+      }
+      .modal-header h2 {
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .container { 
+        padding: 12px 8px 24px; 
+      }
+      .card { 
+        padding: 14px 12px; 
+        border-radius: 14px; 
+      }
+      .actions {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+      }
+      .actions .btn-img img {
+        border-radius: 8px;
+      }
+      .checklist { 
+        grid-template-columns: 1fr 1fr; 
+        gap: 4px;
+      }
+      .navbar { 
+        padding: 8px 12px; 
+      }
+      .navbar-brand img { 
+        height: 24px; 
+      }
+      .navbar-brand span { 
+        font-size: 0.9rem; 
+      }
+      body { 
+        padding-top: 50px; 
+      }
+      .output-head { 
+        flex-direction: column; 
+        align-items: stretch;
+        gap: 6px;
+      }
+      .counter { 
+        align-self: flex-start; 
+      }
+      #output { 
+        min-height: 300px; 
+        font-size: 11px;
+        padding: 10px;
+      }
+      .check { 
+        font-size: 9px; 
+        padding: 6px 4px;
+        border-radius: 8px;
+      }
+      .check span { 
+        font-size: 12px; 
+      }
+      footer { 
+        font-size: 11px; 
+        padding: 16px 12px 24px;
+      }
+      .footer-brand img { 
+        height: 22px; 
+      }
+      .footer-brand span { 
+        font-size: 0.9rem; 
+      }
+      .sidebar {
+        width: 260px;
+        top: 50px;
+        border-radius: 0 16px 16px 0;
+      }
+      .sidebar-toggle {
+        top: 58px;
+        right: 8px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+        border-radius: 8px;
+      }
+      .modal-content {
+        padding: 12px;
+        border-radius: 14px;
+      }
+      .modal-body .riwayat-item {
+        padding: 12px;
+      }
+      .modal-body .riwayat-item .riwayat-keyword {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .actions {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 3px;
+      }
+      .actions .btn-img img {
+        border-radius: 6px;
+      }
+      .checklist { 
+        grid-template-columns: 1fr 1fr; 
+      }
+      .navbar-brand span { 
+        font-size: 0.8rem; 
+      }
+      .navbar-brand img { 
+        height: 20px; 
+      }
+      input, select { 
+        height: 38px; 
+        font-size: 14px; 
+        padding: 0 10px;
+      }
+      textarea { 
+        font-size: 14px; 
+        padding: 10px 12px;
+        min-height: 70px;
+      }
+      .card h2 { 
+        font-size: 18px; 
+      }
+      .sidebar {
+        width: 240px;
+        border-radius: 0 14px 14px 0;
+      }
+    }
+
+    /* Touch-friendly improvements */
+    button, input, select, textarea, .btn-img, .btn-light {
+      touch-action: manipulation;
+    }
+
+    /* Prevent zoom on focus for iOS */
+    @supports (-webkit-touch-callout: none) {
+      input, select, textarea {
+        font-size: 16px !important;
+      }
+    }
+
+    /* Overlay for sidebar on mobile */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 998;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    @media (min-width: 1025px) {
+      .sidebar-overlay {
+        display: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- PASSWORD OVERLAY -->
+  <div id="passwordOverlay">
+    <div class="password-box">
+      <span class="version">V.1.4</span>
+      <div class="logo">
+        <img src="https://adda.biz.id/uploads/Logo-AI-footer.png" alt="AI Agency Logo" loading="lazy">
+      </div>
+      <h2>Artikel Generator</h2>
+      <p class="subtitle">Masukkan password untuk mengakses</p>
+      <div class="input-group">
+        <input type="password" id="passwordInput" placeholder="Masukkan Password" autofocus>
+        <button class="btn-unlock" id="unlockBtn">Masuk</button>
+        <div class="error-msg" id="passwordError"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+  <!-- SIDEBAR TOGGLE - Posisi kanan atas -->
+  <button class="sidebar-toggle" id="sidebarToggle" aria-label="Toggle sidebar">☰</button>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-text">
+        Prompt Generator
+        <small><b>ARTIKEL SEO</b></small>
+      </div>
+      <span class="version-badge">V.1.4</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-label">Menu</div>
+      <a href="https://adda.biz.id/Generator-Artikel-SEO-v1.3" class="active">
+        <span class="icon">📝</span>
+        Generator Prompt
+        <span class="badge">SEO</span>
+      </a>
+      <a href="#" id="riwayatMenu">
+        <span class="icon">📋</span>
+        Riwayat
+        <span class="badge" id="riwayatCount">0</span>
+      </a>
+      <a href="https://adda.biz.id/panduan-Artikel-SEO-v1.3">
+        <span class="icon">📚</span>
+        Panduan SEO
+        <span class="badge">25</span>
+      </a>
+      <a href="https://adda.biz.id/glori-tools" target="_blank">
+        <span class="icon">🏠</span>
+        Home
+      </a>
+      <a id="logoutBtn">
+        <span class="icon">🚪</span>
+        Logout
+      </a>
+    </nav>
+    <div class="sidebar-footer"></div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content" id="mainContent">
+    <!-- NAVBAR FIXED -->
+    <nav class="navbar">
+      <div class="navbar-inner">
+        <a href="#" class="navbar-brand">
+          <img src="https://adda.biz.id/uploads/Logo-AI.png" alt="AI Agency" loading="lazy">
+          <span>AI Agency</span>
+        </a>
+        <div class="navbar-tag">✦ Prompt Generator Artikel SEO</div>
+      </div>
+    </nav>
+
+    <main class="container">
+      <div class="layout">
+        <section class="card">
+          <h2>Data Artikel dan Bisnis</h2>
+          <p class="sub">Semakin lengkap datanya, semakin spesifik dan meyakinkan artikel yang dihasilkan.</p>
+
+          <form id="seoForm">
+            <div class="grid">
+              <div class="field full">
+                <label class="required" for="keyword">Keyword utama</label>
+                <input id="keyword" placeholder="Contoh: Kata Kunci (Max 60 Karakter)" required>
+              </div>
+
+              <div class="field">
+                <label for="brand">Nama bisnis/merek</label>
+                <input id="brand" placeholder="Contoh: AI Agency">
+              </div>
+
+              <div class="field">
+                <label for="location">Target kota/area</label>
+                <input id="location" placeholder="Contoh: Jakarta, Bekasi, Indonesia">
+              </div>
+
+              <div class="field">
+                <label for="intent">Search intent</label>
+                <select id="intent">
+                  <option value="komersial dan transaksional">Komersial + transaksional</option>
+                  <option value="informasional">Informasional</option>
+                  <option value="lokal">Lokal</option>
+                  <option value="komparasi sebelum membeli">Komparasi</option>
+                </select>
+              </div>
+
+              <div class="field">
+                <label for="length">Target panjang artikel</label>
+                <select id="length">
+		<option value="300–500 kata">300–500 kata</option>
+                  <option value="700–1.000 kata">700–1.000 kata</option>
+                  <option value="1.000–1.500 kata">1.000–1.500 kata</option>
+                  <option value="1.500–2.000 kata">1.500–2.000 kata</option>
+                  <option value="2.000–2.500 kata">2.000–2.500 kata</option>
+                  <option value="2.500–5.000 kata">2.500–5.000 kata</option>
+                </select>
+              </div>
+
+              <div class="field full">
+                <label for="audience">Target pembaca</label>
+                <textarea id="audience" placeholder="Siapa calon pembaca dan masalah utamanya?"></textarea>
+              </div>
+
+              <div class="field full">
+                <label for="product">Data produk/paket</label>
+                <textarea id="product" placeholder="Harga, jadwal, durasi, maskapai, hotel, jenis paket, stok..."></textarea>
+              </div>
+
+              <div class="field full">
+                <label for="facilities">Fasilitas dan keunggulan</label>
+                <textarea id="facilities" placeholder="Tuliskan fasilitas dan keunggulan nyata bisnis"></textarea>
+              </div>
+
+              <div class="field">
+                <label for="license">Legalitas/kredibilitas</label>
+                <input id="license" placeholder="Nomor izin, pengalaman, sertifikasi">
+              </div>
+
+              <div class="field">
+                <label for="whatsapp">Nomor/tautan WhatsApp</label>
+                <input id="whatsapp" placeholder="Contoh: 628123456789">
+              </div>
+
+              <div class="field full">
+                <label for="internalLinks">URL internal link</label>
+                <textarea id="internalLinks" placeholder="Satu URL per baris, boleh disertai topik/anchor"></textarea>
+              </div>
+
+              <div class="field full">
+                <label for="notes">Catatan dan aturan tambahan</label>
+                <textarea id="notes" placeholder="Gaya bahasa, promo, larangan klaim, data khusus...">URL internal link jangan dibuatkan link dalam artikel</textarea>
+              </div>
+            </div>
+
+            <div class="actions">
+              <a href="#" class="btn-img" id="generateBtn">
+                <img src="https://adda.biz.id/uploads/Buat-Prompt-2.png" alt="Buat Prompt SEO" loading="lazy">
+              </a>
+              <a href="#" class="btn-img" id="copyBtn">
+                <img src="https://adda.biz.id/uploads/Copy-Prompt-2.png" alt="Salin Prompt" loading="lazy">
+              </a>
+              <a href="#" class="btn-img" id="saveRiwayatBtn">
+                <img src="https://adda.biz.id/uploads/Save-Riwayat.png" alt="Save Riwayat" loading="lazy">
+              </a>
+              <a href="#" class="btn-img" id="resetBtn">
+                <img src="https://adda.biz.id/uploads/Reset-2.png" alt="Reset Form" loading="lazy">
+              </a>
+            </div>
+            <div id="formStatus" class="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <section class="card output-card">
+          <div class="output-head">
+            <div>
+              <h2>Prompt Siap Digunakan</h2>
+              <p class="sub">Salin hasilnya ke ChatGPT atau AI pilihan Anda.</p>
+            </div>
+            <div class="counter" id="counter">0 karakter</div>
+          </div>
+          <textarea id="output" readonly spellcheck="false"></textarea>
+        </section>
+      </div>
+
+      <div class="checklist" aria-label="Komponen SEO yang dicakup">
+        <div class="check"><span>✓</span>Search Intent</div>
+        <div class="check"><span>✓</span>Title & Meta</div>
+        <div class="check"><span>✓</span>H1–H3</div>
+        <div class="check"><span>✓</span>Keyword Semantik</div>
+        <div class="check"><span>✓</span>Topical Coverage</div>
+        <div class="check"><span>✓</span>E-E-A-T</div>
+        <div class="check"><span>✓</span>Local SEO</div>
+        <div class="check"><span>✓</span>Internal Link</div>
+        <div class="check"><span>✓</span>FAQ & Schema</div>
+        <div class="check"><span>✓</span>CTA Konversi</div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="footer-brand">
+        <img src="https://adda.biz.id/uploads/Logo-AI-footer.png" alt="AI Agency" loading="lazy">
+        <span>AI Agency</span>
+      </div>
+      Prompt Generator Artikel SEO • <b>Data faktual tetap harus diperiksa sebelum artikel diterbitkan</b>.
+    </footer>
+  </div>
+
+  <!-- MODAL RIWAYAT -->
+  <div class="modal" id="riwayatModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>📋 Riwayat Prompt</h2>
+        <button class="modal-close" id="riwayatClose">&times;</button>
+      </div>
+      <div class="modal-body" id="riwayatBody">
+        <div class="empty-riwayat">
+          <div class="icon">📭</div>
+          <p>Belum ada riwayat. Buat prompt terlebih dahulu dan simpan.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ==================== PASSWORD PROTECTION ====================
+    const PASSWORD = "AIagency2";
+    const overlay = document.getElementById('passwordOverlay');
+    const passwordInput = document.getElementById('passwordInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const errorMsg = document.getElementById('passwordError');
+
+    function showPasswordOverlay() {
+      overlay.classList.remove('hidden');
+      passwordInput.value = '';
+      errorMsg.textContent = '';
+      passwordInput.classList.remove('error');
+      setTimeout(() => passwordInput.focus(), 300);
+    }
+
+    function unlockPage() {
+      if (passwordInput.value === PASSWORD) {
+        overlay.classList.add('hidden');
+        document.getElementById('keyword').focus();
+        restoreData();
+        renderRiwayat();
+      } else {
+        errorMsg.textContent = '❌ Password salah. Silakan coba lagi.';
+        passwordInput.classList.add('error');
+        passwordInput.value = '';
+        passwordInput.focus();
+        setTimeout(() => {
+          passwordInput.classList.remove('error');
+        }, 1000);
+      }
+    }
+
+    passwordInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        unlockBtn.click();
+      }
+    });
+
+    unlockBtn.addEventListener('click', unlockPage);
+
+    // ==================== LOGOUT ====================
+    document.getElementById('logoutBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.innerWidth <= 1024) {
+        closeSidebar();
+      }
+      showPasswordOverlay();
+    });
+
+    window.addEventListener('load', function() {
+      setTimeout(() => passwordInput.focus(), 300);
+    });
+
+    // ==================== MAIN SCRIPT ====================
+    const $ = id => document.getElementById(id);
+    const fields = ["keyword", "brand", "location", "intent", "length", "audience", "product", "facilities", "license", "whatsapp", "internalLinks", "notes"];
+
+    // ==================== RIWAYAT ====================
+    let riwayatData = [];
+
+    function loadRiwayat() {
+      try {
+        const saved = localStorage.getItem('seoPromptRiwayat');
+        if (saved) {
+          riwayatData = JSON.parse(saved);
+        }
+      } catch (e) {
+        riwayatData = [];
+      }
+      updateRiwayatCount();
+    }
+
+    function saveRiwayatToStorage() {
+      localStorage.setItem('seoPromptRiwayat', JSON.stringify(riwayatData));
+      updateRiwayatCount();
+    }
+
+    function updateRiwayatCount() {
+      const count = document.getElementById('riwayatCount');
+      count.textContent = riwayatData.length;
+    }
+
+    function renderRiwayat() {
+      const body = document.getElementById('riwayatBody');
+      if (riwayatData.length === 0) {
+        body.innerHTML = `
+          <div class="empty-riwayat">
+            <div class="icon">📭</div>
+            <p>Belum ada riwayat. Buat prompt terlebih dahulu dan simpan.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      riwayatData.slice().reverse().forEach((item, index) => {
+        const realIndex = riwayatData.length - 1 - index;
+        const preview = item.prompt.length > 100 ? item.prompt.substring(0, 100) + '...' : item.prompt;
+        const date = new Date(item.timestamp);
+        const dateStr = date.toLocaleDateString('id-ID') + ' ' + date.toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'});
+        html += `
+          <div class="riwayat-item">
+            <div class="riwayat-date">📅 ${dateStr}</div>
+            <div class="riwayat-keyword">🔑 ${item.keyword}</div>
+            <div class="riwayat-preview">${preview}</div>
+            <div class="riwayat-actions">
+              <button onclick="loadRiwayatPrompt(${realIndex})">📥 Muat</button>
+              <button onclick="deleteRiwayat(${realIndex})">🗑 Hapus</button>
+            </div>
+          </div>
+        `;
+      });
+      body.innerHTML = html;
+    }
+
+    function saveRiwayat() {
+      const keyword = value("keyword");
+      const prompt = $("output").value.trim();
+      if (!prompt) {
+        $("formStatus").textContent = "❌ Buat prompt terlebih dahulu sebelum menyimpan.";
+        return;
+      }
+      if (keyword === "[BELUM DIISI]") {
+        $("formStatus").textContent = "❌ Isi keyword utama terlebih dahulu.";
+        return;
+      }
+
+      riwayatData.push({
+        keyword: keyword,
+        prompt: prompt,
+        timestamp: Date.now()
+      });
+      saveRiwayatToStorage();
+      renderRiwayat();
+      $("formStatus").textContent = "✅ Prompt berhasil disimpan ke riwayat.";
+    }
+
+    function loadRiwayatPrompt(index) {
+      const item = riwayatData[index];
+      if (!item) return;
+      $("output").value = item.prompt;
+      $("counter").textContent = item.prompt.length.toLocaleString("id-ID") + " karakter";
+      // Isi keyword ke form
+      $("keyword").value = item.keyword;
+      $("formStatus").textContent = "✅ Prompt dari riwayat telah dimuat.";
+      if (window.innerWidth <= 1024) {
+        closeModal();
+      }
+    }
+
+    function deleteRiwayat(index) {
+      if (!confirm("Hapus riwayat ini?")) return;
+      riwayatData.splice(index, 1);
+      saveRiwayatToStorage();
+      renderRiwayat();
+    }
+
+    // ==================== MODAL ====================
+    const modal = document.getElementById('riwayatModal');
+    const modalClose = document.getElementById('riwayatClose');
+    const riwayatMenu = document.getElementById('riwayatMenu');
+
+    function openModal() {
+      renderRiwayat();
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modal.addEventListener('click', function(e) {
+      if (e.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    riwayatMenu.addEventListener('click', function(e) {
+      e.preventDefault();
+      if (window.innerWidth <= 1024) {
+        closeSidebar();
+      }
+      openModal();
+    });
+
+    // ==================== VALUE HELPER ====================
+    function value(id, fallback = "[BELUM DIISI]") {
+      const result = $(id).value.trim();
+      return result || fallback;
+    }
+
+    // ==================== BUILD PROMPT ====================
+    function buildPrompt() {
+      const keyword = value("keyword");
+      const brand = value("brand");
+      const location = value("location");
+      const intent = value("intent");
+      const length = value("length");
+      const audience = value("audience");
+      const product = value("product");
+      const facilities = value("facilities");
+      const license = value("license");
+      const whatsapp = value("whatsapp");
+      const internalLinks = value("internalLinks");
+      const notes = value("notes");
+
+      const prompt = `ROLE:
+ANDA ADALAH SEO CONTENT STRATEGIST, PENULIS ARTIKEL KOMERSIAL, KEYWORD RESEARCHER, LOCAL SEO SPECIALIST, COPYWRITER, EDITOR, dan SPESIALIS ON-PAGE SEO BERPENGALAMAN. ANDA MEMAHAMI SEO INTENS, TOPICAL AUTHORITY, HELPFUL CONTENT, E-E-A-T, LOCAL SEO, ENTITY SEO, SEMANTIC SEO, SERTA KONVERSI.
+
+TUGAS UTAMA:
+Buat artikel SEO orisinal dengan keyword utama:
+"${keyword}"
+
+DATA DASAR:
+- Nama bisnis/merek: ${brand}
+- Target lokasi: ${location}
+- Search intent: ${intent}
+- Target pembaca: ${audience}
+- Panjang artikel: ${length}
+- Data produk/paket: ${product}
+- Fasilitas/keunggulan: ${facilities}
+- Legalitas/kredibilitas: ${license}
+- WhatsApp/CTA: ${whatsapp}
+- URL internal link yang tersedia:
+${internalLinks}
+- Catatan tambahan: ${notes}
+
+RISET DAN AKURASI:
+1. Pahami terlebih dahulu maksud pencarian pengguna untuk keyword utama.
+2. Jika akses internet tersedia, analisis hasil pencarian Google terbaru, halaman kompetitor utama, People Also Ask, related searches, dan sumber resmi.
+3. Gunakan hasil riset hanya untuk memahami kebutuhan pembaca dan celah konten. Jangan menyalin susunan kalimat kompetitor.
+4. Jangan mengarang harga, jadwal, stok, hotel, maskapai, izin, alamat, pengalaman, testimoni, atau fasilitas.
+5. Jika data bisnis belum tersedia, jangan menciptakan fakta.
+6. Jangan menjanjikan artikel pasti berada di halaman pertama Google.
+7. Jangan ada duplikat dengan konten sebelumnya.
+
+STRUKTUR SEO WAJIB:
+1. Tentukan satu keyword utama.
+2. Buat daftar keyword semantik dan entitas penting.
+3. Tentukan search intent utama dan kebutuhan pembaca.
+4. Buat SEO title maksimal sekitar 55–60 karakter, menarik, spesifik, dan memuat keyword utama secara alami.
+5. Buat slug pendek, huruf kecil, menggunakan tanda hubung, dan mengandung keyword utama.
+6. Letakkan keyword utama secara alami dalam 100 kata pertama.
+7. Gunakan struktur H2 dan H3 yang logis. Jangan melompati hierarki heading.
+8. Gunakan keyword utama dan turunannya secara alami. Hindari keyword stuffing dan pengulangan kaku.
+9. Bahas topik secara lengkap sesuai intent: informasi utama, manfaat, pilihan, harga, proses, syarat, risiko, tips, FAQ, dan tindakan berikutnya bila relevan.
+10. Gunakan paragraf pendek, kalimat mudah dipahami, daftar poin, dan tabel hanya ketika membantu pembaca.
+11. Buat bagian jawaban singkat 40–60 kata setelah pembukaan yang berpotensi menjadi featured snippet.
+12. Tambahkan unsur E-E-A-T: pengalaman nyata, identitas bisnis, legalitas, transparansi data, prosedur, dan sumber resmi. Jangan memalsukan pengalaman.
+13. Terapkan local SEO secara alami menggunakan lokasi, wilayah layanan, alamat, dan titik keberangkatan bila datanya tersedia.
+14. Sisipkan internal link secara kontekstual. Anchor text harus berada di dalam kalimat dan sesuai halaman tujuan.
+15. Sarankan external link hanya ke sumber primer atau resmi yang benar-benar relevan.
+16. Tambahkan CTA yang relevan di bagian awal, tengah, dan akhir tanpa terasa memaksa.
+17. Pastikan isi artikel relevan terhadap keyword utama dan tidak melebar ke topik yang tidak membantu pembaca.
+18. Akhiri dengan pemeriksaan fakta, konsistensi data, keterbacaan, dan kelengkapan CTA.
+
+GAYA PENULISAN:
+- Bahasa Indonesia alami, ramah, profesional, dan mudah dipahami orang awam.
+- Utamakan informasi konkret, bukan kalimat promosi kosong.
+- Jangan membuka artikel dengan definisi generik yang membosankan.
+- Hindari frasa berlebihan seperti "paling murah", "nomor satu", "dijamin", atau "pasti berangkat" jika tidak ada bukti.
+- Jangan menyebut proses penulisan, SEO, keyword density, algoritma Google, atau instruksi prompt di dalam artikel.
+- Jangan menambahkan kutipan atau statistik tanpa sumber yang dapat diperiksa.
+- Jangan menyalin tulisan dari situs lain.
+
+FORMAT HASIL:
+A. ANALISIS SEO SINGKAT
+- Search intent
+- Persona pembaca
+- Keyword utama
+- Keyword turunan
+- Keyword semantik/entitas
+- Sudut pembahasan dan keunggulan konten
+
+B. ELEMEN META
+- SEO title
+- Slug
+- H2
+- Seluruh H3
+- Seluruh H4
+- Meta Deskripsi dengan 155 karakter yang persuasif, natural, mengandung keyword fokus dan manfaat utama layanan.
+- Meta keyword dengan 155 karakter
+
+C. ARTIKEL LENGKAP
+- Tulis artikel siap terbit.
+- Hanya satu <H2> untuk pembahasan utama.
+- pembukaan yang menjawab intent.
+- <h3> untuk subtopik bila perlu.
+- paragraf yang mudah dibaca.
+- masalah atau kebutuhan pembaca.
+- akar masalah/konteks.
+- solusi.
+- manfaat.
+- tips atau langkah praktis.
+- CTA yang relevan.
+- FAQ yang relevan.
+- Paragraf penutup yang memiliki ajakan dengan soft selling.
+- Gunakan tabel dan daftar bila relevan.
+- Jangan ada catatan apapun selain konten artikel
+
+D. SCRIPT TOMBOL MENUJU LINK URL
+- Buatkan kode HTML tombol CTA siap tempel (copy-paste) yang mengarah ke setiap URL internal link berikut:
+${internalLinks}
+- Gunakan tag <a> dengan atribut href, target="_blank", rel="noopener noreferrer", dan aria-label yang deskriptif.
+- Beri styling inline (style="...") agar tombol langsung tampil rapi tanpa perlu CSS eksternal: padding, border-radius, background color yang kontras, warna teks putih, font-weight bold, text-decoration none, display inline-block, dan efek hover sederhana bila memungkinkan.
+- Sertakan teks tombol yang persuasif dan relevan dengan keyword utama "${keyword}".
+- Jika ada lebih dari satu URL, buat tombol terpisah untuk masing-masing URL dengan teks yang berbeda sesuai topik/anchor dari link tersebut.
+- Jangan menyisipkan script JavaScript berbahaya. Cukup HTML + inline CSS.
+- Tampilkan kode dalam blok kode (code block) agar mudah disalin.
+- Jangan ada catatan apapun selain kode tombol.
+
+
+SEKARANG KERJAKAN SECARA LENGKAP SESUAI DATA DAN KETENTUAN DI ATAS.`;
+
+      $("output").value = prompt;
+      $("counter").textContent = prompt.length.toLocaleString("id-ID") + " karakter";
+      $("formStatus").textContent = "Prompt SEO berhasil dibuat.";
+      localStorage.setItem("seoPromptForm", JSON.stringify(Object.fromEntries(fields.map(id => [id, $(id).value]))));
+    }
+
+    // ==================== COPY ====================
+    async function copyPrompt() {
+      if (!$("output").value.trim()) buildPrompt();
+      try {
+        await navigator.clipboard.writeText($("output").value);
+        $("formStatus").textContent = "Prompt berhasil disalin.";
+      } catch (error) {
+        $("output").select();
+        document.execCommand("copy");
+        $("formStatus").textContent = "Prompt berhasil disalin.";
+      }
+    }
+
+    // ==================== RESET ====================
+    function resetForm() {
+  if (!confirm("Kosongkan semua data formulir?")) return;
+  $("seoForm").reset();
+  fields.forEach(id => {
+    if ($(id).tagName !== "SELECT") $(id).value = "";
+  });
+  // Kembalikan default value catatan tambahan
+  $("notes").value = "URL internal link jangan dibuatkan link dalam artikel";
+  $("output").value = "";
+  $("counter").textContent = "0 karakter";
+  $("formStatus").textContent = "Formulir telah dikosongkan.";
+  localStorage.removeItem("seoPromptForm");
+}
+
+    // ==================== RESTORE DATA ====================
+    function restoreData() {
+      const saved = localStorage.getItem("seoPromptForm");
+      if (!saved) return;
+      try {
+        const data = JSON.parse(saved);
+        fields.forEach(id => {
+          if (typeof data[id] === "string") $(id).value = data[id];
+        });
+      } catch (error) {
+        localStorage.removeItem("seoPromptForm");
+      }
+    }
+
+    // ==================== SIDEBAR ====================
+    const sidebar = document.getElementById('sidebar');
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+
+    function toggleSidebar() {
+      sidebar.classList.toggle('open');
+      sidebarOverlay.classList.toggle('active');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('open');
+      sidebarOverlay.classList.remove('active');
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+    sidebarOverlay.addEventListener('click', closeSidebar);
+
+    sidebar.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        if (window.innerWidth <= 1024) {
+          closeSidebar();
+        }
+      });
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 1024) {
+        closeSidebar();
+      }
+    });
+
+    // ==================== EVENT LISTENERS ====================
+    document.getElementById('generateBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      buildPrompt();
+    });
+
+    document.getElementById('copyBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      copyPrompt();
+    });
+
+    document.getElementById('saveRiwayatBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      saveRiwayat();
+    });
+
+    document.getElementById('resetBtn').addEventListener('click', function(e) {
+      e.preventDefault();
+      resetForm();
+    });
+
+    $("output").addEventListener("click", event => event.target.select());
+
+    // ==================== INIT ====================
+$("seoForm").reset();
+fields.forEach(id => {
+  if ($(id).tagName !== "SELECT") $(id).value = "";
+});
+// Default value untuk catatan tambahan
+$("notes").value = "URL internal link jangan dibuatkan link dalam artikel";
+$("output").value = "";
+$("counter").textContent = "0 karakter";
+localStorage.removeItem("seoPromptForm");
+
+loadRiwayat();
+  </script>
+
+  <!-- ==================== PROTEKSI RINGAN (AMAN) ==================== -->
+
+  <!-- Anti Klik Kanan -->
+  <script>
+    document.addEventListener("contextmenu", e => e.preventDefault());
+  </script>
+
+  <!-- Block Keys -->
+  <script>
+    document.addEventListener("keydown", function (e) {
+      const k = e.key;
+      if (k === "F12") { e.preventDefault(); return false; }
+      if (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(k)) { e.preventDefault(); return false; }
+      if (e.ctrlKey && (k === "u" || k === "U")) { e.preventDefault(); return false; }
+      if (e.ctrlKey && (k === "s" || k === "S")) { e.preventDefault(); return false; }
+      if (e.ctrlKey && (k === "p" || k === "P")) { e.preventDefault(); return false; }
+    }, true);
+  </script>
+
+  <!-- Anti Drag -->
+  <script>
+    document.addEventListener("dragstart", e => e.preventDefault());
+  </script>
+
+  <!-- Deteksi DevTools (versi aman: desktop only, threshold besar, konfirmasi ganda) -->
+  <script>
+  (function () {
+    // Lewati sepenuhnya di perangkat mobile/tablet
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent);
+    if (isMobile) return;
+
+    // Lewati jika layar kecil (netbook / jendela kecil)
+    if (window.outerWidth < 900) return;
+
+    const THRESHOLD = 320; // px, cukup besar agar tidak false positive
+    let confirming = false;
+
+    setInterval(function () {
+      if (confirming) return;
+
+      const wDiff = window.outerWidth  - window.innerWidth;
+      const hDiff = window.outerHeight - window.innerHeight;
+
+      if (wDiff > THRESHOLD || hDiff > THRESHOLD) {
+        confirming = true;
+
+        // Cek ulang setelah 2 detik, pastikan bukan false alarm
+        setTimeout(function () {
+          const wDiff2 = window.outerWidth  - window.innerWidth;
+          const hDiff2 = window.outerHeight - window.innerHeight;
+
+          if (wDiff2 > THRESHOLD || hDiff2 > THRESHOLD) {
+            window.location.href = "about:blank";
+          } else {
+            confirming = false; // false alarm, reset
+          }
+        }, 2000);
+      }
+    }, 2000);
+  })();
+  </script>
+
+</body>
+</html>
