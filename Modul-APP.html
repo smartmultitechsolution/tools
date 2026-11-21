@@ -1,0 +1,1885 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generator Aplikasi Pembelajaran Interaktif v5.1 — Colorful Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+  /* ===== PALET WARNA COLORFUL ===== */
+  :root {
+    --p1: #6366f1;   /* indigo */
+    --p2: #8b5cf6;   /* violet */
+    --p3: #ec4899;   /* pink */
+    --p4: #f59e0b;   /* amber */
+    --p5: #10b981;   /* emerald */
+    --p6: #06b6d4;   /* cyan */
+    --p7: #ef4444;   /* red */
+    --p8: #3b82f6;   /* blue */
+
+    --bg: #f8fafc;
+    --bg-soft: #f1f5f9;
+    --card: #ffffff;
+    --text: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+
+    --grad-hero: linear-gradient(135deg, #6366f1 0%, #8b5cf6 45%, #ec4899 100%);
+    --grad-card1: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    --grad-card2: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    --grad-card3: linear-gradient(135deg, #fef3c7, #fde68a);
+    --grad-card4: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    --grad-card5: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+    --grad-card6: linear-gradient(135deg, #cffafe, #a5f3fc);
+    --grad-card7: linear-gradient(135deg, #fee2e2, #fecaca);
+    --grad-card8: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+
+    --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.12);
+    --shadow-color: 0 8px 24px rgba(99,102,241,0.25);
+  }
+  body.dark {
+    --bg: #0b1220;
+    --bg-soft: #111827;
+    --card: #1e293b;
+    --text: #f1f5f9;
+    --muted: #94a3b8;
+    --border: #334155;
+
+    --grad-hero: linear-gradient(135deg, #4338ca 0%, #6d28d9 45%, #be185d 100%);
+    --grad-card1: linear-gradient(135deg, #1e3a8a, #1e40af);
+    --grad-card2: linear-gradient(135deg, #14532d, #166534);
+    --grad-card3: linear-gradient(135deg, #78350f, #92400e);
+    --grad-card4: linear-gradient(135deg, #831843, #9d174d);
+    --grad-card5: linear-gradient(135deg, #312e81, #3730a3);
+    --grad-card6: linear-gradient(135deg, #164e63, #155e75);
+    --grad-card7: linear-gradient(135deg, #7f1d1d, #991b1b);
+    --grad-card8: linear-gradient(135deg, #581c87, #6b21a8);
+
+    --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+    --shadow-lg: 0 12px 32px rgba(0,0,0,0.55);
+    --shadow-color: 0 8px 24px rgba(139,92,246,0.35);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', 'Segoe UI', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    transition: background 0.3s, color 0.3s;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Dekorasi background blob */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(139,92,246,0.12), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; left: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(236,72,153,0.10), transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== HEADER HERO ===== */
+  header.hero {
+    background: var(--grad-hero);
+    color: white;
+    padding: 30px 24px 34px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 0 28px 28px;
+    box-shadow: var(--shadow-color);
+  }
+  header.hero::before {
+    content: '';
+    position: absolute;
+    top: 20%; left: 10%;
+    width: 180px; height: 180px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  header.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: 15%;
+    width: 240px; height: 240px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1160px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .hero-text h1 {
+    font-size: clamp(22px, 3.2vw, 30px);
+    margin: 0 0 6px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .hero-text h1 i {
+    background: rgba(255,255,255,0.18);
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: inline-grid; place-items: center;
+    font-size: 22px;
+  }
+  .hero-text p { margin: 0; opacity: 0.92; font-size: 14px; }
+  .hero-actions { display: flex; gap: 10px; align-items: center; }
+  .hero-btn {
+    background: rgba(255,255,255,0.18);
+    border: 1px solid rgba(255,255,255,0.35);
+    color: white;
+    padding: 10px 14px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    display: grid; place-items: center;
+    width: 42px; height: 42px;
+    transition: 0.2s;
+  }
+  .hero-btn:hover { background: rgba(255,255,255,0.32); transform: translateY(-2px); }
+
+  /* ===== TAB BAR (pill style) ===== */
+  .tab-wrap {
+    position: sticky; top: 0;
+    background: var(--bg);
+    z-index: 30;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(8px);
+    background: color-mix(in srgb, var(--bg) 88%, transparent);
+  }
+  .tab-bar {
+    display: flex; gap: 8px; overflow-x: auto;
+    max-width: 1160px; margin: 0 auto;
+    padding-bottom: 2px;
+    scrollbar-width: thin;
+  }
+  .tab-bar::-webkit-scrollbar { height: 4px; }
+  .tab-bar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  .main-tab {
+    border: 1.5px solid var(--border);
+    background: var(--card);
+    color: var(--text);
+    padding: 10px 18px;
+    border-radius: 999px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 600;
+    font-size: 13.5px;
+    display: flex; align-items: center; gap: 8px;
+    transition: 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  .main-tab i {
+    width: 20px; height: 20px;
+    border-radius: 6px;
+    display: grid; place-items: center;
+    font-size: 11px;
+    background: var(--bg-soft);
+    transition: 0.2s;
+  }
+  .main-tab:hover { transform: translateY(-1px); border-color: var(--p2); }
+  .main-tab.active {
+    background: var(--grad-hero);
+    color: white;
+    border-color: transparent;
+    box-shadow: var(--shadow-color);
+  }
+  .main-tab.active i { background: rgba(255,255,255,0.22); color: white; }
+
+  main {
+    max-width: 1160px;
+    margin: auto;
+    padding: 24px 20px 80px;
+    position: relative;
+    z-index: 1;
+  }
+  .panel { display: none; animation: fadeIn 0.3s ease; }
+  .panel.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ===== CARD ===== */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: var(--shadow-md);
+    transition: 0.3s;
+  }
+  .card:hover { box-shadow: var(--shadow-lg); }
+  .card h2 {
+    color: var(--text);
+    margin: 0 0 12px;
+    font-size: 19px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    letter-spacing: -0.3px;
+  }
+  .card h2 i {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: grid; place-items: center;
+    font-size: 16px;
+    background: var(--grad-card5);
+    color: var(--p1);
+  }
+  .card h3 {
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 700;
+    margin: 20px 0 10px;
+    display: flex; align-items: center; gap: 8px;
+  }
+
+  /* ===== HERO GREETING ===== */
+  .greeting-card {
+    background: var(--grad-hero);
+    color: white;
+    padding: 28px;
+    border-radius: 20px;
+    margin-bottom: 22px;
+    box-shadow: var(--shadow-color);
+    position: relative;
+    overflow: hidden;
+  }
+  .greeting-card::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 200px; height: 200px;
+    background: rgba(255,255,255,0.10);
+    border-radius: 50%;
+  }
+  .greeting-card::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: 30%;
+    width: 220px; height: 220px;
+    background: rgba(255,255,255,0.07);
+    border-radius: 50%;
+  }
+  .greeting-card > * { position: relative; z-index: 1; }
+  .greeting-card h2 {
+    color: white; font-size: 24px; margin: 0 0 6px;
+    font-weight: 800; display: block;
+  }
+  .greeting-card h2 i { display: none; }
+  .greeting-card p { margin: 0; font-size: 14.5px; opacity: 0.94; }
+  .greeting-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .stat-mini {
+    background: rgba(255,255,255,0.16);
+    backdrop-filter: blur(6px);
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.22);
+  }
+  .stat-mini .label { font-size: 11.5px; opacity: 0.9; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  .stat-mini .val { font-size: 24px; font-weight: 800; margin-top: 4px; }
+
+  /* ===== STAT CARDS GRID ===== */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+  .stat-card {
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: 0.3s;
+    color: var(--text);
+  }
+  .stat-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.35);
+  }
+  .stat-card .icon-wrap {
+    width: 46px; height: 46px;
+    border-radius: 12px;
+    display: grid; place-items: center;
+    font-size: 20px;
+    background: rgba(255,255,255,0.55);
+    color: var(--text);
+    margin-bottom: 10px;
+    position: relative; z-index: 1;
+  }
+  .stat-card .label { font-size: 12.5px; font-weight: 600; opacity: 0.85; position: relative; z-index: 1; }
+  .stat-card .val { font-size: 26px; font-weight: 800; margin-top: 4px; position: relative; z-index: 1; letter-spacing: -0.5px; }
+  .stat-card .sub { font-size: 12px; opacity: 0.75; margin-top: 4px; position: relative; z-index: 1; }
+  .stat-card.c1 { background: var(--grad-card1); }
+  .stat-card.c2 { background: var(--grad-card2); }
+  .stat-card.c3 { background: var(--grad-card3); }
+  .stat-card.c4 { background: var(--grad-card4); }
+  .stat-card.c5 { background: var(--grad-card5); }
+  .stat-card.c6 { background: var(--grad-card6); }
+  .stat-card.c7 { background: var(--grad-card7); }
+  .stat-card.c8 { background: var(--grad-card8); }
+
+  /* ===== FORM ===== */
+  label { display: block; font-weight: 700; margin: 16px 0 6px; font-size: 13.5px; color: var(--text); }
+  .hint { font-size: 12px; color: var(--muted); font-weight: 500; margin-left: 4px; }
+  input[type="text"], input[type="password"], select, textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    font: inherit;
+    background: var(--bg-soft);
+    color: var(--text);
+    transition: 0.2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--p2);
+    background: var(--card);
+    box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
+  }
+  textarea { min-height: 130px; resize: vertical; font-family: 'JetBrains Mono', monospace; font-size: 13px; }
+
+  /* ===== PANCA & DPL GRID ===== */
+  .panca-grid, .dpl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 9px; margin-top: 8px;
+  }
+  .panca-item, .dpl-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 13px;
+    border: 1.5px solid var(--border);
+    border-radius: 11px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    background: var(--bg-soft);
+    transition: 0.2s;
+  }
+  .panca-item:hover, .dpl-item:hover {
+    transform: translateY(-1px);
+    background: var(--card);
+  }
+  .panca-item input, .dpl-item input { accent-color: var(--p2); width: 16px; height: 16px; }
+  .panca-item.checked {
+    background: var(--grad-card5);
+    border-color: var(--p1);
+    color: var(--p1);
+    font-weight: 700;
+  }
+  .dpl-item.checked {
+    background: var(--grad-card2);
+    border-color: var(--p5);
+    color: #065f46;
+    font-weight: 700;
+  }
+  .dark .dpl-item.checked { color: #6ee7b7; }
+  .dark .panca-item.checked { color: #c7d2fe; }
+
+  /* ===== BUTTONS ===== */
+  .btn-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+  button {
+    cursor: pointer; font: inherit;
+    border: 0; padding: 11px 20px;
+    border-radius: 11px;
+    font-weight: 700; font-size: 13.5px;
+    transition: 0.2s;
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    box-shadow: var(--shadow-sm);
+  }
+  button:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  button:active { transform: translateY(0); }
+  .btn-primary { background: var(--grad-hero); color: white; }
+  .btn-primary:hover { filter: brightness(1.08); box-shadow: var(--shadow-color); }
+  .btn-secondary { background: var(--bg-soft); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--p2); color: var(--p2); background: var(--card); }
+  .btn-ai { background: linear-gradient(135deg, #f59e0b, #fbbf24); color: #451a03; }
+  .btn-ai:hover { filter: brightness(1.05); }
+  .btn-danger { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+  .btn-sm { padding: 8px 14px; font-size: 12.5px; }
+
+  /* ===== PREVIEW PROMPT ===== */
+  .preview {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 14px;
+    padding: 18px;
+    font-family: 'JetBrains Mono', 'Courier New', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    max-height: 460px;
+    overflow-y: auto;
+    box-shadow: var(--shadow-md);
+    border: 1px solid #1e293b;
+  }
+  .preview::-webkit-scrollbar { width: 8px; }
+  .preview::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  .preview .slot { color: #fbbf24; font-weight: 700; }
+  .preview .dpl-slot { color: #34d399; font-weight: 700; }
+  .preview .cp-slot { color: #f472b6; font-weight: 700; }
+
+  /* ===== STATUS ===== */
+  .status {
+    margin-top: 12px;
+    padding: 11px 15px;
+    border-radius: 11px;
+    font-size: 13px;
+    display: none;
+    font-weight: 500;
+  }
+  .status.ok { display: block; background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #14532d; border-left: 4px solid var(--p5); }
+  .status.warn { display: block; background: linear-gradient(135deg, #fef3c7, #fde68a); color: #78350f; border-left: 4px solid var(--p4); }
+  .status.err { display: block; background: linear-gradient(135deg, #fee2e2, #fecaca); color: #7f1d1d; border-left: 4px solid var(--p7); }
+  .dark .status.ok { background: linear-gradient(135deg, #14532d, #166534); color: #bbf7d0; }
+  .dark .status.warn { background: linear-gradient(135deg, #78350f, #92400e); color: #fde68a; }
+  .dark .status.err { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: #fecaca; }
+
+  /* ===== PANDUAN CARD ===== */
+  .panduan {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    border-radius: 16px;
+    padding: 18px 22px;
+    font-size: 13.5px;
+    margin-bottom: 20px;
+    border-left: 5px solid var(--p4);
+    color: #78350f;
+    box-shadow: var(--shadow-md);
+  }
+  .panduan b { color: #451a03; }
+  .panduan ol { margin: 8px 0 0; padding-left: 22px; }
+  .panduan li { margin-bottom: 6px; }
+  .dark .panduan { background: linear-gradient(135deg, #78350f, #92400e); color: #fde68a; }
+  .dark .panduan b { color: #fef3c7; }
+
+  /* ===== AI LINKS ===== */
+  .ai-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+  .ai-links a {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 16px;
+    border-radius: 12px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 13px;
+    transition: 0.2s;
+  }
+  .ai-links a:hover {
+    transform: translateY(-2px);
+    border-color: var(--p2);
+    color: var(--p2);
+    box-shadow: var(--shadow-md);
+    background: var(--card);
+  }
+  .ai-links a:nth-child(1):hover { border-color: #10a37f; color: #10a37f; }
+  .ai-links a:nth-child(2):hover { border-color: #d97706; color: #d97706; }
+  .ai-links a:nth-child(3):hover { border-color: #4285f4; color: #4285f4; }
+
+  /* ===== PRESET CHIPS ===== */
+  .preset-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .preset-chip {
+    background: var(--card);
+    border: 1.5px solid var(--border);
+    padding: 10px 15px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--text);
+    display: inline-flex; align-items: center; gap: 8px;
+    box-shadow: var(--shadow-sm);
+    transition: 0.2s;
+  }
+  .preset-chip:hover {
+    transform: translateY(-2px);
+    background: var(--grad-hero);
+    color: white;
+    border-color: transparent;
+    box-shadow: var(--shadow-color);
+  }
+  .preset-chip i { font-size: 14px; }
+
+  /* ===== HISTORY ===== */
+  .history-item {
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    background: var(--bg-soft);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    font-size: 13.5px;
+    transition: 0.2s;
+  }
+  .history-item:hover { border-color: var(--p2); background: var(--card); }
+  .history-item .meta { color: var(--muted); font-size: 12px; display: block; margin-top: 4px; }
+  .history-item .actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+  /* ===== GALERI ===== */
+  .galeri-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+  }
+  .galeri-card {
+    border: 1.5px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    cursor: pointer;
+    background: var(--card);
+    transition: 0.3s;
+    box-shadow: var(--shadow-sm);
+  }
+  .galeri-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-lg);
+    border-color: var(--p2);
+  }
+  .galeri-thumb {
+    height: 130px;
+    display: grid; place-items: center;
+    font-size: 46px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+  }
+  .galeri-thumb::before {
+    content: '';
+    position: absolute;
+    top: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+  }
+  .galeri-thumb i { position: relative; z-index: 1; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2)); }
+  .galeri-body { padding: 16px 18px; }
+  .galeri-body h4 { margin: 0 0 5px; color: var(--text); font-size: 15px; font-weight: 800; }
+  .galeri-body p { margin: 0; font-size: 12.5px; color: var(--muted); line-height: 1.5; }
+
+  /* ===== MODAL ===== */
+  .modal-bg {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(15,23,42,0.7);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  .modal-bg.show { display: flex; align-items: flex-start; justify-content: center; animation: fadeIn 0.2s; }
+  .modal {
+    background: var(--card);
+    border-radius: 20px;
+    max-width: 900px;
+    width: 100%;
+    padding: 26px;
+    margin-top: 40px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+  }
+  .modal h3 {
+    margin: 0 0 14px;
+    font-size: 20px;
+    font-weight: 800;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .modal .close {
+    float: right;
+    background: var(--bg-soft);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    border: 1.5px solid var(--border);
+  }
+  .modal .close:hover { background: var(--p7); color: white; border-color: transparent; }
+  .iframe-wrap {
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 16px;
+    background: white;
+    box-shadow: var(--shadow-md);
+  }
+  iframe { width: 100%; height: 520px; border: 0; display: block; }
+
+  /* ===== CHECKLIST ===== */
+  .checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 8px;
+    margin-top: 14px;
+    font-size: 13px;
+  }
+  .checklist .item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 9px 12px;
+    border-radius: 10px;
+    border: 1.5px solid var(--border);
+    font-weight: 500;
+  }
+  .checklist .item.ok { background: linear-gradient(135deg, #dcfce7, #bbf7d0); color: #14532d; border-color: #86efac; }
+  .checklist .item.no { background: linear-gradient(135deg, #fee2e2, #fecaca); color: #7f1d1d; border-color: #fca5a5; }
+  .dark .checklist .item.ok { background: linear-gradient(135deg, #14532d, #166534); color: #bbf7d0; border-color: var(--p5); }
+  .dark .checklist .item.no { background: linear-gradient(135deg, #7f1d1d, #991b1b); color: #fecaca; border-color: var(--p7); }
+
+  .kode-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--grad-card5); color: var(--p1);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    color: var(--muted);
+    font-size: 12.5px;
+    border-top: 1px solid var(--border);
+    margin-top: 30px;
+    position: relative;
+    z-index: 1;
+  }
+  footer b {
+    background: var(--grad-hero);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+  }
+
+  /* ===== OVERLAY ===== */
+  #devtoolsOverlay, #printOverlay {
+    position: fixed; inset: 0; z-index: 99999;
+    display: none; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; padding: 30px;
+  }
+  #devtoolsOverlay { background: #0b1220; color: #e5e7eb; }
+  #printOverlay { background: #000; color: #fff; font-size: 20px; }
+  #devtoolsOverlay h2 { color: #f4b942; margin: 0 0 12px; font-size: 22px; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    main { padding: 16px 12px 60px; }
+    .card { padding: 18px; border-radius: 14px; }
+    .btn-row { flex-direction: column; }
+    .btn-row button { width: 100%; }
+    .history-item { flex-direction: column; align-items: flex-start; }
+    .history-item .actions { width: 100%; }
+    .history-item .actions button { flex: 1; }
+    header.hero { padding: 22px 16px 26px; border-radius: 0 0 20px 20px; }
+    .hero-text h1 { font-size: 20px; }
+    .hero-text h1 i { width: 36px; height: 36px; font-size: 17px; }
+    .greeting-card { padding: 22px; }
+    .greeting-card h2 { font-size: 20px; }
+    .tab-wrap { padding: 10px 12px; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body.print-blocked * { visibility: hidden !important; }
+    body.print-blocked::after {
+      content: "Pencetakan dibatasi pada halaman ini.";
+      visibility: visible !important;
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; background: #fff; color: #000;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO HEADER ===== -->
+<header class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1><i class="fa-solid fa-wand-magic-sparkles"></i> Generator Aplikasi v5.1</h1>
+      <p>Colorful Dashboard • CP/TP/ATP • DPL • Pembelajaran Mendalam • Diferensiasi • Password Siswa</p>
+    </div>
+    <div class="hero-actions">
+      <button class="hero-btn" onclick="toggleDark()" id="darkBtn" title="Mode gelap">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== TAB BAR ===== -->
+<div class="tab-wrap">
+  <div class="tab-bar">
+    <button class="main-tab active" onclick="bukaPanel(0)"><i class="fa-solid fa-puzzle-piece"></i> Buat Prompt</button>
+    <button class="main-tab" onclick="bukaPanel(1)"><i class="fa-solid fa-lightbulb"></i> Preset Topik</button>
+    <button class="main-tab" onclick="bukaPanel(2)"><i class="fa-solid fa-images"></i> Galeri</button>
+    <button class="main-tab" onclick="bukaPanel(3)"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat</button>
+    <button class="main-tab" onclick="bukaPanel(4)"><i class="fa-solid fa-eye"></i> Preview & Unduh</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ PANEL 0: BUAT PROMPT ============ -->
+  <div class="panel active">
+
+    <!-- Dashboard stat cards -->
+    <div class="stat-grid">
+      <div class="stat-card c1">
+        <div class="icon-wrap"><i class="fa-solid fa-bullseye"></i></div>
+        <div class="label">Capaian Pembelajaran</div>
+        <div class="val">CP</div>
+        <div class="sub">Fase E — SMA/SMK</div>
+      </div>
+      <div class="stat-card c2">
+        <div class="icon-wrap"><i class="fa-solid fa-list-check"></i></div>
+        <div class="label">Tujuan Pembelajaran</div>
+        <div class="val">TP</div>
+        <div class="sub">Per sub-bab</div>
+      </div>
+      <div class="stat-card c3">
+        <div class="icon-wrap"><i class="fa-solid fa-route"></i></div>
+        <div class="label">Alur Tujuan</div>
+        <div class="val">ATP</div>
+        <div class="sub">Runtut & bermakna</div>
+      </div>
+      <div class="stat-card c4">
+        <div class="icon-wrap"><i class="fa-solid fa-award"></i></div>
+        <div class="label">Dimensi Profil</div>
+        <div class="val">8 DPL</div>
+        <div class="sub">Permendikdasmen 10/2025</div>
+      </div>
+    </div>
+
+    <div class="panduan">
+      <b><i class="fa-solid fa-clipboard-list"></i> Cara pakai v5.1:</b>
+      <ol>
+        <li>Isi form bertahap: identitas kurikulum → CP/TP/ATP → DPL → Pembelajaran Mendalam.</li>
+        <li>Pilih maksimal 3 Panca Cinta & 3 Dimensi Profil Lulusan.</li>
+        <li>Pilih prinsip Pembelajaran Mendalam (berkesadaran, bermakna, menggembirakan).</li>
+        <li>Isi <b>Password Siswa</b> — dipakai siswa untuk login di aplikasi hasil.</li>
+        <li>Klik <b>Buat Prompt</b> → salin → tempel ke AI → salin HTML hasilnya ke tab <b>Preview & Unduh</b>.</li>
+      </ol>
+    </div>
+
+    <!-- Akses Guru -->
+    <div class="card">
+      <h2><i class="fa-solid fa-key"></i> Akses Guru</h2>
+      <p style="font-size:13px;color:var(--muted);margin-top:0;">Masukkan kode akses untuk membuka form lengkap.</p>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <input type="password" id="kodeInput" placeholder="Masukkan kode akses guru" style="flex:1; min-width:220px;">
+        <button class="btn-primary" onclick="cekKode()"><i class="fa-solid fa-unlock"></i> Buka Form</button>
+      </div>
+      <div class="status" id="statusKode"></div>
+    </div>
+
+    <div id="formArea" style="display:none;">
+
+      <!-- Bagian 1: Identitas Kurikulum -->
+      <div class="card">
+        <h2><i class="fa-solid fa-id-badge"></i> 1. Identitas & Kurikulum</h2>
+
+        <label for="mapel">Mata Pelajaran</label>
+        <input type="text" id="mapel" placeholder="Contoh: Matematika / Bahasa Inggris">
+
+        <label for="jenjang">Jenjang & Kelas</label>
+        <input type="text" id="jenjang" value="SMK Kelas 10">
+
+        <label for="fase">Fase</label>
+        <select id="fase">
+          <option value="Fase E (Kelas 10)">Fase E (Kelas 10)</option>
+          <option value="Fase F (Kelas 11-12)">Fase F (Kelas 11–12)</option>
+        </select>
+
+        <label for="konsentrasi">Konsentrasi Keahlian <span class="hint">(khusus SMK)</span></label>
+        <input type="text" id="konsentrasi" placeholder="Contoh: Teknik Komputer dan Jaringan">
+
+        <label for="konteks">Konteks Sekolah <span class="hint">(opsional)</span></label>
+        <input type="text" id="konteks" placeholder="Contoh: SMK di kawasan industri">
+      </div>
+
+      <!-- Bagian 2: CP/TP/ATP -->
+      <div class="card">
+        <h2><i class="fa-solid fa-bullseye"></i> 2. CP / TP / ATP</h2>
+
+        <label for="cp">Capaian Pembelajaran (CP) <span class="hint">(opsional — AI melengkapi jika kosong)</span></label>
+        <textarea id="cp" style="min-height: 80px; font-family: inherit; font-size: 14px;" placeholder="Contoh: Peserta didik mampu memahami pola bilangan, barisan, dan deret..."></textarea>
+
+        <label for="judulBab">Judul Bab</label>
+        <input type="text" id="judulBab" placeholder="Contoh: Bab 1 Barisan dan Deret">
+
+        <label for="subBab">Daftar Sub Bab <span class="hint">(Tulis satu per baris)</span></label>
+        <textarea id="subBab" style="min-height: 90px; font-family: inherit; font-size: 14px;" placeholder="A. Barisan Aritmatika&#10;B. Barisan Geometri&#10;C. Aplikasi Barisan dan Deret"></textarea>
+
+        <label for="tp">Tujuan Pembelajaran (TP) <span class="hint">(opsional — boleh kosong, AI menyusun)</span></label>
+        <textarea id="tp" style="min-height: 70px; font-family: inherit; font-size: 14px;" placeholder="Contoh:&#10;1. Menjelaskan konsep barisan aritmatika&#10;2. Menghitung suku ke-n..."></textarea>
+      </div>
+
+      <!-- Bagian 3: DPL & Panca Cinta -->
+      <div class="card">
+        <h2><i class="fa-solid fa-award"></i> 3. Dimensi Profil Lulusan & Panca Cinta</h2>
+
+        <label>Dimensi Profil Lulusan <span class="hint">(maks 3 — Permendikdasmen No. 10/2025)</span></label>
+        <div class="dpl-grid" id="dplGrid">
+          <label class="dpl-item"><input type="checkbox" value="Keimanan dan Ketakwaan terhadap Tuhan Yang Maha Esa"> Keimanan &amp; Ketakwaan</label>
+          <label class="dpl-item"><input type="checkbox" value="Kewargaan"> Kewargaan</label>
+          <label class="dpl-item"><input type="checkbox" value="Penalaran Kritis"> Penalaran Kritis</label>
+          <label class="dpl-item"><input type="checkbox" value="Kreativitas"> Kreativitas</label>
+          <label class="dpl-item"><input type="checkbox" value="Kolaborasi"> Kolaborasi</label>
+          <label class="dpl-item"><input type="checkbox" value="Kemandirian"> Kemandirian</label>
+          <label class="dpl-item"><input type="checkbox" value="Kesehatan"> Kesehatan</label>
+          <label class="dpl-item"><input type="checkbox" value="Komunikasi"> Komunikasi</label>
+        </div>
+
+        <label style="margin-top:22px;">Panca Cinta <span class="hint">(maks 3 — KBC Kemenag)</span></label>
+        <div class="panca-grid" id="pancaGrid">
+          <label class="panca-item"><input type="checkbox" value="Cinta Allah SWT dan Rasul-Nya"> Cinta Allah SWT dan Rasul-Nya</label>
+          <label class="panca-item"><input type="checkbox" value="Cinta Ilmu"> Cinta Ilmu</label>
+          <label class="panca-item"><input type="checkbox" value="Cinta Lingkungan"> Cinta Lingkungan</label>
+          <label class="panca-item"><input type="checkbox" value="Cinta Diri dan Sesama Manusia"> Cinta Diri dan Sesama Manusia</label>
+          <label class="panca-item"><input type="checkbox" value="Cinta Tanah Air"> Cinta Tanah Air</label>
+        </div>
+      </div>
+
+      <!-- Bagian 4: Pembelajaran Mendalam -->
+      <div class="card">
+        <h2><i class="fa-solid fa-water"></i> 4. Pembelajaran Mendalam</h2>
+        <p style="font-size:13px;color:var(--muted);margin-top:0;">Pilih prinsip yang ingin ditekankan dalam aplikasi.</p>
+
+        <label>Prinsip <span class="hint">(boleh pilih lebih dari satu)</span></label>
+        <div class="panca-grid" id="pmGrid">
+          <label class="panca-item"><input type="checkbox" value="Berkesadaran (mindful)" checked> Berkesadaran</label>
+          <label class="panca-item"><input type="checkbox" value="Bermakna (meaningful)" checked> Bermakna</label>
+          <label class="panca-item"><input type="checkbox" value="Menggembirakan (joyful)" checked> Menggembirakan</label>
+        </div>
+
+        <label style="margin-top:20px;">Pengalaman Belajar <span class="hint">(pilih pengalaman yang ingin dibangun)</span></label>
+        <div class="panca-grid" id="pengalamanGrid">
+          <label class="panca-item"><input type="checkbox" value="Memahami (understand)" checked> Memahami</label>
+          <label class="panca-item"><input type="checkbox" value="Mengaplikasi (apply)" checked> Mengaplikasi</label>
+          <label class="panca-item"><input type="checkbox" value="Merefleksi (reflect)" checked> Merefleksi</label>
+        </div>
+      </div>
+
+      <!-- Bagian 5: Asesmen & Diferensiasi -->
+      <div class="card">
+        <h2><i class="fa-solid fa-chart-simple"></i> 5. Asesmen & Diferensiasi</h2>
+
+        <label>Jenis Asesmen</label>
+        <div class="panca-grid" id="asesmenGrid">
+          <label class="panca-item"><input type="checkbox" value="Diagnostik" checked> Diagnostik</label>
+          <label class="panca-item"><input type="checkbox" value="Formatif" checked> Formatif</label>
+          <label class="panca-item"><input type="checkbox" value="Sumatif" checked> Sumatif</label>
+        </div>
+
+        <label style="margin-top:20px;">Diferensiasi <span class="hint">(pilih minimal 1)</span></label>
+        <div class="panca-grid" id="diferensiasiGrid">
+          <label class="panca-item"><input type="checkbox" value="Kesiapan belajar (readiness)" checked> Kesiapan Belajar</label>
+          <label class="panca-item"><input type="checkbox" value="Minat (interest)"> Minat</label>
+          <label class="panca-item"><input type="checkbox" value="Profil belajar (learning profile)"> Profil Belajar</label>
+        </div>
+      </div>
+
+      <!-- Bagian 6: Identitas Sekolah -->
+      <div class="card">
+        <h2><i class="fa-solid fa-school"></i> 6. Identitas Sekolah & Guru</h2>
+
+        <label for="sekolah">Nama Sekolah</label>
+        <input type="text" id="sekolah" placeholder="Contoh: SMK KARYA BANGSA">
+
+        <label for="guru">Nama Guru Pengajar</label>
+        <input type="text" id="guru" placeholder="Contoh: Aditya Kusumawardani, S.Pd.">
+
+        <label for="tahun">Tahun Pelajaran</label>
+        <input type="text" id="tahun" value="2026/2027">
+
+        <label for="passSiswa">Password Siswa <span class="hint">(wajib diisi siswa saat login di aplikasi hasil)</span></label>
+        <input type="text" id="passSiswa" placeholder="Contoh: SISWA2026">
+
+        <div class="btn-row">
+          <button class="btn-primary" onclick="buatPrompt()"><i class="fa-solid fa-bolt"></i> Buat Prompt</button>
+          <button class="btn-secondary" onclick="resetForm()"><i class="fa-solid fa-rotate-right"></i> Reset</button>
+          <button class="btn-secondary" onclick="acakTopik()"><i class="fa-solid fa-dice"></i> Acak Topik</button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+
+      <!-- Bagian 7: Preview Prompt -->
+      <div class="card">
+        <h2><i class="fa-solid fa-eye"></i> Preview Prompt</h2>
+        <p style="font-size:12.5px;color:var(--muted);margin-top:0;">
+          <span style="color:#fbbf24;font-weight:700;">Kuning</span> = isian umum,
+          <span style="color:#34d399;font-weight:700;">Hijau</span> = DPL,
+          <span style="color:#f472b6;font-weight:700;">Pink</span> = CP.
+        </p>
+        <div class="preview" id="preview">Isi form di atas, lalu klik "Buat Prompt".</div>
+        <div class="btn-row">
+          <button class="btn-ai" onclick="salinPrompt()"><i class="fa-solid fa-copy"></i> Salin Prompt</button>
+          <button class="btn-secondary" onclick="unduhPrompt()"><i class="fa-solid fa-download"></i> Unduh (.txt)</button>
+          <button class="btn-secondary" onclick="simpanRiwayat()"><i class="fa-solid fa-clock-rotate-left"></i> Simpan Riwayat</button>
+        </div>
+
+        <h3 style="margin-top:24px;"><i class="fa-solid fa-globe"></i> Buka AI</h3>
+        <div class="ai-links">
+          <a href="https://chat.openai.com" target="_blank" rel="noopener"><i class="fa-solid fa-robot"></i> ChatGPT</a>
+          <a href="https://claude.ai" target="_blank" rel="noopener"><i class="fa-solid fa-brain"></i> Claude</a>
+          <a href="https://gemini.google.com" target="_blank" rel="noopener"><i class="fa-solid fa-wand-magic-sparkles"></i> Gemini</a>
+          <a href="https://copilot.microsoft.com" target="_blank" rel="noopener"><i class="fa-brands fa-microsoft"></i> Copilot</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 1: PRESET ============ -->
+  <div class="panel">
+    <div class="card">
+      <h2><i class="fa-solid fa-lightbulb"></i> Preset Topik</h2>
+      <p style="font-size:13px;color:var(--muted);">Klik preset untuk mengisi form otomatis.</p>
+      <div class="preset-row" id="presetRow"></div>
+      <div class="btn-row" style="margin-top:18px;">
+        <button class="btn-secondary btn-sm" onclick="exportPreset()"><i class="fa-solid fa-file-export"></i> Export (.json)</button>
+        <button class="btn-secondary btn-sm" onclick="document.getElementById('importPreset').click()"><i class="fa-solid fa-file-import"></i> Import (.json)</button>
+        <input type="file" id="importPreset" accept=".json" style="display:none;" onchange="importPresetFile(event)">
+      </div>
+      <div class="status" id="statusPreset"></div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 2: GALERI ============ -->
+  <div class="panel">
+    <div class="card">
+      <h2><i class="fa-solid fa-images"></i> Galeri Contoh</h2>
+      <p style="font-size:13px;color:var(--muted);">Klik kartu untuk melihat ide dan memakainya.</p>
+      <div class="galeri-grid" id="galeriGrid"></div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 3: RIWAYAT ============ -->
+  <div class="panel">
+    <div class="card">
+      <h2><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Prompt</h2>
+      <p style="font-size:13px;color:var(--muted);">Tersimpan di browser ini. Bisa dipakai ulang kapan saja.</p>
+      <div id="historyList"><p style="color:var(--muted);">Belum ada riwayat.</p></div>
+      <div class="btn-row">
+        <button class="btn-danger btn-sm" onclick="hapusRiwayat()"><i class="fa-solid fa-trash"></i> Hapus Semua</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ PANEL 4: PREVIEW HTML ============ -->
+  <div class="panel">
+    <div class="card">
+      <h2><i class="fa-solid fa-eye"></i> Tempel Kode HTML Hasil AI</h2>
+      <p style="font-size:13px;color:var(--muted);">Salin HTML dari AI → tempel di sini → validasi → preview → unduh.</p>
+      <textarea id="htmlInput" placeholder="Tempel kode HTML lengkap di sini..."></textarea>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="validasiHTML()"><i class="fa-solid fa-check"></i> Validasi & Preview</button>
+        <button class="btn-secondary" onclick="bersihkanHTML()"><i class="fa-solid fa-broom"></i> Bersihkan</button>
+        <button class="btn-ai" onclick="unduhHTML()"><i class="fa-solid fa-download"></i> Unduh .html</button>
+      </div>
+      <div class="status" id="statusHTML"></div>
+      <div id="checklistArea" style="display:none;">
+        <h3 style="margin-top:20px;"><i class="fa-solid fa-list-check"></i> Checklist Validasi</h3>
+        <div class="checklist" id="checklist"></div>
+      </div>
+    </div>
+    <div class="card" id="previewCard" style="display:none;">
+      <h2><i class="fa-solid fa-display"></i> Live Preview</h2>
+      <div class="iframe-wrap">
+        <iframe id="previewFrame" sandbox="allow-scripts allow-forms allow-modals allow-same-origin"></iframe>
+      </div>
+      <div class="btn-row">
+        <button class="btn-secondary" onclick="bukaTabBaru()"><i class="fa-solid fa-arrow-up-right-from-square"></i> Tab Baru</button>
+        <button class="btn-secondary" onclick="bukaModalPreview()"><i class="fa-solid fa-expand"></i> Modal</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <b>Generator Aplikasi Pembelajaran v5.1</b> • Colorful Dashboard • Digitalisasi • SMK KARYA BANGSA
+</footer>
+
+<!-- MODAL GALERI -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)tutupModal()">
+  <div class="modal">
+    <button class="close" onclick="tutupModal()"><i class="fa-solid fa-xmark"></i> Tutup</button>
+    <h3 id="modalTitle">Judul</h3>
+    <p id="modalBody" style="font-size:14px;"></p>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="pakaiIdeModal()"><i class="fa-solid fa-check"></i> Pakai Ide Ini</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PREVIEW -->
+<div class="modal-bg" id="modalPreviewBg" onclick="if(event.target===this)tutupModalPreview()">
+  <div class="modal" style="max-width:1000px;">
+    <button class="close" onclick="tutupModalPreview()"><i class="fa-solid fa-xmark"></i> Tutup</button>
+    <h3><i class="fa-solid fa-display"></i> Preview Aplikasi</h3>
+    <div class="iframe-wrap">
+      <iframe id="modalPreviewFrame" sandbox="allow-scripts allow-forms allow-modals allow-same-origin" style="height:600px;"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- OVERLAY -->
+<div id="devtoolsOverlay">
+  <h2>⚠ Akses Dibatasi</h2>
+  <p>DevTools terdeteksi.<br>Tutup DevTools untuk melanjutkan.</p>
+</div>
+<div id="printOverlay">🖨 Pencetakan halaman ini dibatasi.</div>
+
+<script>
+/* ============================================================
+   KONFIGURASI
+   ============================================================ */
+const KODE_GURU = "RUANGGURU"; // GANTI: kode akses guru
+
+/* ============================================================
+   MASTER PROMPT v5.1
+   ============================================================ */
+const MASTER_PROMPT = `Kamu adalah Senior EdTech Developer dan Ahli Desain Kurikulum tingkat SMA/MA/SMK.
+
+TUGAS:
+Buatkan satu file HTML lengkap (HTML+CSS+JS dalam satu file, tanpa file eksternal selain CDN Font Awesome) yang merupakan aplikasi pembelajaran interaktif untuk siswa.
+
+KETENTUAN WAJIB:
+1. Aplikasi harus bisa dijalankan hanya dengan membuka file .html di browser (tanpa server).
+2. Gunakan palet warna CERIA, MODERN, dan COLORFUL. Sertakan mode gelap dengan tombol toggle (ikon bulan/matahari).
+3. Struktur aplikasi:
+   - Halaman LOGIN SISWA (nama + kelas + password) sebelum masuk dashboard.
+   - Sidebar navigasi: Dashboard, Materi, Latihan Bertahap, Kuis Akhir, Hasil & Laporan, Refleksi, Identitas Siswa.
+   - Header dengan judul bab dan sub judul mapel.
+   - Progress bar otomatis.
+   - DASHBOARD COLORFUL: kartu statistik berwarna (stat-card) dengan ikon, angka besar, dan gradient.
+4. Pada setiap sub-bab WAJIB ada:
+   - Penjelasan materi singkat dengan rumus/konsep kunci.
+   - Visualisasi / contoh nyata kehidupan sehari-hari.
+   - Latihan bertahap (melatih proses/langkah).
+5. Tab "Kuis Akhir": minimal 10 soal pilihan ganda, pembahasan otomatis, skor.
+6. Tab "Refleksi": 4 pertanyaan terstruktur (apa yang dipahami, apa yang sulit, manfaat nyata, rencana perbaikan).
+7. Tab "Hasil & Laporan": nilai, rincian benar/salah, tombol Ekspor PDF (window.print + @media print),
+   memuat header sekolah/tahun/siswa, tabel rincian, pembahasan, refleksi, kolom tanda tangan guru & siswa.
+8. Konstanta di awal <script> dengan komentar // GANTI:
+   const SCHOOL = "{SEKOLAH}";
+   const TEACHER = "{GURU}";
+   const YEAR = "{TAHUN}";
+9. Simpan data siswa, refleksi, progres, skor di localStorage.
+10. Bahasa Indonesia (kecuali materi Bahasa Inggris).
+11. Desain responsif (HP & laptop). Sidebar toggle di mobile.
+12. Font Awesome untuk semua ikon.
+13. Sertakan komentar <!-- GANTI: ... -->.
+
+// ===== v5.0: KURIKULUM & PEMBELAJARAN MENDALAM =====
+14. IDENTITAS KURIKULUM:
+    - Mapel: {MATA_PELAJARAN}
+    - Jenjang: {JENJANG}
+    - Fase: {FASE}
+    - Konsentrasi Keahlian: {KONSENTRASI}
+    - Konteks Sekolah: {KONTEKS}
+    - Judul Bab: {JUDUL_BAB}
+    - Sub Bab:
+{SUB_BAB}
+
+15. CAPAIAN PEMBELAJARAN (CP):
+{CP}
+   Jika CP kosong, susun CP yang sesuai Fase & Mapel, lalu tampilkan di UI siswa.
+
+16. TUJUAN PEMBELAJARAN (TP):
+{TP}
+   Jika TP kosong, susun TP per sub-bab dengan kata kerja operasional (menganalisis, membandingkan, menerapkan).
+   Tampilkan TP di awal setiap sub-bab.
+
+17. ALUR TUJUAN PEMBELAJARAN (ATP):
+   Susun ATP yang runtut dan bermakna, tampilkan sebagai timeline/stepper visual di Dashboard.
+
+// ===== v5.0: DIMENSI PROFIL LULUSAN =====
+18. DELAPAN DIMENSI PROFIL LULUSAN (Permendikdasmen No. 10/2025) yang dipilih:
+    {DPL}
+
+19. UNTUK SETIAP DIMENSI, WAJIB diterapkan MENDALAM:
+    a. Jelaskan ALASAN pemilihan dikaitkan dengan materi.
+    b. Terjemahkan menjadi INDIKATOR PERILAKU yang dapat diamati.
+    c. Integrasikan ke TUJUAN PEMBELAJARAN.
+    d. Integrasikan ke AKTIVITAS BELAJAR (latihan, studi kasus, simulasi, proyek).
+    e. Buat minimal 1 BUTIR ASESMEN + RUBRIK 4 level (Mulai Berkembang, Berkembang, Cakap, Mahir).
+    f. Tampilkan label dimensi (badge) pada aktivitas terkait.
+
+// ===== v5.0: PEMBELAJARAN MENDALAM =====
+20. PRINSIP PEMBELAJARAN MENDALAM:
+    {PRINSIP_PM}
+
+21. PENGALAMAN BELAJAR:
+    {PENGALAMAN}
+
+    Untuk SETIAP pengalaman, buat aktivitas eksplisit di aplikasi:
+    - Memahami: penjelasan konsep + visualisasi.
+    - Mengaplikasi: studi kasus / simulasi / proyek.
+    - Merefleksi: pertanyaan metakognitif.
+
+// ===== v5.0: ASESMEN & DIFERENSIASI =====
+22. JENIS ASESMEN: {ASESMEN}
+
+23. DIFERENSIASI: {DIFERENSIASI}
+    - Sediakan 3 tingkat soal (mudah/sedang/sulit) di latihan.
+    - Berikan rekomendasi tindak lanjut berdasarkan hasil kuis:
+      * Skor < 60: remedial (materi ulang + soal mudah).
+      * Skor 60–80: penguatan (soal sedang).
+      * Skor > 80: pengayaan (soal tantangan/proyek).
+
+// ===== v5.0: PANCA CINTA =====
+24. Integrasikan nilai Kurikulum Berbasis Cinta (KBC) Kemenag RI:
+    {PANCA_CINTA}
+
+25. IDENTITAS SEKOLAH:
+    - Sekolah: {SEKOLAH}
+    - Guru: {GURU}
+    - Tahun: {TAHUN}
+
+// ===== v5.1: PROTEKSI APLIKASI =====
+26. PASSWORD SISWA:
+    - Password yang WAJIB dimasukkan siswa sebelum masuk dashboard: {PASS_SISWA}
+    - Halaman LOGIN SISWA harus memiliki 3 field: Nama, Kelas, dan Password.
+    - Validasi password di JavaScript: jika salah, tampilkan pesan error
+      ("Password salah, silakan coba lagi") dan JANGAN izinkan masuk.
+    - Jika benar, simpan status login ke localStorage agar tidak perlu login ulang
+      saat halaman di-refresh (sampai siswa logout).
+    - Sediakan tombol Logout yang menghapus status login.
+    - Password TIDAK boleh ditampilkan di teks/console/komentar HTML.
+    - Gunakan perbandingan string sederhana (===) di dalam <script>.
+
+Setelah selesai, tampilkan kode HTML lengkap dalam satu blok kode.`;
+
+/* ============================================================
+   PRESET
+   ============================================================ */
+let PRESET = [
+  {
+    ikon: "fa-calculator", warna: "#6366f1",
+    mapel: "Matematika", jenjang: "SMK Kelas 10", fase: "Fase E (Kelas 10)",
+    konsentrasi: "Semua Konsentrasi", konteks: "SMK di kawasan perkotaan",
+    judulBab: "Bab 1 Barisan dan Deret",
+    subBab: "A. Barisan dan Deret Aritmatika\nB. Barisan dan Deret Geometri\nC. Aplikasi Barisan dan Deret",
+    cp: "Peserta didik mampu memahami pola bilangan, barisan, dan deret serta menerapkannya untuk menyelesaikan masalah kontekstual.",
+    tp: "1. Menjelaskan konsep barisan aritmatika dan geometri\n2. Menghitung suku ke-n dan jumlah n suku pertama\n3. Menerapkan barisan & deret dalam masalah nyata",
+    dpl: ["Penalaran Kritis", "Kemandirian"],
+    panca: ["Cinta Ilmu"],
+    pm: ["Berkesadaran (mindful)", "Bermakna (meaningful)", "Menggembirakan (joyful)"],
+    pengalaman: ["Memahami (understand)", "Mengaplikasi (apply)", "Merefleksi (reflect)"],
+    asesmen: ["Diagnostik", "Formatif", "Sumatif"],
+    diferensiasi: ["Kesiapan belajar (readiness)"],
+    sekolah: "SMK KARYA BANGSA", guru: "Aditya Kusumawardani, S.Pd.", tahun: "2026/2027",
+    passSiswa: "SISWA2026"
+  },
+  {
+    ikon: "fa-language", warna: "#10b981",
+    mapel: "Bahasa Inggris", jenjang: "SMK Kelas 10", fase: "Fase E (Kelas 10)",
+    konsentrasi: "Semua Konsentrasi", konteks: "SMK dengan program internasionalisasi",
+    judulBab: "Chapter 1: Future Plans",
+    subBab: "A. Will vs Going To\nB. Present Continuous for Future\nC. Time Expressions",
+    cp: "Peserta didik mampu menggunakan bahasa Inggris untuk berkomunikasi tentang rencana masa depan.",
+    tp: "1. Membedakan penggunaan will vs going to\n2. Menyusun kalimat rencana masa depan\n3. Menulis paragraf tentang rencana pribadi",
+    dpl: ["Komunikasi", "Kreativitas"],
+    panca: ["Cinta Ilmu", "Cinta Diri dan Sesama Manusia"],
+    pm: ["Bermakna (meaningful)", "Menggembirakan (joyful)"],
+    pengalaman: ["Memahami (understand)", "Mengaplikasi (apply)"],
+    asesmen: ["Formatif", "Sumatif"],
+    diferensiasi: ["Minat (interest)", "Profil belajar (learning profile)"],
+    sekolah: "SMK NEGERI 2 BANDUNG", guru: "Siti Aminah, M.Pd.", tahun: "2026/2027",
+    passSiswa: "ENGLISH2026"
+  },
+  {
+    ikon: "fa-network-wired", warna: "#f59e0b",
+    mapel: "Informatika / TKJ", jenjang: "SMK Kelas 10", fase: "Fase E (Kelas 10)",
+    konsentrasi: "Teknik Komputer dan Jaringan", konteks: "SMK dengan lab jaringan",
+    judulBab: "Bab 3: Dasar Jaringan Komputer",
+    subBab: "A. Pengenalan IP Address\nB. Subnetting Dasar\nC. Konfigurasi Router\nD. Troubleshooting",
+    cp: "Peserta didik mampu memahami konsep dasar jaringan komputer dan melakukan konfigurasi sederhana.",
+    tp: "1. Menjelaskan konsep IP Address\n2. Melakukan subnetting dasar\n3. Mengonfigurasi router sederhana\n4. Menganalisis gangguan jaringan",
+    dpl: ["Penalaran Kritis", "Kolaborasi", "Kemandirian"],
+    panca: ["Cinta Ilmu", "Cinta Lingkungan"],
+    pm: ["Berkesadaran (mindful)", "Bermakna (meaningful)"],
+    pengalaman: ["Memahami (understand)", "Mengaplikasi (apply)", "Merefleksi (reflect)"],
+    asesmen: ["Diagnostik", "Formatif", "Sumatif"],
+    diferensiasi: ["Kesiapan belajar (readiness)", "Minat (interest)"],
+    sekolah: "SMK NEGERI 3 SURABAYA", guru: "Ahmad Fauzi, S.Kom.", tahun: "2026/2027",
+    passSiswa: "TKJ2026"
+  }
+];
+
+/* ============================================================
+   GALERI
+   ============================================================ */
+const GALERI = [
+  {
+    judul: "Barisan & Deret Interaktif",
+    deskripsi: "Matematika Kelas 10 dengan tab Aritmatika, Geometri, Aplikasi. DPL: Penalaran Kritis & Kemandirian. Dilengkapi CP/TP/ATP, asesmen diagnostik, diferensiasi 3 level, dan refleksi. Password siswa: SISWA2026.",
+    ikon: "fa-calculator", warna: "#6366f1", preset: 0
+  },
+  {
+    judul: "Future Plans: Will vs Going To",
+    deskripsi: "Bahasa Inggris dengan visualisasi kalimat, latihan urutkan kata, kuis pembahasan, dan tindak lanjut otomatis. DPL: Komunikasi & Kreativitas. Password siswa: ENGLISH2026.",
+    ikon: "fa-language", warna: "#10b981", preset: 1
+  },
+  {
+    judul: "Dasar Jaringan Komputer",
+    deskripsi: "TKJ dengan visualisasi topologi, simulasi subnetting, troubleshooting. DPL: Penalaran Kritis, Kolaborasi, Kemandirian. Cocok untuk SMK dengan lab jaringan. Password siswa: TKJ2026.",
+    ikon: "fa-network-wired", warna: "#f59e0b", preset: 2
+  }
+];
+
+/* ============================================================
+   STATE & UTIL
+   ============================================================ */
+let promptTerakhir = "";
+let aksesTerbuka = false;
+
+function escapeHTML(str) {
+  return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' })[m]);
+}
+function $(id){ return document.getElementById(id); }
+
+/* ============================================================
+   PROTEKSI
+   ============================================================ */
+(function proteksi() {
+  document.addEventListener('keydown', function(e) {
+    const k = (e.key || '').toLowerCase();
+    const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
+    const isField = (tag === 'input' || tag === 'textarea');
+    if (e.ctrlKey && !e.shiftKey && !e.altKey && k === 'u') { e.preventDefault(); return false; }
+    if (e.ctrlKey && !e.shiftKey && !e.altKey && k === 's') { e.preventDefault(); return false; }
+    if (k === 'f12') { e.preventDefault(); return false; }
+    if (e.ctrlKey && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')) { e.preventDefault(); return false; }
+    if (e.ctrlKey && !e.shiftKey && !e.altKey && k === 'a' && !isField) { e.preventDefault(); return false; }
+  }, false);
+
+  document.addEventListener('contextmenu', function(e) {
+    const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return true;
+    e.preventDefault(); return false;
+  }, false);
+
+  function allowedCopy(t) {
+    if (!t) return false;
+    const tag = (t.tagName || '').toLowerCase();
+    if (tag === 'input' || tag === 'textarea') return true;
+    if (t.closest && (t.closest('.preview') || t.closest('.panca-item') || t.closest('.dpl-item'))) return true;
+    return false;
+  }
+  document.addEventListener('copy', e => { if (!allowedCopy(e.target)) e.preventDefault(); }, false);
+  document.addEventListener('cut', e => { if (!allowedCopy(e.target)) e.preventDefault(); }, false);
+  document.addEventListener('dragstart', e => { e.preventDefault(); }, false);
+  document.addEventListener('mousedown', e => {
+    if (e.detail > 1) {
+      const tag = (e.target && e.target.tagName ? e.target.tagName : '').toLowerCase();
+      if (tag !== 'input' && tag !== 'textarea') e.preventDefault();
+    }
+  }, false);
+
+  let devOpen = false;
+  setInterval(() => {
+    const wDiff = window.outerWidth - window.innerWidth > 160;
+    const hDiff = window.outerHeight - window.innerHeight > 160;
+    const ov = document.getElementById('devtoolsOverlay');
+    if (!ov) return;
+    if (wDiff || hDiff) {
+      if (!devOpen) { devOpen = true; ov.style.display = 'flex'; const fa = document.getElementById('formArea'); if (fa) fa.style.visibility = 'hidden'; }
+    } else if (devOpen) {
+      devOpen = false; ov.style.display = 'none'; const fa = document.getElementById('formArea'); if (fa) fa.style.visibility = 'visible';
+    }
+  }, 800);
+
+  window.addEventListener('beforeprint', () => {
+    if (window !== window.top) return;
+    document.body.classList.add('print-blocked');
+    const ov = document.getElementById('printOverlay');
+    if (ov) ov.style.display = 'flex';
+  });
+  window.addEventListener('afterprint', () => {
+    document.body.classList.remove('print-blocked');
+    const ov = document.getElementById('printOverlay');
+    if (ov) ov.style.display = 'none';
+  });
+})();
+
+/* ============================================================
+   AKSES GURU
+   ============================================================ */
+function cekKode() {
+  if ($("kodeInput").value.trim() === KODE_GURU) {
+    aksesTerbuka = true;
+    $("formArea").style.display = 'block';
+    $("statusKode").className = "status ok";
+    $("statusKode").innerHTML = '<i class="fa-solid fa-circle-check"></i> Akses diberikan. Form siap diisi.';
+    try { sessionStorage.setItem("genAkses", "1"); } catch(e){}
+    setTimeout(() => { $("statusKode").className = "status"; }, 4000);
+  } else {
+    $("statusKode").className = "status err";
+    $("statusKode").innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Kode akses salah.';
+  }
+}
+(function initAkses(){
+  try {
+    if (sessionStorage.getItem("genAkses") === "1") {
+      aksesTerbuka = true;
+      $("formArea").style.display = 'block';
+    }
+  } catch(e){}
+})();
+
+/* ============================================================
+   TAB PANEL
+   ============================================================ */
+function bukaPanel(n) {
+  document.querySelectorAll(".panel").forEach((e,i) => e.classList.toggle("active", i===n));
+  document.querySelectorAll(".main-tab").forEach((e,i) => e.classList.toggle("active", i===n));
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+function toggleDark() {
+  document.body.classList.toggle("dark");
+  const dark = document.body.classList.contains("dark");
+  $("darkBtn").innerHTML = dark ? '<i class="fa-solid fa-sun"></i>' : '<i class="fa-solid fa-moon"></i>';
+  try { localStorage.setItem("genDark", dark ? "1" : "0"); } catch(e){}
+}
+(function initDark(){
+  try {
+    if (localStorage.getItem("genDark") === "1") {
+      document.body.classList.add("dark");
+      $("darkBtn").innerHTML = '<i class="fa-solid fa-sun"></i>';
+    }
+  } catch(e){}
+})();
+
+/* ============================================================
+   GENERIC CHECKBOX GROUP
+   ============================================================ */
+function attachCheckboxGroup(gridId, max, label) {
+  document.querySelectorAll(`#${gridId} input[type="checkbox"]`).forEach(cb => {
+    cb.addEventListener('change', () => {
+      cb.closest('label').classList.toggle('checked', cb.checked);
+      if (max > 0) {
+        const checked = document.querySelectorAll(`#${gridId} input:checked`);
+        if (checked.length > max) {
+          cb.checked = false;
+          cb.closest('label').classList.remove('checked');
+          setStatus('warn', `Maksimal ${max} ${label}.`);
+        }
+      }
+    });
+  });
+}
+function ambilGrid(gridId) {
+  return Array.from(document.querySelectorAll(`#${gridId} input:checked`)).map(c => c.value);
+}
+function setGrid(gridId, list) {
+  list = list || [];
+  document.querySelectorAll(`#${gridId} input`).forEach(cb => {
+    cb.checked = list.includes(cb.value);
+    cb.closest('label').classList.toggle('checked', cb.checked);
+  });
+}
+
+attachCheckboxGroup('pancaGrid', 3, 'Panca Cinta');
+attachCheckboxGroup('dplGrid', 3, 'Dimensi Profil Lulusan');
+attachCheckboxGroup('pmGrid', 0, 'Prinsip PM');
+attachCheckboxGroup('pengalamanGrid', 0, 'Pengalaman');
+attachCheckboxGroup('asesmenGrid', 0, 'Asesmen');
+attachCheckboxGroup('diferensiasiGrid', 0, 'Diferensiasi');
+
+/* ============================================================
+   STATUS
+   ============================================================ */
+function setStatus(tipe, msg, target="status") {
+  const el = $(target);
+  el.className = "status " + tipe;
+  let icon = "";
+  if (tipe === 'ok') icon = '<i class="fa-solid fa-circle-check"></i> ';
+  if (tipe === 'warn') icon = '<i class="fa-solid fa-triangle-exclamation"></i> ';
+  if (tipe === 'err') icon = '<i class="fa-solid fa-circle-xmark"></i> ';
+  el.innerHTML = icon + msg;
+  if (tipe) setTimeout(() => { el.className = "status"; }, 6000);
+}
+
+/* ============================================================
+   BUAT PROMPT
+   ============================================================ */
+function buatPrompt() {
+  const mapel = $("mapel").value.trim();
+  const jenjang = $("jenjang").value.trim();
+  const fase = $("fase").value;
+  const konsentrasi = $("konsentrasi").value.trim() || "Semua Konsentrasi";
+  const konteks = $("konteks").value.trim() || "SMK umum";
+  const judulBab = $("judulBab").value.trim();
+  const subBab = $("subBab").value.trim();
+  const cp = $("cp").value.trim() || "(Belum diisi — susun CP yang sesuai Fase dan Mapel)";
+  const tp = $("tp").value.trim() || "(Belum diisi — susun TP per sub-bab)";
+  const dpl = ambilGrid('dplGrid');
+  const panca = ambilGrid('pancaGrid');
+  const pm = ambilGrid('pmGrid');
+  const pengalaman = ambilGrid('pengalamanGrid');
+  const asesmen = ambilGrid('asesmenGrid');
+  const diferensiasi = ambilGrid('diferensiasiGrid');
+  const sekolah = $("sekolah").value.trim() || "SMK / Madrasah";
+  const guru = $("guru").value.trim() || "Guru Mata Pelajaran";
+  const tahun = $("tahun").value.trim() || "2026/2027";
+  const passSiswa = $("passSiswa").value.trim();
+
+  if (!mapel || !jenjang || !judulBab || !subBab) {
+    return setStatus('err', 'Mapel, jenjang, judul bab, dan sub bab wajib diisi.');
+  }
+  if (dpl.length === 0) return setStatus('err', 'Pilih minimal 1 DPL.');
+  if (dpl.length > 3) return setStatus('err', 'Maksimal 3 DPL.');
+  if (panca.length === 0) return setStatus('err', 'Pilih minimal 1 Panca Cinta.');
+  if (panca.length > 3) return setStatus('err', 'Maksimal 3 Panca Cinta.');
+  if (diferensiasi.length === 0) return setStatus('err', 'Pilih minimal 1 diferensiasi.');
+  if (!passSiswa) return setStatus('err', 'Password Siswa wajib diisi.');
+
+  let hasil = MASTER_PROMPT
+    .replace(/{MATA_PELAJARAN}/g, mapel)
+    .replace(/{JENJANG}/g, jenjang)
+    .replace(/{FASE}/g, fase)
+    .replace(/{KONSENTRASI}/g, konsentrasi)
+    .replace(/{KONTEKS}/g, konteks)
+    .replace(/{JUDUL_BAB}/g, judulBab)
+    .replace(/{SUB_BAB}/g, subBab)
+    .replace(/{CP}/g, cp)
+    .replace(/{TP}/g, tp)
+    .replace(/{DPL}/g, dpl.join(', '))
+    .replace(/{PANCA_CINTA}/g, panca.join(', '))
+    .replace(/{PRINSIP_PM}/g, pm.join(', '))
+    .replace(/{PENGALAMAN}/g, pengalaman.join(', '))
+    .replace(/{ASESMEN}/g, asesmen.join(', '))
+    .replace(/{DIFERENSIASI}/g, diferensiasi.join(', '))
+    .replace(/{SEKOLAH}/g, sekolah)
+    .replace(/{GURU}/g, guru)
+    .replace(/{TAHUN}/g, tahun)
+    .replace(/{PASS_SISWA}/g, passSiswa);
+
+  promptTerakhir = hasil;
+
+  let previewHTML = escapeHTML(hasil)
+    .replace(escapeHTML(mapel), `<span class="slot">${escapeHTML(mapel)}</span>`)
+    .replace(escapeHTML(jenjang), `<span class="slot">${escapeHTML(jenjang)}</span>`)
+    .replace(escapeHTML(fase), `<span class="slot">${escapeHTML(fase)}</span>`)
+    .replace(escapeHTML(konsentrasi), `<span class="slot">${escapeHTML(konsentrasi)}</span>`)
+    .replace(escapeHTML(konteks), `<span class="slot">${escapeHTML(konteks)}</span>`)
+    .replace(escapeHTML(judulBab), `<span class="slot">${escapeHTML(judulBab)}</span>`)
+    .replace(escapeHTML(subBab), `<span class="slot">${escapeHTML(subBab).replace(/\n/g, '<br>')}</span>`)
+    .replace(escapeHTML(cp), `<span class="cp-slot">${escapeHTML(cp).replace(/\n/g, '<br>')}</span>`)
+    .replace(escapeHTML(tp), `<span class="cp-slot">${escapeHTML(tp).replace(/\n/g, '<br>')}</span>`)
+    .replace(escapeHTML(dpl.join(', ')), `<span class="dpl-slot">${escapeHTML(dpl.join(', '))}</span>`)
+    .replace(escapeHTML(panca.join(', ')), `<span class="slot">${escapeHTML(panca.join(', '))}</span>`)
+    .replace(escapeHTML(pm.join(', ')), `<span class="slot">${escapeHTML(pm.join(', '))}</span>`)
+    .replace(escapeHTML(pengalaman.join(', ')), `<span class="slot">${escapeHTML(pengalaman.join(', '))}</span>`)
+    .replace(escapeHTML(asesmen.join(', ')), `<span class="slot">${escapeHTML(asesmen.join(', '))}</span>`)
+    .replace(escapeHTML(diferensiasi.join(', ')), `<span class="slot">${escapeHTML(diferensiasi.join(', '))}</span>`)
+    .replace(escapeHTML(sekolah), `<span class="slot">${escapeHTML(sekolah)}</span>`)
+    .replace(escapeHTML(guru), `<span class="slot">${escapeHTML(guru)}</span>`)
+    .replace(escapeHTML(tahun), `<span class="slot">${escapeHTML(tahun)}</span>`)
+    .replace(escapeHTML(passSiswa), `<span class="slot">${escapeHTML(passSiswa)}</span>`);
+
+  $("preview").innerHTML = previewHTML;
+  setStatus('ok', 'Prompt v5.1 berhasil dibuat! Klik "Salin Prompt".');
+}
+
+function resetForm() {
+  $("mapel").value = '';
+  $("jenjang").value = 'SMK Kelas 10';
+  $("fase").value = 'Fase E (Kelas 10)';
+  $("konsentrasi").value = '';
+  $("konteks").value = '';
+  $("judulBab").value = '';
+  $("subBab").value = '';
+  $("cp").value = '';
+  $("tp").value = '';
+  $("sekolah").value = '';
+  $("guru").value = '';
+  $("tahun").value = '2026/2027';
+  $("passSiswa").value = '';
+  setGrid('pancaGrid', []);
+  setGrid('dplGrid', []);
+  setGrid('pmGrid', ['Berkesadaran (mindful)', 'Bermakna (meaningful)', 'Menggembirakan (joyful)']);
+  setGrid('pengalamanGrid', ['Memahami (understand)', 'Mengaplikasi (apply)', 'Merefleksi (reflect)']);
+  setGrid('asesmenGrid', ['Diagnostik', 'Formatif', 'Sumatif']);
+  setGrid('diferensiasiGrid', ['Kesiapan belajar (readiness)']);
+  $("preview").textContent = 'Isi form di atas, lalu klik "Buat Prompt".';
+  $("status").className = 'status';
+  promptTerakhir = "";
+}
+
+/* ============================================================
+   PRESET
+   ============================================================ */
+function renderPreset() {
+  $("presetRow").innerHTML = PRESET.map((p, i) => `
+    <button class="preset-chip" onclick="pakaiPreset(${i})">
+      <i class="fa-solid ${p.ikon}" style="color:${p.warna};"></i> ${escapeHTML(p.mapel)} — ${escapeHTML(p.judulBab)}
+    </button>
+  `).join("");
+}
+function pakaiPreset(i) {
+  const p = PRESET[i];
+  if (!p) return;
+  $("mapel").value = p.mapel;
+  $("jenjang").value = p.jenjang;
+  $("fase").value = p.fase || 'Fase E (Kelas 10)';
+  $("konsentrasi").value = p.konsentrasi || '';
+  $("konteks").value = p.konteks || '';
+  $("judulBab").value = p.judulBab;
+  $("subBab").value = p.subBab;
+  $("cp").value = p.cp || '';
+  $("tp").value = p.tp || '';
+  $("sekolah").value = p.sekolah || '';
+  $("guru").value = p.guru || '';
+  $("tahun").value = p.tahun || '2026/2027';
+  $("passSiswa").value = p.passSiswa || '';
+  setGrid('pancaGrid', p.panca);
+  setGrid('dplGrid', p.dpl);
+  setGrid('pmGrid', p.pm || []);
+  setGrid('pengalamanGrid', p.pengalaman || []);
+  setGrid('asesmenGrid', p.asesmen || []);
+  setGrid('diferensiasiGrid', p.diferensiasi || []);
+  bukaPanel(0);
+  if (!aksesTerbuka) { $("formArea").style.display = 'block'; aksesTerbuka = true; }
+  setStatus('ok', 'Preset dimuat: ' + p.judulBab);
+}
+function acakTopik() {
+  pakaiPreset(Math.floor(Math.random() * PRESET.length));
+}
+
+/* ============================================================
+   EXPORT / IMPORT
+   ============================================================ */
+function exportPreset() {
+  const blob = new Blob([JSON.stringify(PRESET, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'preset-generator-v5.1-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  setStatus('ok', 'Preset diekspor.', 'statusPreset');
+}
+function importPresetFile(ev) {
+  const file = ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) throw new Error('Format tidak valid');
+      PRESET = data;
+      renderPreset();
+      setStatus('ok', 'Preset diimpor (' + data.length + ' item).', 'statusPreset');
+    } catch (err) {
+      setStatus('err', 'Gagal impor: ' + err.message, 'statusPreset');
+    }
+  };
+  reader.readAsText(file);
+  ev.target.value = '';
+}
+
+/* ============================================================
+   SALIN & UNDUH
+   ============================================================ */
+function salinPrompt() {
+  if (!promptTerakhir) return setStatus('warn', 'Klik "Buat Prompt" dulu.');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(promptTerakhir).then(() => {
+      setStatus('ok', 'Prompt tersalin! Tempel ke AI.');
+    }).catch(() => fallbackCopy());
+  } else fallbackCopy();
+  function fallbackCopy() {
+    const ta = document.createElement('textarea');
+    ta.value = promptTerakhir;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); setStatus('ok', 'Prompt tersalin.'); }
+    catch(e) { setStatus('err', 'Gagal salin. Salin manual dari preview.'); }
+    document.body.removeChild(ta);
+  }
+}
+function unduhPrompt() {
+  if (!promptTerakhir) return setStatus('warn', 'Buat prompt dulu.');
+  const blob = new Blob([promptTerakhir], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'prompt-v5.1-' + ($("judulBab").value.trim().slice(0,20).replace(/\s+/g,'-') || 'aplikasi') + '.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  setStatus('ok', 'Prompt diunduh.');
+}
+
+/* ============================================================
+   RIWAYAT
+   ============================================================ */
+function ambilRiwayat() {
+  try { return JSON.parse(localStorage.getItem('genRiwayatV5') || '[]'); }
+  catch(e){ return []; }
+}
+function simpanRiwayat() {
+  if (!promptTerakhir) return setStatus('warn', 'Buat prompt dulu.');
+  const list = ambilRiwayat();
+  list.unshift({
+    mapel: $("mapel").value.trim(),
+    jenjang: $("jenjang").value.trim(),
+    fase: $("fase").value,
+    konsentrasi: $("konsentrasi").value.trim(),
+    judulBab: $("judulBab").value.trim(),
+    subBab: $("subBab").value.trim(),
+    cp: $("cp").value.trim(),
+    tp: $("tp").value.trim(),
+    sekolah: $("sekolah").value.trim(),
+    guru: $("guru").value.trim(),
+    tahun: $("tahun").value.trim(),
+    passSiswa: $("passSiswa").value.trim(),
+    dpl: ambilGrid('dplGrid'),
+    panca: ambilGrid('pancaGrid'),
+    pm: ambilGrid('pmGrid'),
+    pengalaman: ambilGrid('pengalamanGrid'),
+    asesmen: ambilGrid('asesmenGrid'),
+    diferensiasi: ambilGrid('diferensiasiGrid'),
+    prompt: promptTerakhir,
+    waktu: new Date().toLocaleString('id-ID')
+  });
+  localStorage.setItem('genRiwayatV5', JSON.stringify(list.slice(0, 20)));
+  renderRiwayat();
+  setStatus('ok', 'Tersimpan ke riwayat.');
+}
+function renderRiwayat() {
+  const list = ambilRiwayat();
+  if (!list.length) {
+    $("historyList").innerHTML = '<p style="color:var(--muted);">Belum ada riwayat.</p>';
+    return;
+  }
+  $("historyList").innerHTML = list.map((r, i) => `
+    <div class="history-item">
+      <div>
+        <b>${escapeHTML(r.judulBab)}</b>
+        <span class="meta">${escapeHTML(r.mapel)} • ${escapeHTML(r.jenjang)} • ${escapeHTML(r.fase || '')}${r.guru ? ' • ' + escapeHTML(r.guru) : ''} • ${r.waktu}</span>
+        ${r.dpl && r.dpl.length ? '<span class="kode-badge" style="margin-top:6px;display:inline-block;">DPL: ' + r.dpl.map(escapeHTML).join(', ') + '</span>' : ''}
+      </div>
+      <div class="actions">
+        <button class="btn-secondary btn-sm" onclick="pakaiRiwayat(${i})">Pakai</button>
+        <button class="btn-danger btn-sm" onclick="hapusSatu(${i})"><i class="fa-solid fa-trash"></i></button>
+      </div>
+    </div>
+  `).join("");
+}
+function pakaiRiwayat(i) {
+  const r = ambilRiwayat()[i];
+  if (!r) return;
+  $("mapel").value = r.mapel;
+  $("jenjang").value = r.jenjang;
+  $("fase").value = r.fase || 'Fase E (Kelas 10)';
+  $("konsentrasi").value = r.konsentrasi || '';
+  $("judulBab").value = r.judulBab;
+  $("subBab").value = r.subBab || '';
+  $("cp").value = r.cp || '';
+  $("tp").value = r.tp || '';
+  $("sekolah").value = r.sekolah || '';
+  $("guru").value = r.guru || '';
+  $("tahun").value = r.tahun || '2026/2027';
+  $("passSiswa").value = r.passSiswa || '';
+  setGrid('pancaGrid', r.panca || []);
+  setGrid('dplGrid', r.dpl || []);
+  setGrid('pmGrid', r.pm || []);
+  setGrid('pengalamanGrid', r.pengalaman || []);
+  setGrid('asesmenGrid', r.asesmen || []);
+  setGrid('diferensiasiGrid', r.diferensiasi || []);
+  promptTerakhir = r.prompt;
+  $("preview").innerHTML = escapeHTML(r.prompt).replace(/\n/g, '<br>');
+  bukaPanel(0);
+  if (!aksesTerbuka) { $("formArea").style.display = 'block'; aksesTerbuka = true; }
+  setStatus('ok', 'Riwayat dimuat.');
+}
+function hapusSatu(i) {
+  const list = ambilRiwayat();
+  list.splice(i, 1);
+  localStorage.setItem('genRiwayatV5', JSON.stringify(list));
+  renderRiwayat();
+}
+function hapusRiwayat() {
+  if (!confirm('Hapus semua riwayat?')) return;
+  localStorage.removeItem('genRiwayatV5');
+  renderRiwayat();
+  setStatus('ok', 'Riwayat dihapus.', 'status');
+}
+
+/* ============================================================
+   GALERI
+   ============================================================ */
+function renderGaleri() {
+  $("galeriGrid").innerHTML = GALERI.map((g, i) => `
+    <div class="galeri-card" onclick="bukaModal(${i})">
+      <div class="galeri-thumb" style="background:linear-gradient(135deg, ${g.warna}, ${g.warna}dd)">
+        <i class="fa-solid ${g.ikon}"></i>
+      </div>
+      <div class="galeri-body">
+        <h4>${escapeHTML(g.judul)}</h4>
+        <p>${escapeHTML(g.deskripsi.substring(0,95))}…</p>
+      </div>
+    </div>
+  `).join("");
+}
+function bukaModal(i) {
+  const g = GALERI[i];
+  $("modalTitle").innerHTML = `<i class="fa-solid ${g.ikon}" style="color:${g.warna};"></i> ${escapeHTML(g.judul)}`;
+  $("modalBody").textContent = g.deskripsi;
+  $("modalBg").classList.add('show');
+  $("modalBg").dataset.preset = g.preset;
+}
+function tutupModal() { $("modalBg").classList.remove('show'); }
+function pakaiIdeModal() {
+  const i = Number($("modalBg").dataset.preset);
+  tutupModal();
+  pakaiPreset(i);
+}
+
+/* ============================================================
+   VALIDASI HTML
+   ============================================================ */
+function validasiHTML() {
+  const html = $("htmlInput").value.trim();
+  if (!html) return setStatus('err', 'Tempel kode HTML dulu.', 'statusHTML');
+
+  const checks = [
+    { label: '<html>', ok: /<html[\s>]/i.test(html) },
+    { label: '<head>', ok: /<head[\s>]/i.test(html) },
+    { label: '<body>', ok: /<body[\s>]/i.test(html) },
+    { label: '<style>', ok: /<style[\s>]/i.test(html) },
+    { label: '<script>', ok: /<script[\s>]/i.test(html) },
+    { label: 'Font Awesome', ok: /font-awesome|fontawesome/i.test(html) },
+    { label: 'Konstanta SCHOOL', ok: /const\s+SCHOOL/i.test(html) },
+    { label: 'Konstanta TEACHER', ok: /const\s+TEACHER/i.test(html) },
+    { label: 'Login siswa', ok: /login|nama lengkap|peserta didik/i.test(html) },
+    { label: 'Materi/Sub Bab', ok: /materi|sub-?bab/i.test(html) },
+    { label: 'Latihan bertahap', ok: /latihan|exercise|langkah/i.test(html) },
+    { label: 'Kuis', ok: /kuis|quiz|soal/i.test(html) },
+    { label: 'Refleksi', ok: /refleksi|reflection/i.test(html) },
+    { label: 'Laporan/PDF', ok: /laporan|pdf|print/i.test(html) },
+    { label: 'localStorage', ok: /localStorage/i.test(html) },
+    { label: 'Mode gelap', ok: /dark|gelap|theme|moon|sun/i.test(html) },
+    { label: 'DPL', ok: /dimensi\s*profil\s*lulusan|DPL|penalaran\s*kritis|kolaborasi/i.test(html) },
+    { label: 'Pembelajaran Mendalam', ok: /berkesadaran|bermakna|menggembirakan|deep\s*learning/i.test(html) },
+    { label: 'Diferensiasi', ok: /diferensiasi|differentiat|remedial|pengayaan/i.test(html) },
+    { label: 'CP/TP', ok: /capaian\s*pembelajaran|tujuan\s*pembelajaran|\bCP\b|\bTP\b/i.test(html) },
+    { label: 'Password Siswa', ok: /password/i.test(html) }
+  ];
+  const gagal = checks.filter(c => !c.ok);
+
+  $("checklistArea").style.display = 'block';
+  $("checklist").innerHTML = checks.map(c => `
+    <div class="item ${c.ok ? 'ok' : 'no'}">
+      <i class="fa-solid ${c.ok ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+      ${escapeHTML(c.label)}
+    </div>
+  `).join('');
+
+  const skor = checks.length - gagal.length;
+  if (gagal.length) {
+    setStatus('warn', `Struktur HTML: ${skor}/${checks.length} elemen terdeteksi. Kurang: ${gagal.map(g=>g.label).join(', ')}. Tetap ditampilkan.`, 'statusHTML');
+  } else {
+    setStatus('ok', `Struktur HTML lengkap! (${skor}/${checks.length})`, 'statusHTML');
+  }
+
+  $("previewCard").style.display = 'block';
+  $("previewFrame").srcdoc = html;
+  $("previewCard").scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function bersihkanHTML() {
+  $("htmlInput").value = '';
+  $("statusHTML").className = 'status';
+  $("previewCard").style.display = 'none';
+  $("checklistArea").style.display = 'none';
+  $("previewFrame").srcdoc = '';
+}
+function unduhHTML() {
+  const html = $("htmlInput").value.trim();
+  if (!html) return setStatus('err', 'Tidak ada HTML.', 'statusHTML');
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'aplikasi-v5.1-' + ($("judulBab").value.trim().slice(0,20).replace(/\s+/g,'-') || 'kelompok') + '.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+  setStatus('ok', 'File .html diunduh!', 'statusHTML');
+}
+function bukaTabBaru() {
+  const html = $("htmlInput").value.trim();
+  if (!html) return setStatus('warn', 'Tidak ada HTML.', 'statusHTML');
+  const w = window.open('', '_blank');
+  w.document.open(); w.document.write(html); w.document.close();
+}
+function bukaModalPreview() {
+  const html = $("htmlInput").value.trim();
+  if (!html) return setStatus('warn', 'Tidak ada HTML.', 'statusHTML');
+  $("modalPreviewFrame").srcdoc = html;
+  $("modalPreviewBg").classList.add('show');
+}
+function tutupModalPreview() {
+  $("modalPreviewBg").classList.remove('show');
+  $("modalPreviewFrame").srcdoc = '';
+}
+
+/* ============================================================
+   INIT
+   ============================================================ */
+renderPreset();
+renderGaleri();
+renderRiwayat();
+</script>
+</body>
+</html>
