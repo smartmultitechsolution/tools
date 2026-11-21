@@ -1,0 +1,1431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Generator Landingpage</title>
+<!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f0f2f5;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        body.dark-mode {
+            background: #1a1a2e;
+        }
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 420px;
+            transition: background 0.3s ease, color 0.3s ease;
+            position: relative;
+        }
+        body.dark-mode .auth-container {
+            background: #2d2d44;
+            color: #e2e8f0;
+        }
+        .auth-container .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .auth-container .logo img {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
+        }
+        .auth-container .logo h1 {
+            margin-top: 12px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .auth-container .logo p {
+            color: #6b7280;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        body.dark-mode .auth-container .logo p {
+            color: #94a3b8;
+        }
+        .badge-version {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+        }
+        body.dark-mode .badge-version {
+            background: #2d2d44;
+            color: #94a3b8;
+        }
+        .badge-version-dashboard {
+            background: #eef2ff;
+            color: #4f46e5;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        body.dark-mode .badge-version-dashboard {
+            background: #2d2d44;
+            color: #94a3b8;
+        }
+        .btn-image {
+            border: none;
+            background: none;
+            padding: 0;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.15s ease, filter 0.15s ease;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .btn-image:hover {
+            transform: scale(1.03);
+            filter: brightness(0.95);
+        }
+        .btn-image:active {
+            transform: scale(0.97);
+        }
+        .btn-image img {
+            display: block;
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        /* ===== TOMBOL RESPONSIF ===== */
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-group .btn-image {
+            flex: 0 0 auto;
+        }
+
+        /* Hanya di HP tombol dibuat 2 baris (2 kolom) */
+        @media (max-width: 640px) {
+            .btn-group .btn-image {
+                flex: 1 1 calc(50% - 5px);
+                min-width: calc(50% - 5px);
+                max-width: calc(50% - 5px);
+            }
+            .btn-group .btn-image img {
+                width: 100%;
+                height: auto;
+                max-height: 110px;
+                object-fit: contain;
+            }
+        }
+        @media (max-width: 400px) {
+            .btn-group {
+                gap: 8px;
+            }
+            .btn-group .btn-image {
+                flex: 1 1 calc(50% - 4px);
+                min-width: calc(50% - 4px);
+                max-width: calc(50% - 4px);
+            }
+            .btn-group .btn-image img {
+                max-height: 100px;
+            }
+        }
+
+        .hero-mini {
+            background: linear-gradient(135deg, #0012fc, #008aff);
+            border-radius: 16px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        body.dark-mode .hero-mini {
+            background: linear-gradient(135deg, #1a1a3e, #2d1b69);
+            border-color: #3d3d5c;
+        }
+        .hero-mini h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .hero-mini h1 i { color: #fff; }
+        .hero-mini p {
+            color: #fff;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .hero-mini .badge-version-dashboard {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 11px;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body.dark-mode .hero-mini .badge-version-dashboard {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.8s ease-in-out infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .loading-text {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* Logo di sidebar dashboard */
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+        .sidebar-logo img {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+        }
+        .sidebar-logo .logo-text h1 {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 0;
+            line-height: 1.2;
+        }
+        .sidebar-logo .logo-text span {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        .dashboard-hidden {
+            display: none !important;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 9999;
+            transform: translateX(120%);
+            transition: transform 0.4s ease;
+            max-width: 400px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        .notification.show {
+            transform: translateX(0);
+        }
+        .notification.success { background: #10b981; }
+        .notification.error { background: #ef4444; }
+        .notification.info { background: #3b82f6; }
+
+        .theme-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border: none;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        body.dark-mode .theme-toggle {
+            background: #2d2d44;
+            color: #e2e8f0;
+        }
+        .theme-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                padding: 24px;
+                margin: 16px;
+            }
+            .badge-version {
+                top: 12px;
+                right: 12px;
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+        }
+
+        /* ===== SIDEBAR RESPONSIVE & FIXED ===== */
+        .dashboard-wrapper {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+            width: 100%;
+            max-width: 1400px;
+            padding: 24px;
+            position: relative;
+            min-height: 100vh;
+            align-items: flex-start;
+        }
+        .sidebar {
+            flex: 0 0 260px;
+            background: linear-gradient(140deg, #1a1a2e 0%, #0404f9 100%);
+            border-radius: 24px;
+            padding: 28px 20px;
+            color: #fff;
+            min-height: 500px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.5);
+            align-self: flex-start;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            position: sticky;
+            top: 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            margin-top: 8px;
+        }
+        .sidebar ul li {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .sidebar ul li:hover {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+        .sidebar ul li.active {
+            background: rgba(102, 126, 234, 0.25);
+            color: #fff;
+            box-shadow: inset 3px 0 0 #667eea;
+        }
+        .sidebar ul li i {
+            width: 20px;
+        }
+        .sidebar .sidebar-footer {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 10px 16px;
+            border-radius: 12px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+        }
+        .sidebar .sidebar-footer strong {
+            color: #fff;
+            display: block;
+            font-size: 14px;
+        }
+        .main-content {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        /* ===== BURGER MENU ===== */
+        .burger-container {
+            display: none;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .burger-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(140deg, #1a1a2e 0%, #0404f9 100%);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 14px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            width: 100%;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+        .burger-btn:hover {
+            transform: scale(1.02);
+        }
+        .burger-btn i {
+            font-size: 22px;
+        }
+
+        /* Dropdown menu burger */
+        .burger-dropdown {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: linear-gradient(140deg, #1a1a2e 0%, #0404f9 100%);
+            border-radius: 16px;
+            padding: 12px 8px;
+            box-shadow: 0 20px 40px -12px rgba(0,0,0,0.5);
+            z-index: 999;
+            animation: slideDown 0.3s ease;
+        }
+        .burger-dropdown.open {
+            display: block;
+        }
+        .burger-dropdown ul {
+            list-style: none;
+        }
+        .burger-dropdown ul li {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255,255,255,0.6);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .burger-dropdown ul li:hover {
+            background: rgba(255,255,255,0.08);
+            color: #fff;
+        }
+        .burger-dropdown ul li.active {
+            background: rgba(102, 126, 234, 0.25);
+            color: #fff;
+            box-shadow: inset 3px 0 0 #667eea;
+        }
+        .burger-dropdown ul li i {
+            width: 20px;
+        }
+        .burger-dropdown .burger-footer {
+            background: rgba(102, 126, 234, 0.2);
+            padding: 10px 16px;
+            border-radius: 12px;
+            margin-top: 12px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.6;
+        }
+        .burger-dropdown .burger-footer strong {
+            color: #fff;
+            display: block;
+            font-size: 14px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HERO BARU ===== */
+        .hero-top {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px 24px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+            border: 1px solid #e5e7eb;
+            transition: background 0.3s ease, border-color 0.3s ease;
+        }
+        body.dark-mode .hero-top {
+            background: #2d2d44;
+            border-color: #3d3d5c;
+        }
+        .hero-top-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .hero-top-left img {
+            height: 44px;
+            width: auto;
+            object-fit: contain;
+        }
+        .hero-top-left span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+        body.dark-mode .hero-top-left span {
+            color: #e2e8f0;
+        }
+        .hero-top-right {
+            background: #dbeafe;
+            color: #1e40af;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        body.dark-mode .hero-top-right {
+            background: #1e3a5f;
+            color: #93c5fd;
+        }
+
+        /* ===== LOGIN FORM ===== */
+        .login-error {
+            color: #ef4444;
+            font-size: 13px;
+            margin-top: 8px;
+            display: none;
+            text-align: center;
+        }
+        .login-error.show {
+            display: block;
+        }
+        .login-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1.5px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 14px;
+            background: #fafbfc;
+            transition: border-color 0.3s ease;
+        }
+        .login-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        body.dark-mode .login-input {
+            background: #1a1a2e;
+            border-color: #3d3d5c;
+            color: #e2e8f0;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+        .login-btn:hover {
+            transform: scale(1.02);
+        }
+        .login-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .dashboard-wrapper {
+                padding: 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            /* Sembunyikan sidebar di mobile */
+            .sidebar {
+                display: none !important;
+            }
+            .burger-container {
+                display: block;
+            }
+            .main-content {
+                min-width: 0;
+                width: 100%;
+            }
+            .hero-top {
+                padding: 12px 16px;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .hero-top-left img {
+                height: 32px;
+            }
+            .hero-top-left span {
+                font-size: 15px;
+            }
+            .hero-top-right {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+        }
+        @media (max-width: 480px) {
+            .dashboard-wrapper {
+                padding: 10px;
+            }
+            .burger-btn {
+                font-size: 16px;
+                padding: 10px 14px;
+            }
+            .burger-btn i {
+                font-size: 18px;
+            }
+            .burger-dropdown ul li {
+                padding: 10px 14px;
+                font-size: 13px;
+            }
+            .hero-top-left img {
+                height: 28px;
+            }
+            .hero-top-left span {
+                font-size: 13px;
+            }
+            .hero-top-right {
+                font-size: 10px;
+                padding: 3px 10px;
+            }
+            .auth-container {
+                padding: 24px 20px;
+                margin: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="notification" class="notification"></div>
+
+    <button class="theme-toggle" id="themeToggleBtn" title="Ganti Tema">
+        <i class="fas fa-moon" id="themeIcon"></i>
+    </button>
+
+    <!-- ===== LOGIN CONTAINER ===== -->
+    <div id="loginContainer" class="auth-container">
+        <div class="badge-version">V.1.3</div>
+        <div class="logo">
+            <img id="loginLogo" src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png" alt="Logo">
+            <h1>Generator Landingpage</h1>
+            <p>Masukkan password untuk mengakses</p>
+        </div>
+        <form id="loginForm" onsubmit="handleLogin(event)" style="margin-top: 20px;">
+            <div style="margin-bottom: 16px;">
+                <input type="password" id="loginPassword" class="login-input" placeholder="Masukkan Password" required>
+            </div>
+            <button type="submit" class="login-btn">
+                <i class="fas fa-unlock-alt"></i> Masuk
+            </button>
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> Password salah! Coba lagi.
+            </div>
+        </form>
+    </div>
+
+    <!-- ===== DASHBOARD ===== -->
+    <div id="dashboardContainer" class="dashboard-wrapper" style="display:none;">
+        <!-- SIDEBAR (Desktop) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-logo">
+                <img id="sidebarLogo" src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png" alt="Logo">
+                <div class="logo-text">
+                    <h1>Prompt Generator</h1>
+<h5>Landingpage</h5>
+                </div>
+            </div>
+            <ul>
+                <li id="menuHome" onclick="goHome()">
+                    <i class="fas fa-home"></i> Home
+                </li>
+                <li id="menuGenerator" class="active" onclick="switchTab('generator')">
+                    <i class="fas fa-magic"></i> Generator
+                </li>
+                <li id="menuHistory" onclick="switchTab('history')">
+                    <i class="fas fa-history"></i> Riwayat
+                </li>
+                <li onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </li>
+            </ul>
+            <div class="sidebar-footer">
+                <strong>✨ AI Generator</strong>
+                Buat prompt landingpage otomatis dengan berbagai tema.
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <!-- BURGER MENU (Mobile) -->
+            <div class="burger-container">
+                <button class="burger-btn" id="burgerBtn" onclick="toggleBurger()">
+                    <i class="fas fa-bars"></i> Menu
+                </button>
+                <div class="burger-dropdown" id="burgerDropdown">
+                    <ul>
+                        <li id="burgerHome" onclick="goHome(); closeBurger();">
+                            <i class="fas fa-home"></i> Home
+                        </li>
+                        <li id="burgerGenerator" class="active" onclick="switchTab('generator'); closeBurger();">
+                            <i class="fas fa-magic"></i> Generator
+                        </li>
+                        <li id="burgerHistory" onclick="switchTab('history'); closeBurger();">
+                            <i class="fas fa-history"></i> Riwayat
+                        </li>
+                        <li onclick="logout(); closeBurger();">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </li>
+                    </ul>
+                    <div class="burger-footer">
+                        <strong>✨ AI Generator</strong>
+                        Buat prompt landingpage otomatis dengan berbagai tema.
+                    </div>
+                </div>
+            </div>
+
+            <!-- HERO -->
+            <div class="hero-top">
+                <div class="hero-top-left">
+                    <img id="heroLogo" src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png" alt="Logo">
+                    <span>Tools Landingpage</span>
+                </div>
+                <div class="hero-top-right">
+                    V.1.3
+                </div>
+            </div>
+
+            <div id="tabContent"></div>
+        </main>
+    </div>
+
+    <script>
+        // ============================================================
+        // PASSWORD LOGIN
+        // ============================================================
+        const CORRECT_PASSWORD = "AIagency3";
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const passwordInput = document.getElementById('loginPassword');
+            const errorDiv = document.getElementById('loginError');
+            
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                // Login berhasil
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('dashboardContainer').style.display = 'flex';
+                errorDiv.classList.remove('show');
+                passwordInput.value = '';
+                loadDashboard();
+                showNotification('Login berhasil! Selamat datang.', 'success');
+            } else {
+                errorDiv.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
+                showNotification('Password salah!', 'error');
+            }
+        }
+
+        // ============================================================
+        // LOCAL STORAGE
+        // ============================================================
+        function getPrompts() {
+            return JSON.parse(localStorage.getItem('prompt_history') || '[]');
+        }
+
+        function savePrompts(prompts) {
+            localStorage.setItem('prompt_history', JSON.stringify(prompts));
+        }
+
+        // ============================================================
+        // NOTIFIKASI
+        // ============================================================
+        function showNotification(message, type = 'success') {
+            const notif = document.getElementById('notification');
+            notif.textContent = message;
+            notif.className = `notification ${type}`;
+            notif.classList.add('show');
+            setTimeout(() => notif.classList.remove('show'), 4000);
+        }
+
+        // ============================================================
+        // TOGGLE THEME
+        // ============================================================
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const icon = document.getElementById('themeIcon');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.className = 'fas fa-sun';
+                localStorage.setItem('prompt_theme', 'dark');
+            } else {
+                icon.className = 'fas fa-moon';
+                localStorage.setItem('prompt_theme', 'light');
+            }
+            // Update logo berdasarkan tema
+            updateLogos();
+        }
+
+        // ============================================================
+        // UPDATE LOGOS BERDASARKAN TEMA
+        // ============================================================
+        function updateLogos() {
+            const isDark = document.body.classList.contains('dark-mode');
+            
+            // Login logo: terang = Logo-AI.png, gelap = Logo-AI-footer.png
+            const loginLogoSrc = isDark ? 'https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png' : 'https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png';
+            const loginLogo = document.getElementById('loginLogo');
+            if (loginLogo) loginLogo.src = loginLogoSrc;
+            
+            // Hero logo: terang = Logo-AI.png, gelap = Logo-AI-footer.png
+            const heroLogoSrc = isDark ? 'https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png' : 'https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png';
+            const heroLogo = document.getElementById('heroLogo');
+            if (heroLogo) heroLogo.src = heroLogoSrc;
+            
+            // Sidebar logo: tetap Logo-AI-footer.png untuk kedua mode
+            const sidebarLogo = document.getElementById('sidebarLogo');
+            if (sidebarLogo) sidebarLogo.src = 'https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png';
+        }
+
+        // ============================================================
+        // BURGER TOGGLE
+        // ============================================================
+        function toggleBurger() {
+            const dropdown = document.getElementById('burgerDropdown');
+            const btn = document.getElementById('burgerBtn');
+            dropdown.classList.toggle('open');
+            if (dropdown.classList.contains('open')) {
+                btn.innerHTML = '<i class="fas fa-times"></i> Tutup';
+            } else {
+                btn.innerHTML = '<i class="fas fa-bars"></i> Menu';
+            }
+        }
+
+        function closeBurger() {
+            const dropdown = document.getElementById('burgerDropdown');
+            const btn = document.getElementById('burgerBtn');
+            dropdown.classList.remove('open');
+            btn.innerHTML = '<i class="fas fa-bars"></i> Menu';
+        }
+
+        // ============================================================
+        // HOME - Buka Tab Baru
+        // ============================================================
+        function goHome() {
+            window.open('https://smartmultitechsolution.github.io/tools/', '_blank');
+        }
+
+        // ============================================================
+        // LOGOUT - Tanpa Tab Baru
+        // ============================================================
+        function logout() {
+            // Kembali ke halaman login
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            showNotification('Anda telah logout.', 'info');
+        }
+
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+        function loadDashboard() {
+            switchTab('generator');
+            loadHistory();
+        }
+
+        // ============================================================
+        // TAB SWITCHING
+        // ============================================================
+        let currentTab = 'generator';
+
+        function switchTab(tab) {
+            currentTab = tab;
+            const container = document.getElementById('tabContent');
+            if (tab === 'generator') {
+                container.innerHTML = generateGeneratorTab();
+            } else if (tab === 'history') {
+                container.innerHTML = generateHistoryTab();
+                loadHistory();
+            }
+            // Update active menu di desktop
+            document.querySelectorAll('.sidebar ul li').forEach(li => li.classList.remove('active'));
+            if (tab === 'generator') document.getElementById('menuGenerator').classList.add('active');
+            else if (tab === 'history') document.getElementById('menuHistory').classList.add('active');
+            
+            // Update active menu di burger
+            document.querySelectorAll('.burger-dropdown ul li').forEach(li => li.classList.remove('active'));
+            if (tab === 'generator') document.getElementById('burgerGenerator').classList.add('active');
+            else if (tab === 'history') document.getElementById('burgerHistory').classList.add('active');
+        }
+
+        // ============================================================
+        // GENERATOR TAB
+        // ============================================================
+        function generateGeneratorTab() {
+            return `
+                <div style="background: #ffffff; border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-box-open" style="color: #667eea;"></i> <b>ISI DATA LANDINGPAGE</b>
+                        </h3>
+                        <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; font-size: 10px; padding: 4px 12px; border-radius: 40px; font-weight: 600;">
+                            <i class="fas fa-robot"></i> AI Powered
+                        </span>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-tag" style="color: #667eea;"></i> Produk / Jasa / Program
+                            </label>
+                            <input id="nama" placeholder="Contoh: Homeschooling tangerang berizajah resmi" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-palette" style="color: #667eea;"></i> Tema Landingpage
+                            </label>
+                            <select id="tema" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                                <option>Jualan Produk</option>
+                                <option>Pendidikan</option>
+                                <option>Jasa Profesional</option>
+                                <option>Kelas / Webinar</option>
+                                <option>Komunitas</option>
+                                <option>Produk Herbal</option>
+                                <option>Produk Digital</option>
+                                <option>Bisnis Kuliner</option>
+                                <option>Properti</option>
+                                <option>Travel / Umroh</option>
+                                <option>Aplikasi SaaS</option>
+                                <option>Event / Seminar</option>
+                                <option>Personal Branding</option>
+                                <option>Donasi / Sosial</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-bullseye" style="color: #667eea;"></i> Target Market
+                            </label>
+                            <input id="target" placeholder="Contoh: Orang Tua Murid" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-exclamation-triangle" style="color: #667eea;"></i> Masalah Utama
+                            </label>
+                            <textarea id="masalah" placeholder="Contoh: Sulit Konsentrasi" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc; min-height: 60px;"></textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-lightbulb" style="color: #667eea;"></i> Solusi yang Ditawarkan
+                            </label>
+                            <textarea id="solusi" placeholder="Contoh: Belajar Fleksibel" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc; min-height: 60px;"></textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-star" style="color: #667eea;"></i> Keunggulan / Benefit
+                            </label>
+                            <textarea id="benefit" placeholder="Contoh: Tersedia Offline & Online" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc; min-height: 60px;"></textarea>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-paintbrush" style="color: #667eea;"></i> Gaya Desain
+                            </label>
+                            <select id="desain" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                                <option>Model Web Pendidikan</option>
+                                <option>Modern SaaS Premium</option>
+                                <option>Model Web Berita</option>
+                                <option>Model Web SPA</option>
+                                <option>Elegan Minimalis</option>
+                                <option>Kartun Lucu</option>
+                                <option>Natural Herbal</option>
+                                <option>Luxury Premium</option>
+                                <option>Dark Mode Futuristik</option>
+                                <option>Warna Cerah UMKM</option>
+                                <option>Nuansa Islami</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-feather" style="color: #667eea;"></i> Gaya Copywriting
+                            </label>
+                            <select id="copywriting" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                                <option>AIDA</option>
+                                <option>AIDCA</option>
+                                <option>PAS</option>
+                                <option>Storytelling</option>
+                                <option>Hard Selling</option>
+                                <option>Soft Selling</option>
+                                <option>Bahasa Profesional</option>
+                                <option>Bahasa Santai Anak Muda</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-droplet" style="color: #667eea;"></i> Warna Utama
+                            </label>
+                            <input id="warna" placeholder="Contoh: biru ungu" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fab fa-whatsapp" style="color: #25D366;"></i> Nomor WhatsApp
+                            </label>
+                            <input id="wa" placeholder="Contoh: 08123456789" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-font" style="color: #667eea;"></i> Font Header
+                            </label>
+                            <select id="fontHeader" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                                <option>Inter</option>
+                                <option>Poppins Sans Serif</option>
+                                <option>Manrope</option>
+                                <option>Plus Jakarta Sans</option>
+                                <option>Playfair Display</option>
+                                <option>Nunito Sans Serif</option>
+                                <option>Open Sans</option>
+                                <option>Roboto</option>
+                                <option>Lato</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-hand-pointer" style="color: #667eea;"></i> CTA Utama
+                            </label>
+                            <input id="cta" placeholder="Contoh: Konsultasi Sekarang" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc;">
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-cubes" style="color: #667eea;"></i> Fitur Tambahan
+                            </label>
+                            <textarea id="fitur" placeholder="Contoh: FAQ, testimoni, tabel harga" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc; min-height: 60px;"></textarea>
+                        </div>
+                        <div style="grid-column: 1 / -1;">
+                            <label style="display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px;">
+                                <i class="fas fa-plus-circle" style="color: #667eea;"></i> Perintah Tambahan
+                            </label>
+                            <textarea id="tambahan" placeholder="Contoh: buat versi mobile saja" style="width: 100%; padding: 10px 14px; border: 1.5px solid #e5e7eb; border-radius: 12px; font-size: 14px; background: #fafbfc; min-height: 60px;"></textarea>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn-image" onclick="generatePrompt()" title="Buat Prompt">
+                            <img src="https://smartmultitechsolution.github.io/tools/assets/Buat-Prompt-2.png" alt="Buat Prompt">
+                        </button>
+                        <button class="btn-image" onclick="copyPrompt()" title="Copy Prompt">
+                            <img src="https://smartmultitechsolution.github.io/tools/assets/Copy-Prompt-2.png" alt="Copy Prompt">
+                        </button>
+                        <button class="btn-image" onclick="resetForm()" title="Reset">
+                            <img src="https://smartmultitechsolution.github.io/tools/assets/Reset-2.png" alt="Reset">
+                        </button>
+                        <button class="btn-image" onclick="saveToHistory()" title="Simpan ke Riwayat">
+                            <img src="https://smartmultitechsolution.github.io/tools/assets/Save-Riwayat.png" alt="Simpan ke Riwayat">
+                        </button>
+                    </div>
+                </div>
+                <div style="background: #ffffff; border-radius: 20px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-code" style="color: #667eea;"></i> Hasil Prompt
+                        </h3>
+                        <span style="background: linear-gradient(135deg, #667eea, #764ba2); color: #fff; font-size: 10px; padding: 4px 12px; border-radius: 40px; font-weight: 600;">
+                            <i class="fas fa-check-circle"></i> Siap Pakai
+                        </span>
+                    </div>
+                    <div style="background: #0f172a; border-radius: 16px; padding: 20px; margin-top: 12px;">
+                        <div style="color: #94a3b8; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-terminal" style="color: #667eea;"></i> Output Generator
+                        </div>
+                        <div id="output" style="color: #e2e8f0; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.7; white-space: pre-wrap; max-height: 500px; overflow-y: auto;">
+                            ✨ Prompt akan muncul di sini...
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ============================================================
+        // GENERATOR FUNCTIONS
+        // ============================================================
+        let currentPrompt = '';
+
+        function generatePrompt() {
+            const nama = document.getElementById('nama').value;
+            const tema = document.getElementById('tema').value;
+            const target = document.getElementById('target').value;
+            const masalah = document.getElementById('masalah').value;
+            const solusi = document.getElementById('solusi').value;
+            const benefit = document.getElementById('benefit').value;
+            const desain = document.getElementById('desain').value;
+            const copywriting = document.getElementById('copywriting').value;
+            const warna = document.getElementById('warna').value;
+            const wa = document.getElementById('wa').value;
+            const fontHeader = document.getElementById('fontHeader').value;
+            const cta = document.getElementById('cta').value;
+            const fitur = document.getElementById('fitur').value;
+            const tambahan = document.getElementById('tambahan').value;
+
+            const prompt = `Buatkan saya script landingpage yang SEO friendly berbasis HTML, CSS, Bootstrap dan JavaScript dalam 1 file lengkap.
+
+Nama landingpage: ${nama}
+Tema landingpage: ${tema}
+Target market: ${target}
+Masalah utama: ${masalah}
+Solusi: ${solusi}
+Keunggulan: ${benefit}
+Gaya desain: ${desain}
+Gaya copywriting: ${copywriting}
+Warna utama: ${warna}
+Nomor WhatsApp: ${wa}
+Font Header: ${fontHeader}
+CTA utama: ${cta}
+Fitur tambahan: ${fitur}
+
+Struktur landingpage:
+1. Hero section dengan headline kuat
+2. Subheadline masalah dan solusi
+3. Tombol CTA WhatsApp
+4. Section masalah
+5. Section solusi
+6. Section benefit
+7. Section alasan memilih
+8. Section cara kerja
+9. Section testimoni dummy
+10. Section harga/paket
+11. Section 10-12 FAQ
+12. Section CTA akhir
+13. Footer sederhana
+
+Ketentuan desain: modern, responsive, mobile friendly, card modern, animasi ringan. Khusus untuk SPA (Singel Page Aplication) seiap menu di bedakan halaman menggunakan menu di navigasi.
+
+Ketentuan teknis: 1 file HTML, HTML+CSS+JS murni, CDN Font Awesome, kode rapi, komentar, CTA WhatsApp wa.me, gambar dari penyedia gratis.
+
+Perintah tambahan: ${tambahan}`;
+
+            currentPrompt = prompt;
+            document.getElementById('output').innerText = prompt;
+            showNotification('Prompt berhasil dibuat!', 'success');
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('output').innerText;
+            if (!text || text === '✨ Prompt akan muncul di sini...') {
+                showNotification('Belum ada prompt untuk di-copy!', 'error');
+                return;
+            }
+            navigator.clipboard.writeText(text);
+            showNotification('Prompt berhasil di-copy!', 'success');
+        }
+
+        function resetForm() {
+            document.querySelectorAll('#tabContent input, #tabContent textarea, #tabContent select').forEach(el => {
+                if (el.tagName === 'SELECT') el.selectedIndex = 0;
+                else el.value = '';
+            });
+            document.getElementById('output').innerText = '✨ Prompt akan muncul di sini...';
+            currentPrompt = '';
+            showNotification('Form berhasil di-reset!', 'info');
+        }
+
+        function saveToHistory() {
+            const output = document.getElementById('output').innerText;
+            if (!output || output === '✨ Prompt akan muncul di sini...') {
+                showNotification('Buat prompt terlebih dahulu!', 'error');
+                return;
+            }
+            const prompts = getPrompts();
+            prompts.push({
+                id: Date.now(),
+                prompt: output,
+                theme: document.getElementById('tema').value || 'Umum',
+                createdAt: new Date().toLocaleString('id-ID')
+            });
+            savePrompts(prompts);
+            showNotification('Prompt berhasil disimpan ke riwayat!', 'success');
+        }
+
+        // ============================================================
+        // HISTORY TAB
+        // ============================================================
+        function generateHistoryTab() {
+            return `
+                <div style="background: #ffffff; border-radius: 20px; padding: 24px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.04);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                        <h3 style="font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+                            <i class="fas fa-history" style="color: #667eea;"></i> Riwayat Prompt
+                        </h3>
+                        <button onclick="clearHistory()" style="background: #ef4444; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                            <i class="fas fa-trash"></i> Hapus Semua
+                        </button>
+                    </div>
+                    <div id="historyList">
+                        <p style="color: #6b7280; text-align: center; padding: 40px 0;">
+                            <i class="fas fa-inbox" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>
+                            Belum ada riwayat
+                        </p>
+                    </div>
+                </div>
+            `;
+        }
+
+        function loadHistory() {
+            const prompts = getPrompts();
+            const container = document.getElementById('historyList');
+            if (!container) return;
+            if (prompts.length === 0) {
+                container.innerHTML = `<p style="color: #6b7280; text-align: center; padding: 40px 0;"><i class="fas fa-inbox" style="font-size: 32px; display: block; margin-bottom: 12px;"></i>Belum ada riwayat</p>`;
+                return;
+            }
+            container.innerHTML = prompts.map(p => `
+                <div style="background: #f8fafc; border-radius: 12px; padding: 16px; margin-bottom: 12px; border-left: 4px solid #667eea;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; flex-wrap: wrap; gap: 8px;">
+                        <div>
+                            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                                <span style="background: #667eea; color: white; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">${p.theme || 'Umum'}</span>
+                                <span style="color: #6b7280; font-size: 12px;"><i class="far fa-calendar-alt"></i> ${p.createdAt || 'Tanggal tidak tersedia'}</span>
+                            </div>
+                            <p style="margin-top: 8px; color: #1a1a2e; font-size: 13px; line-height: 1.5; max-height: 80px; overflow: hidden; text-overflow: ellipsis;">${p.prompt.substring(0, 200)}${p.prompt.length > 200 ? '...' : ''}</p>
+                        </div>
+                        <div style="display: flex; gap: 8px; flex-shrink: 0;">
+                            <button onclick="viewPrompt('${p.id}')" style="background: #667eea; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;"><i class="fas fa-eye"></i> Lihat</button>
+                            <button onclick="deletePrompt('${p.id}')" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; cursor: pointer;"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewPrompt(id) {
+            const prompts = getPrompts();
+            const prompt = prompts.find(p => p.id == id);
+            if (prompt) {
+                switchTab('generator');
+                document.getElementById('output').innerText = prompt.prompt;
+                currentPrompt = prompt.prompt;
+                showNotification('Prompt dimuat dari riwayat!', 'success');
+            }
+        }
+
+        function deletePrompt(id) {
+            if (!confirm('Yakin ingin menghapus prompt ini?')) return;
+            let prompts = getPrompts();
+            prompts = prompts.filter(p => p.id != id);
+            savePrompts(prompts);
+            loadHistory();
+            showNotification('Prompt berhasil dihapus!', 'info');
+        }
+
+        function clearHistory() {
+            if (!confirm('Yakin ingin menghapus semua riwayat?')) return;
+            savePrompts([]);
+            loadHistory();
+            showNotification('Semua riwayat berhasil dihapus!', 'info');
+        }
+
+        // ============================================================
+        // EVENT LISTENERS
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM ready!');
+
+            // ===== THEME TOGGLE =====
+            const themeBtn = document.getElementById('themeToggleBtn');
+            if (themeBtn) {
+                themeBtn.onclick = toggleTheme;
+            }
+
+            // ===== LOAD THEME =====
+            if (localStorage.getItem('prompt_theme') === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+            }
+            
+            // ===== UPDATE LOGO SAAT LOAD =====
+            updateLogos();
+
+            // ===== TUTUP BURGER SAAT KLIK DI LUAR =====
+            document.addEventListener('click', function(event) {
+                const burgerContainer = document.querySelector('.burger-container');
+                const dropdown = document.getElementById('burgerDropdown');
+                if (burgerContainer && !burgerContainer.contains(event.target)) {
+                    if (dropdown.classList.contains('open')) {
+                        closeBurger();
+                    }
+                }
+            });
+
+            // ===== LOGIN: Enter key submit =====
+            document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+                }
+            });
+
+            console.log('Setup selesai!');
+        });
+
+        // ============================================================
+        // EXPOSE FUNGSI KE GLOBAL
+        // ============================================================
+        window.goHome = goHome;
+        window.logout = logout;
+        window.toggleTheme = toggleTheme;
+        window.switchTab = switchTab;
+        window.generatePrompt = generatePrompt;
+        window.copyPrompt = copyPrompt;
+        window.resetForm = resetForm;
+        window.saveToHistory = saveToHistory;
+        window.viewPrompt = viewPrompt;
+        window.deletePrompt = deletePrompt;
+        window.clearHistory = clearHistory;
+        window.toggleBurger = toggleBurger;
+        window.closeBurger = closeBurger;
+        window.handleLogin = handleLogin;
+
+        console.log('Semua fungsi sudah di-expose ke window!');
+    </script>
+
+
+
+
+
+
+
+
+
+</script>
+<!-- Anti Klik Kanan -->
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Block Keys -->
+<script>
+  document.onkeydown = function (e) {
+    // F12
+    if (e.key === "F12") return false;
+
+    // Ctrl+Shift+I / J / C
+    if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) {
+      return false;
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      return false;
+    }
+
+    // Ctrl+S (Save)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      return false;
+    }
+
+    // Ctrl+P (Print)
+    if (e.ctrlKey && (e.key === "p" || e.key === "P")) {
+      return false;
+    }
+    // Ctrl+A (All)
+    if (e.ctrlKey && (e.key === "a" || e.key === "A")) {
+      return false;
+    }
+
+  };
+</script>
+
+<!-- Anti Drag -->
+<script>
+  document.addEventListener("dragstart", e => e.preventDefault());
+</script>
+
+<!-- ============================================================ -->
+<!-- FIXED: Anti Inspect Element + Anti Debug Mode               -->
+<!-- (Versi lama menyebabkan about:blank karena getter id       -->
+<!--  terpicu oleh console.log internal browser)                 -->
+<!-- ============================================================ -->
+<script>
+(function() {
+  // Deteksi DevTools via dimensi viewport dengan toleransi aman.
+  // Tidak menggunakan Object.defineProperty / console.log(element)
+  // agar tidak memicu redirect palsu.
+  let alreadyRedirected = false;
+
+  setInterval(function() {
+    if (alreadyRedirected) return;
+
+    const widthDiff  = window.outerWidth  - window.innerWidth;
+    const heightDiff = window.outerHeight - window.innerHeight;
+
+    // Toleransi 300px untuk address bar mobile / taskbar desktop.
+    // Hanya trigger jika KEDUA dimensi melebihi threshold
+    // DAN tidak sedang fullscreen.
+    if (!document.fullscreenElement && widthDiff > 300 && heightDiff > 300) {
+      alreadyRedirected = true;
+      window.location.href = "about:blank";
+    }
+  }, 1500);
+})();
+</script>
+
+<!-- Detect DevTools via Dimensions (FIXED) -->
+<script>
+(function() {
+  // Versi lama: interval 800ms, threshold 200px, TANPA flag → false-positive
+  // di mobile saat address bar muncul/hilang.
+  // Versi baru: digabung logikanya dengan script di atas, jadi script ini
+  // tidak lagi melakukan redirect terpisah untuk menghindari konflik.
+  // (Dibiarkan sebagai placeholder agar struktur file tidak berubah.)
+})();
+</script>
+
+<!-- JS Code Obfuscation (ringan) -->
+<script>
+  (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+</script>
+
+</body>
+</html>
