@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Generator · Tools Konten Kreator</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="apple-touch-icon"https://smartmultitechsolution.github.io/tools/assets/fivicon-ai.png">
+	<!-- Google Font: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f0f4ff;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 300px;
+            background: #020296;
+            color: #e6edf5;
+            padding: 28px 0 20px 0;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+            transition: transform 0.3s ease;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar-brand {
+            padding: 0 24px 30px 24px;
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            margin-bottom: 20px;
+        }
+        .sidebar-brand img {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+        .sidebar-brand span {
+            background: linear-gradient(135deg, #a5b9e6, #6d8fd1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 16px;
+            flex: 1;
+        }
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+        .sidebar-menu li a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #b0c4e8;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .sidebar-menu li a i {
+            width: 22px;
+            font-size: 17px;
+            color: #7a90b9;
+            transition: 0.2s;
+        }
+        .sidebar-menu li a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+        }
+        .sidebar-menu li a:hover i {
+            color: #c7d8ff;
+        }
+        .sidebar-menu li a.active {
+            background: rgba(79, 70, 229, 0.25);
+            color: #ffffff;
+            box-shadow: inset 3px 0 0 #4F46E5;
+        }
+        .sidebar-menu li a.active i {
+            color: #a5bbff;
+        }
+
+        .sidebar-footer {
+            padding: 20px 24px 0 24px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            margin-top: 10px;
+        }
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 16px;
+            border-radius: 12px;
+            color: #b0c4e8;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: 0.2s;
+            cursor: pointer;
+        }
+        .sidebar-footer a i {
+            width: 22px;
+            font-size: 17px;
+            color: #7a90b9;
+        }
+        .sidebar-footer a:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+        }
+        .sidebar-footer a:hover i {
+            color: #c7d8ff;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 24px 30px 40px 30px;
+            min-height: 100vh;
+        }
+
+        /* ========== HEADER CARD ========== */
+        .header-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 20px 28px;
+            margin-bottom: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .header-card h1 {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e293b;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header-card .header-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+        .header-card .badge-version {
+            background: rgba(79, 70, 229, 0.12);
+            color: #4F46E5;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Password Overlay */
+        .password-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .password-overlay.hidden {
+            display: none;
+        }
+        .password-modal {
+            background: white;
+            border-radius: 32px;
+            padding: 40px 48px;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .password-modal .lock-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .password-modal .lock-icon img {
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+        }
+        .password-modal h2 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+        .password-modal .sub-text {
+            color: #64748b;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        .password-modal .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .password-modal .form-group label {
+            display: block;
+            font-weight: 600;
+            font-size: 14px;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+        .password-modal .form-group input {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #dce1f0;
+            border-radius: 16px;
+            font-size: 16px;
+            transition: 0.2s;
+            outline: none;
+        }
+        .password-modal .form-group input:focus {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+        .password-modal .btn-masuk {
+            background: #1f2a44;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+            width: 100%;
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 6px 14px rgba(26, 38, 57, 0.2);
+        }
+        .password-modal .btn-masuk:hover {
+            background: #2a3d62;
+            transform: scale(0.98);
+        }
+        .password-modal .error-msg {
+            color: #dc2626;
+            font-size: 13px;
+            margin-top: 12px;
+            min-height: 24px;
+        }
+
+        /* Responsif Header Logo */
+        @media (max-width: 480px) {
+            .header-card h1 {
+                font-size: 18px;
+                gap: 8px;
+            }
+            .header-card .header-logo {
+                width: 26px;
+                height: 26px;
+            }
+            .header-card {
+                padding: 16px 20px;
+            }
+            .password-modal {
+                padding: 32px 24px;
+                margin: 16px;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .header-card h1 {
+                font-size: 15px;
+                gap: 6px;
+            }
+            .header-card .header-logo {
+                width: 22px;
+                height: 22px;
+            }
+            .header-card {
+                padding: 12px 16px;
+            }
+            .header-card .badge-version {
+                font-size: 11px;
+                padding: 4px 12px;
+            }
+        }
+
+        /* ========== GLASS CARD ========== */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 32px -8px rgba(79, 70, 229, 0.12);
+            padding: 28px 32px;
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #020296;
+            font-weight: 700;
+            margin-top: 4px;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid rgba(79, 70, 229, 0.08);
+        }
+        .section-title i {
+            margin-right: 8px;
+            color: #4F46E5;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+            display: block;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px;
+        }
+        .form-col {
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding: 0 10px;
+            margin-bottom: 16px;
+        }
+        .form-col-full {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding: 0 10px;
+            margin-bottom: 16px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-col {
+                flex: 0 0 100%;
+                max-width: 100%;
+            }
+        }
+        
+        .form-control, .form-select {
+            border-radius: 16px;
+            border: 1px solid #dce1f0;
+            padding: 10px 16px;
+            font-size: 14px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            transition: 0.2s;
+            width: 100%;
+        }
+        .form-control:focus, .form-select:focus {
+            border-color: #4F46E5;
+            box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+        }
+        .form-control::placeholder {
+            color: #94a3b8;
+            font-size: 13px;
+        }
+        textarea.form-control {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .select-wrapper {
+            position: relative;
+        }
+        .select-wrapper::after {
+            content: "\f107";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+            pointer-events: none;
+        }
+        .select-wrapper select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 40px;
+            width: 100%;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px 16px;
+        }
+        .checkbox-grid .form-check {
+            padding-left: 28px;
+            margin-bottom: 4px;
+        }
+        .checkbox-grid .form-check-input {
+            margin-left: -28px;
+            margin-top: 4px;
+        }
+        .checkbox-grid .form-check-label {
+            font-size: 14px;
+            color: #334155;
+        }
+
+        /* ===== BUTTONS WITH IMAGES - TANPA BATASAN ===== */
+        .btn-group-custom {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            align-items: center;
+            margin: 0 0 24px 0;
+            padding: 0 0 0 10px;
+            background: transparent;
+        }
+
+        .btn-img-wrapper {
+            display: inline-block;
+            line-height: 0;
+        }
+        
+        .btn-img {
+            border: none;
+            background: transparent;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.2s ease, filter 0.2s ease;
+            display: inline-block;
+            width: auto;
+            height: auto;
+            max-width: 100%;
+        }
+        .btn-img:hover {
+            transform: translateY(-3px);
+            filter: brightness(1.05);
+        }
+        .btn-img:active {
+            transform: scale(0.96);
+        }
+        .btn-img img {
+            width: auto;
+            height: auto;
+            display: block;
+            border-radius: 40px;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
+            max-width: 180px;
+            min-width: 80px;
+        }
+        .btn-img:hover img {
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25);
+        }
+
+        .btn-secondary-custom {
+            background: #e9edf5;
+            border: none;
+            color: #1e293b;
+            font-weight: 600;
+            padding: 12px 28px;
+            border-radius: 40px;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        .btn-secondary-custom:hover {
+            background: #dce1ed;
+            transform: translateY(-2px);
+        }
+
+        /* ========== PROMPT OUTPUT ========== */
+        .prompt-output {
+            background: #1a1a2e;
+            color: #cdd6f4;
+            padding: 20px 24px;
+            border-radius: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            word-break: break-word;
+            max-height: 460px;
+            overflow-y: auto;
+            line-height: 1.7;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .prompt-output .label {
+            color: #89b4fa;
+            font-weight: 600;
+        }
+        .prompt-output .highlight {
+            color: #f9e2af;
+        }
+        .prompt-output .value {
+            color: #a6e3a1;
+        }
+        .prompt-output .text-secondary {
+            color: #94a3b8 !important;
+        }
+
+        .badge-soft {
+            background: rgba(79, 70, 229, 0.12);
+            color: #4F46E5;
+            font-weight: 500;
+            padding: 4px 16px;
+            border-radius: 40px;
+            font-size: 13px;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 992px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+            .hamburger {
+                display: flex !important;
+            }
+            .checkbox-grid {
+                grid-template-columns: 1fr;
+            }
+            .btn-img img {
+                max-width: 140px;
+                min-width: 70px;
+            }
+            .btn-group-custom {
+                gap: 14px 20px;
+                padding: 0 0 0 8px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .btn-group-custom {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px 20px;
+                padding: 0 0 0 6px;
+                margin: 0 0 20px 0;
+                justify-items: center;
+            }
+            .btn-img-wrapper {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+            .btn-img {
+                display: flex;
+                justify-content: center;
+                width: 100%;
+            }
+            .btn-img img {
+                max-width: 140px;
+                min-width: 90px;
+                width: 100%;
+                height: auto;
+            }
+            .glass-card {
+                padding: 20px 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .btn-img img {
+                max-width: 120px;
+                min-width: 70px;
+            }
+            .btn-group-custom {
+                gap: 12px 16px;
+                padding: 0 0 0 4px;
+            }
+            .glass-card {
+                padding: 16px 12px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .btn-img img {
+                max-width: 100px;
+                min-width: 60px;
+            }
+            .btn-group-custom {
+                gap: 10px 12px;
+                padding: 0;
+            }
+        }
+
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 26px;
+            color: #1e293b;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 999;
+        }
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        @media (max-width: 992px) {
+            .sidebar-overlay.show {
+                display: block;
+            }
+        }
+
+        /* ========== TOAST ========== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+        .toast-container .toast {
+            pointer-events: auto;
+            background: #0b1a33;
+            color: #e6edf5;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            min-width: 200px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .toast-container .toast.show {
+            opacity: 1;
+        }
+        .toast-container .toast-body {
+            padding: 14px 20px;
+            font-weight: 500;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .toast-container .toast-body i {
+            font-size: 18px;
+        }
+        .toast-container .btn-close {
+            filter: brightness(0) invert(1);
+            opacity: 0.7;
+        }
+        .toast-container .btn-close:hover {
+            opacity: 1;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        .flex-wrap {
+            flex-wrap: wrap;
+        }
+        .gap-3 {
+            gap: 12px;
+        }
+        .mt-4 {
+            margin-top: 24px;
+        }
+        .mb-0 {
+            margin-bottom: 0;
+        }
+        .mb-2 {
+            margin-bottom: 8px;
+        }
+        .mb-3 {
+            margin-bottom: 16px;
+        }
+        .mt-3 {
+            margin-top: 16px;
+        }
+        .mt-1 {
+            margin-top: 4px;
+        }
+        .ms-1 {
+            margin-left: 4px;
+        }
+        .me-1 {
+            margin-right: 4px;
+        }
+        .me-2 {
+            margin-right: 8px;
+        }
+        .fw-bold {
+            font-weight: 700;
+        }
+        .bg-white {
+            background: #ffffff;
+        }
+        .bg-opacity-50 {
+            opacity: 0.5;
+        }
+        .rounded-4 {
+            border-radius: 20px;
+        }
+        .border {
+            border: 1px solid #dee2e6;
+        }
+        .p-3 {
+            padding: 16px;
+        }
+        .align-items-center {
+            align-items: center;
+        }
+        .align-items-start {
+            align-items: flex-start;
+        }
+        .justify-content-between {
+            justify-content: space-between;
+        }
+        .text-primary {
+            color: #4F46E5;
+        }
+        .text-secondary {
+            color: #6c757d;
+        }
+        .btn-outline-secondary {
+            color: #6c757d;
+            border: 1px solid #6c757d;
+            background: transparent;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-outline-secondary:hover {
+            background: #6c757d;
+            color: #fff;
+        }
+        .btn-outline-danger {
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            background: transparent;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .btn-outline-danger:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+        .btn-sm {
+            font-size: 12px;
+            padding: 4px 12px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== PASSWORD OVERLAY ===== -->
+    <div class="password-overlay" id="passwordOverlay">
+        <div class="password-modal">
+            <div class="lock-icon">
+                <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png" alt="Logo">
+            </div>
+            <h2>Carousel Generator</h2>
+            <p class="sub-text">Masukkan password untuk mengakses</p>
+            <div class="form-group">
+                <label for="passwordInput"><i class="fas fa-key" style="margin-right:6px;"></i>Masukkan Password</label>
+                <input type="password" id="passwordInput" placeholder="Kata sandi …" autocomplete="off">
+            </div>
+            <button class="btn-masuk" id="loginButton"><i class="fas fa-arrow-right-to-bracket" style="margin-right:8px;"></i> Masuk</button>
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png" alt="Logo">
+            <span>Prompt<span style="color:#e6edf5; -webkit-text-fill-color:#e6edf5;"> Generator</span></span>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="https://smartmultitechsolution.github.io/tools/" target="_blank" id="menuHome"><i class="fas fa-house"></i> Home</a></li>
+            <li><a href="#" class="active" id="menuGenerator"><i class="fas fa-bolt"></i> Generator</a></li>
+            <li><a href="#" id="menuRiwayat"><i class="fas fa-clock-rotate-left"></i> Riwayat</a></li>
+            <!-- Logout diposisikan di sini (sejajar dengan menu lain) -->
+            <li><a href="#" id="menuLogout"><i class="fas fa-right-from-bracket"></i> Logout</a></li>
+        </ul>
+        <div class="sidebar-footer">
+            <!-- footer kosong, logout sudah di menu -->
+        </div>
+    </aside>
+
+    <!-- Overlay mobile -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="main-content" id="mainContent">
+
+        <!-- HEADER -->
+        <div class="header-card">
+            <div style="display:flex; align-items:center; gap:14px;">
+                <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+                <h1>
+                    <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png" alt="Logo AI" class="header-logo">
+                    Poster Iklan
+                </h1>
+            </div>
+            <span class="badge-version">V.1.3</span>
+        </div>
+
+        <!-- ===== KONTEN GENERATOR ===== -->
+        <div id="generatorContent">
+
+            <!-- ===== FORM CARD ===== -->
+            <div class="glass-card">
+                <!-- FITUR ISSUE GENERATOR -->
+                <div class="section-title"><i class="fas fa-bolt"></i> Fitur Issue Generator</div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label class="form-label">Target Audiens</label>
+                        <input type="text" id="targetAudience" class="form-control" placeholder="Contoh: Gen Z, Profesional, Ibu Rumah Tangga">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Nada / Tone</label>
+                        <div class="select-wrapper">
+                            <select id="toneHook" class="form-select">
+                                <option value="Professional">Professional</option>
+                                <option value="Friendly">Friendly</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Emotional">Emotional</option>
+                                <option value="Storytelling">Storytelling</option>
+                                <option value="AIDA">AIDA</option>
+                                <option value="PAS">PAS</option>
+                                <option value="Hard Selling">Hard Selling</option>
+                                <option value="Soft Selling">Soft Selling</option>
+                                <option value="Problem Solution">Problem Solution</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Call To Action (CTA)</label>
+                        <input type="text" id="ctaHook" class="form-control" placeholder="Contoh: Beli Sekarang, Daftar Gratis">
+                    </div>
+                </div>
+
+                <!-- FITUR DESAIN IKLAN -->
+                <div class="section-title" style="margin-top:8px;"><i class="fas fa-palette"></i> Fitur Desain Iklan</div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label class="form-label">Gaya Desain</label>
+                        <div class="select-wrapper">
+                            <select id="gayaDesain" class="form-select">
+                                <option value="Portal Berita Modern">Portal Berita Modern</option>
+                                <option value="Poster Iklan Dramatis">Poster Iklan Dramatis</option>
+                                <option value="Minimalis Elegan">Minimalis Elegan</option>
+                                <option value="Streetwear">Streetwear</option>
+                                <option value="Futuristik Neon">Futuristik Neon</option>
+                                <option value="Corporate Professional">Corporate Professional</option>
+                                <option value="Islami Elegan">Islami Elegan</option>
+                                <option value="Islami Kaligrafi">Islami Kaligrafi</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Headline Utama</label>
+                        <input type="text" id="headlineUtama" class="form-control" placeholder="Headline utama poster">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Subheadline (Masalah & Solusi)</label>
+                        <input type="text" id="subheadlineDesain" class="form-control" placeholder="Subheadline yang menjelaskan masalah dan solusi">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Bonus / Penawaran</label>
+                        <input type="text" id="bonus" class="form-control" placeholder="Contoh: Diskon 50%, Free E-book">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Jadwal / Periode</label>
+                        <input type="text" id="jadwal" class="form-control" placeholder="Contoh: 1-10 Januari 2025">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Ukuran / Platform</label>
+                        <div class="select-wrapper">
+                            <select id="ukuranPlatform" class="form-select">
+                                <option value="1:1">1:1 Square Feed</option>
+                                <option value="9:16">9:16 Story / Reels / TikTok</option>
+                                <option value="4:5">4:5 Instagram Feed</option>
+                                <option value="16:9">16:9 Youtube / Banner Lebar</option>
+                                <option value="15:9">15:9 Cover Promosi</option>
+                                <option value="3:4">3:4 Poster Vertikal</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FITUR PROMPT BUILDER -->
+                <div class="section-title" style="margin-top:8px;"><i class="fas fa-box"></i> Fitur Prompt Builder</div>
+                <div class="form-row">
+                    <div class="form-col">
+                        <label class="form-label">Tema Visual Utama</label>
+                        <input type="text" id="temaVisual" class="form-control" placeholder="Contoh: kemewahan, modern, natural, islami">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Warna Dominan</label>
+                        <input type="text" id="warnaDominan" class="form-control" placeholder="Contoh: Biru, Emas, Hijau">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Gaya Visual</label>
+                        <div class="select-wrapper">
+                            <select id="gayaVisual" class="form-select">
+                                <option value="Modern">Modern</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Minimalis">Minimalis</option>
+                                <option value="Cyberpunk">Cyberpunk</option>
+                                <option value="Neon">Neon</option>
+                                <option value="Realistic">Realistic</option>
+                                <option value="3D">3D</option>
+                                <option value="Flat Design">Flat Design</option>
+                                <option value="Photography">Photography</option>
+                                <option value="Kaligrafi Islami">Kaligrafi Islami</option>
+                                <option value="Seni Islami">Seni Islami</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Nama Organisasi / Brand</label>
+                        <input type="text" id="namaOrganisasi" class="form-control" placeholder="Nama brand atau organisasi">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Nomor WhatsApp</label>
+                        <input type="text" id="whatsapp" class="form-control" placeholder="Contoh: 0812-3456-7890">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Website / Link</label>
+                        <input type="text" id="website" class="form-control" placeholder="Contoh: www.tokoanda.com">
+                    </div>
+                    <div class="form-col">
+                        <label class="form-label">Karakter Iklan</label>
+                        <div class="select-wrapper">
+                            <select id="karakterIklan" class="form-select">
+                                <option value="Profesional">Profesional</option>
+                                <option value="Friendly">Friendly</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Energetic">Energetic</option>
+                                <option value="Elegan">Elegan</option>
+                                <option value="Modern">Modern</option>
+                                <option value="Kreatif">Kreatif</option>
+                                <option value="Bold">Bold</option>
+                                <option value="Religius">Religius</option>
+                                <option value="Spiritual">Spiritual</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col-full">
+                        <label class="form-label">Elemen yang Harus Muncul (pisahkan dengan koma)</label>
+                        <input type="text" id="elemenWajib" class="form-control" placeholder="Contoh: Logo, Kaligrafi, Masjid, Bintang">
+                    </div>
+                </div>
+
+                <!-- EFEK TAMBAHAN -->
+                <div class="section-title" style="margin-top:8px;"><i class="fas fa-plus-square"></i> Efek Tambahan</div>
+                <div class="checkbox-grid">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="highContrast" value="High Contrast">
+                        <label class="form-check-label">High Contrast</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="boldTypography" value="Bold Typography">
+                        <label class="form-check-label">Bold Typography</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="clearHierarchy" value="Clear Hierarchy">
+                        <label class="form-check-label">Clear Hierarchy</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="mobileFriendly" value="Mobile Friendly">
+                        <label class="form-check-label">Mobile Friendly</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="attentionGrabbing" value="Attention Grabbing">
+                        <label class="form-check-label">Attention Grabbing</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="nuansaIslami" value="Nuansa Islami">
+                        <label class="form-check-label">Nuansa Islami (Kaligrafi, Motif)</label>
+                    </div>
+                </div>
+            </div>
+            <!-- ===== AKHIR FORM CARD ===== -->
+
+            <!-- ===== TOMBOL GAMBAR - SEPENUHNYA BEBAS TANPA CARD ===== -->
+            <div class="btn-group-custom">
+                <span class="btn-img-wrapper">
+                    <button class="btn-img" id="generatePosterBtn" title="Generate Poster">
+                        <img src="https://smartmultitechsolution.github.io/tools/assets/Buat-Prompt-2.png" alt="Generate Poster">
+                    </button>
+                </span>
+                <span class="btn-img-wrapper">
+                    <button class="btn-img" id="resetBtn" title="Reset">
+                        <img src="https://smartmultitechsolution.github.io/tools/assets/Reset-2.png" alt="Reset">
+                    </button>
+                </span>
+                <span class="btn-img-wrapper">
+                    <button class="btn-img" id="saveRiwayatBtn" title="Save Riwayat">
+                        <img src="https://smartmultitechsolution.github.io/tools/assets/Save-Riwayat.png" alt="Save Riwayat">
+                    </button>
+                </span>
+                <span class="btn-img-wrapper">
+                    <button class="btn-img copy-btn" data-target="prompt" title="Copy Prompt">
+                        <img src="https://smartmultitechsolution.github.io/tools/assets/Copy-Prompt-2.png" alt="Copy Prompt">
+                    </button>
+                </span>
+            </div>
+
+            <!-- ===== HASIL PROMPT ===== -->
+            <div class="glass-card">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h4 class="fw-bold mb-0"><i class="fas fa-stars text-primary me-1"></i> Hasil Generate</h4>
+                </div>
+                <div id="promptOutput" class="prompt-output">
+                    <p class="text-secondary" style="color:#94a3b8 !important;">Isi data dan klik tombol generate di atas.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== RIWAYAT ===== -->
+        <div id="riwayatContent" style="display:none;">
+            <div class="glass-card">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0"><i class="fas fa-clock-rotate-left me-2" style="color:#4F46E5;"></i>Riwayat Prompt</h5>
+                    <span class="badge-soft" id="riwayatCount">0 item</span>
+                </div>
+                <div id="riwayatList" class="prompt-output" style="background:#f8faff; color:#1e293b; border:1px solid #e2e8f0; max-height:500px;">
+                    <p class="text-secondary" style="color:#94a3b8 !important;">Belum ada riwayat yang disimpan.</p>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-sm btn-secondary-custom" id="clearRiwayatBtn"><i class="fas fa-trash-can me-1"></i> Hapus Semua</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast-container">
+        <div id="liveToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    <i class="fas fa-check-circle" style="color:#4ade80;"></i> Berhasil!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== BOOTSTRAP JS ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script>
+        (function() {
+            "use strict";
+
+            const $ = (id) => document.getElementById(id);
+            const promptOutput = $('promptOutput');
+            const generatorContent = $('generatorContent');
+            const riwayatContent = $('riwayatContent');
+            const riwayatList = $('riwayatList');
+            const riwayatCount = $('riwayatCount');
+
+            let currentResult = null;
+            let currentType = 'Poster';
+            let riwayatData = [];
+
+            // ===== PASSWORD SYSTEM =====
+            const passwordOverlay = $('passwordOverlay');
+            const passwordInput = $('passwordInput');
+            const loginButton = $('loginButton');
+            const errorMsg = $('errorMsg');
+            const EXPECTED_PASSWORD = "AIagency4";
+            let isAuthenticated = false;
+
+            function handleLogin() {
+                const entered = passwordInput.value.trim();
+                if (entered === EXPECTED_PASSWORD) {
+                    isAuthenticated = true;
+                    passwordOverlay.classList.add('hidden');
+                    errorMsg.textContent = '';
+                    toast('✅ Akses diberikan. Selamat datang!', 'fa-check-circle');
+                } else {
+                    errorMsg.textContent = '❌ Password salah. Coba lagi.';
+                    passwordInput.style.borderColor = '#dc2626';
+                    setTimeout(() => {
+                        passwordInput.style.borderColor = '#dce1f0';
+                    }, 2000);
+                }
+            }
+
+            loginButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                handleLogin();
+            });
+
+            passwordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    handleLogin();
+                }
+            });
+
+            passwordInput.addEventListener('input', function() {
+                errorMsg.textContent = '';
+                if (passwordInput.style.borderColor === '#dc2626') {
+                    passwordInput.style.borderColor = '#dce1f0';
+                }
+            });
+
+            // ===== LOGOUT =====
+            const menuLogout = $('menuLogout');
+            menuLogout.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.location.href = 'https://smartmultitechsolution.github.io/tools/assets/generator-poster-iklan-v1.3';
+            });
+
+            // ===== SIDEBAR NAV =====
+            const menuHome = $('menuHome');
+            const menuGenerator = $('menuGenerator');
+            const menuRiwayat = $('menuRiwayat');
+
+            menuHome.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('https://smartmultitechsolution.github.io/tools/', '_blank');
+            });
+
+            menuGenerator.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveMenu(menuGenerator);
+                generatorContent.style.display = 'block';
+                riwayatContent.style.display = 'none';
+                closeSidebarMobile();
+            });
+
+            menuRiwayat.addEventListener('click', function(e) {
+                e.preventDefault();
+                setActiveMenu(menuRiwayat);
+                generatorContent.style.display = 'none';
+                riwayatContent.style.display = 'block';
+                renderRiwayat();
+                closeSidebarMobile();
+            });
+
+            function setActiveMenu(activeEl) {
+                document.querySelectorAll('.sidebar-menu li a').forEach(a => a.classList.remove('active'));
+                activeEl.classList.add('active');
+            }
+
+            // ===== MOBILE SIDEBAR =====
+            const sidebar = $('sidebar');
+            const overlay = $('sidebarOverlay');
+            const hamburger = $('hamburgerBtn');
+
+            function toggleSidebar() {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('show');
+            }
+
+            function closeSidebarMobile() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+            }
+
+            hamburger.addEventListener('click', toggleSidebar);
+            overlay.addEventListener('click', closeSidebarMobile);
+
+            // ===== TOAST =====
+            let toastInstance = null;
+
+            function toast(msg, icon = 'fa-check-circle') {
+                const toastEl = document.getElementById('liveToast');
+                const body = document.getElementById('toastMessage');
+                body.innerHTML = `<i class="fas ${icon}" style="color:#4ade80;"></i> ${msg}`;
+                if (toastInstance) {
+                    toastInstance.dispose();
+                }
+                toastInstance = new bootstrap.Toast(toastEl, { 
+                    delay: 3000,
+                    autohide: true
+                });
+                toastInstance.show();
+            }
+
+            // ===== GENERATE PROMPT =====
+            function getFormData() {
+                return {
+                    targetAudience: $('targetAudience').value || 'Semua',
+                    toneHook: $('toneHook').value,
+                    ctaHook: $('ctaHook').value,
+                    gayaDesain: $('gayaDesain').value,
+                    headlineUtama: $('headlineUtama').value || 'Headline Utama',
+                    subheadlineDesain: $('subheadlineDesain').value || 'Subheadline',
+                    bonus: $('bonus').value || '',
+                    jadwal: $('jadwal').value || '',
+                    ukuranPlatform: $('ukuranPlatform').value,
+                    temaVisual: $('temaVisual').value || 'Modern',
+                    warnaDominan: $('warnaDominan').value || 'Biru',
+                    gayaVisual: $('gayaVisual').value,
+                    namaOrganisasi: $('namaOrganisasi').value || 'Brand',
+                    whatsapp: $('whatsapp').value || '',
+                    website: $('website').value || '',
+                    karakterIklan: $('karakterIklan').value,
+                    elemenWajib: $('elemenWajib').value || '',
+                    efek: {
+                        highContrast: $('highContrast').checked,
+                        boldTypography: $('boldTypography').checked,
+                        clearHierarchy: $('clearHierarchy').checked,
+                        mobileFriendly: $('mobileFriendly').checked,
+                        attentionGrabbing: $('attentionGrabbing').checked,
+                        nuansaIslami: $('nuansaIslami').checked
+                    }
+                };
+            }
+
+            function generatePosterPrompt() {
+                const d = getFormData();
+                const efekList = [];
+                if (d.efek.highContrast) efekList.push('High Contrast');
+                if (d.efek.boldTypography) efekList.push('Bold Typography');
+                if (d.efek.clearHierarchy) efekList.push('Clear Hierarchy');
+                if (d.efek.mobileFriendly) efekList.push('Mobile Friendly');
+                if (d.efek.attentionGrabbing) efekList.push('Attention Grabbing');
+                if (d.efek.nuansaIslami) efekList.push('Nuansa Islami (kaligrafi Arab, motif geometris Islami, warna emas/hijau)');
+                const efekStr = efekList.length ? '\nEfek Tambahan: ' + efekList.join(', ') : '';
+
+                const subheadline = d.subheadlineDesain || 'Solusi untuk masalah Anda';
+
+                let islamicSuffix = '';
+                if (d.efek.nuansaIslami || d.gayaDesain.includes('Islami')) {
+                    islamicSuffix = `
+        🌙 NUANSA ISLAMI
+        - Menggunakan elemen kaligrafi Arab
+        - Motif geometris Islami
+        - Warna-warna yang umum dalam seni Islami (emas, hijau, biru tua)
+        - Nuansa spiritual dan religius
+        - Desain yang elegan dan penuh makna`;
+                }
+
+                let kontakSection = '';
+                if (d.whatsapp || d.website) {
+                    kontakSection = '\n📱 KONTAK';
+                    if (d.whatsapp) kontakSection += '\nWhatsApp: ' + d.whatsapp;
+                    if (d.website) kontakSection += '\nWebsite: ' + d.website;
+                }
+
+                let bonusSection = '';
+                if (d.bonus) {
+                    bonusSection = '\n🎁 BONUS / PENAWARAN\n' + d.bonus;
+                }
+
+                let jadwalSection = '';
+                if (d.jadwal) {
+                    jadwalSection = '\n📅 JADWAL / PERIODE\n' + d.jadwal;
+                }
+
+                let ctaSection = '';
+                if (d.ctaHook) {
+                    ctaSection = '\n⚡ CTA\n' + d.ctaHook;
+                }
+
+                return `=== POSTER IKLAN PROFESIONAL ===
+
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        📌 HEADLINE UTAMA
+        "${d.headlineUtama}"
+
+        📝 SUBHEADLINE (Masalah & Solusi)
+        "${subheadline}"
+
+        🎯 TARGET AUDIENS
+        ${d.targetAudience}
+
+        💬 TONE
+        ${d.toneHook}
+
+        🎨 GAYA DESAIN
+        ${d.gayaDesain}
+
+        🖼️ TEMA VISUAL
+        ${d.temaVisual}
+
+        🎨 WARNA DOMINAN
+        ${d.warnaDominan}
+
+        📐 UKURAN / PLATFORM
+        ${d.ukuranPlatform}
+
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        📌 ARAHAN DESAIN PROFESIONAL:
+        ✅ Headline besar dan mudah dibaca dalam 3 detik
+        ✅ Subheadline dimodifikasi dengan kalimat promosi
+        ✅ Kontras tinggi untuk keterbacaan maksimal di HP
+        ✅ Hierarki teks yang jelas: Headline → Subheadline → CTA
+        ✅ Komposisi rapi, tidak terlalu penuh namun tetap menjual
+        ✅ Buat orang berhenti scroll & merasa tertarik
+
+        🔥 TIPS HOOK EFEKTIF:
+        🎯 Mulai dengan pertanyaan provokatif
+        📊 Gunakan data atau fakta mengejutkan
+        💬 Bicara langsung ke masalah audiens
+        ⚡ Buat rasa urgensi (FOMO)
+        🎁 Tawarkan solusi spesifik
+
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        🏢 ORGANISASI
+        ${d.namaOrganisasi}
+        ${kontakSection}
+        🎭 KARAKTER IKLAN
+        ${d.karakterIklan}
+        ${bonusSection}
+        ${jadwalSection}
+        ${ctaSection}
+        📋 ELEMEN WAJIB
+        ${d.elemenWajib || '-'}
+
+        ${efekStr}
+        ${islamicSuffix}
+
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        🖼️ PROMPT VISUAL (untuk AI Image Generator)
+
+        "${d.gayaDesain} commercial advertising poster with ${d.temaVisual} theme.
+        ${d.gayaVisual} style with ${d.warnaDominan} dominant color.
+        ${d.namaOrganisasi} brand identity.
+        Target audience: ${d.targetAudience}.
+        Character: ${d.karakterIklan}.
+        ${d.elemenWajib ? 'Must include elements: ' + d.elemenWajib : ''}
+        ${efekStr}
+        ${d.efek.nuansaIslami || d.gayaDesain.includes('Islami') ? 'Islamic art style, Arabic calligraphy, geometric patterns, spiritual atmosphere, elegant and meaningful design.' : ''}
+        Professional product photography, ultra detailed, 8K quality.
+        Soft lighting, realistic shadows, premium typography.
+        Centered composition, clean layout, commercial grade poster.
+        ${d.gayaDesain === 'Portal Berita Modern' ? 'Clean grid layout, news-style typography, white space, professional.' : ''}
+        ${d.gayaDesain === 'Poster Iklan Dramatis' ? 'Bold contrasts, dramatic lighting, cinematic composition.' : ''}
+        ${d.gayaDesain === 'Minimalis Elegan' ? 'Clean lines, negative space, elegant typography, sophisticated.' : ''}
+        ${d.gayaDesain === 'Streetwear' ? 'Urban vibe, bold graphics, street art elements, edgy.' : ''}
+        ${d.gayaDesain === 'Futuristik Neon' ? 'Neon glow effects, futuristic elements, cyber aesthetic.' : ''}
+        ${d.gayaDesain === 'Corporate Professional' ? 'Corporate identity, professional layout, business oriented.' : ''}
+        ${d.gayaDesain === 'Islami Elegan' ? 'Elegant Islamic design, gold accents, arabesque patterns, sophisticated.' : ''}
+        ${d.gayaDesain === 'Islami Kaligrafi' ? 'Arabic calligraphy focus, traditional Islamic art, decorative elements.' : ''}
+        Negative prompt: low quality, blurry, distorted, ugly, watermark, text artifacts, cluttered."
+
+        ━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+        📢 COPYWRITING
+
+        HEADLINE: "${d.headlineUtama}"
+
+        SUBHEADLINE: "${subheadline}"
+        ${d.bonus ? '\nBONUS: ' + d.bonus : ''}
+        ${d.jadwal ? '\nJADWAL: ' + d.jadwal : ''}
+        ${d.ctaHook ? '\nCTA: "' + d.ctaHook + '"' : ''}`;
+            }
+
+            function renderResult(result, type) {
+                if (!result) {
+                    promptOutput.innerHTML =
+                        `<p class="text-secondary" style="color:#94a3b8 !important;">Isi data dan klik generate.</p>`;
+                    return;
+                }
+                promptOutput.innerHTML = `<span class="label">🖼️ POSTER PROMPT</span>\n${result}`;
+            }
+
+            // ===== RIWAYAT =====
+            function loadRiwayat() {
+                try {
+                    const data = localStorage.getItem('visualads_riwayat');
+                    if (data) {
+                        riwayatData = JSON.parse(data);
+                        if (!Array.isArray(riwayatData)) riwayatData = [];
+                    }
+                } catch (e) { riwayatData = []; }
+            }
+
+            function saveRiwayatToStorage() {
+                try {
+                    localStorage.setItem('visualads_riwayat', JSON.stringify(riwayatData));
+                } catch (e) {}
+            }
+
+            function renderRiwayat() {
+                if (riwayatData.length === 0) {
+                    riwayatList.innerHTML =
+                        `<p class="text-secondary" style="color:#94a3b8 !important;">Belum ada riwayat yang disimpan.</p>`;
+                    riwayatCount.textContent = '0 item';
+                    return;
+                }
+                let html = '';
+                riwayatData.forEach((item, index) => {
+                    const preview = item.length > 300 ? item.substring(0, 300) + '...' : item;
+                    html += `
+                <div style="border-bottom:1px solid #e2e8f0; padding:12px 0; margin-bottom:6px;">
+                  <div style="font-size:13px; white-space:pre-wrap; word-break:break-word; color:#1e293b;">${preview}</div>
+                  <button class="btn btn-sm btn-outline-secondary mt-1 copy-riwayat-btn" data-index="${index}" style="font-size:12px; padding:2px 12px; border-radius:20px;"><i class="far fa-copy me-1"></i> Salin</button>
+                  <button class="btn btn-sm btn-outline-danger mt-1 ms-1 delete-riwayat-btn" data-index="${index}" style="font-size:12px; padding:2px 12px; border-radius:20px;"><i class="fas fa-trash-can me-1"></i> Hapus</button>
+                </div>
+              `;
+                });
+                riwayatList.innerHTML = html;
+                riwayatCount.textContent = riwayatData.length + ' item';
+
+                document.querySelectorAll('.copy-riwayat-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.index);
+                        if (riwayatData[idx]) {
+                            navigator.clipboard.writeText(riwayatData[idx]).then(() => toast('Prompt disalin!', 'fa-copy'))
+                                .catch(() => toast('Gagal copy', 'fa-times-circle'));
+                        }
+                    });
+                });
+
+                document.querySelectorAll('.delete-riwayat-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const idx = parseInt(this.dataset.index);
+                        if (confirm('Hapus riwayat ini?')) {
+                            riwayatData.splice(idx, 1);
+                            saveRiwayatToStorage();
+                            renderRiwayat();
+                            toast('Riwayat dihapus', 'fa-trash-can');
+                        }
+                    });
+                });
+            }
+
+            // ===== EVENT LISTENERS =====
+            $('saveRiwayatBtn').addEventListener('click', function() {
+                if (!currentResult) {
+                    toast('Belum ada prompt yang digenerate!', 'fa-exclamation-circle');
+                    return;
+                }
+                riwayatData.push(currentResult);
+                saveRiwayatToStorage();
+                toast('Riwayat tersimpan!', 'fa-floppy-disk');
+                if (riwayatContent.style.display !== 'none') {
+                    renderRiwayat();
+                }
+            });
+
+            $('clearRiwayatBtn').addEventListener('click', function() {
+                if (riwayatData.length === 0) {
+                    toast('Tidak ada riwayat', 'fa-info-circle');
+                    return;
+                }
+                if (confirm('Hapus semua riwayat?')) {
+                    riwayatData = [];
+                    saveRiwayatToStorage();
+                    renderRiwayat();
+                    toast('Semua riwayat dihapus', 'fa-trash-can');
+                }
+            });
+
+            $('generatePosterBtn').addEventListener('click', function() {
+                const prompt = generatePosterPrompt();
+                currentResult = prompt;
+                currentType = 'Poster';
+                renderResult(prompt, 'Poster');
+                toast('Poster Prompt generated!', 'fa-image');
+            });
+
+            $('resetBtn').addEventListener('click', function() {
+                if (confirm('Reset semua data?')) {
+                    localStorage.removeItem('visualads_poster_pro_state');
+                    location.reload();
+                }
+            });
+
+            document.querySelectorAll('.copy-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (!currentResult) { toast('Tidak ada data', 'fa-exclamation-circle'); return; }
+                    navigator.clipboard.writeText(currentResult).then(() => toast('Disalin!', 'fa-copy')).catch(() =>
+                        toast('Gagal copy', 'fa-times-circle'));
+                });
+            });
+
+            // ===== AUTO SAVE STATE =====
+            function saveState() {
+                try {
+                    const state = {
+                        targetAudience: $('targetAudience').value,
+                        toneHook: $('toneHook').value,
+                        ctaHook: $('ctaHook').value,
+                        gayaDesain: $('gayaDesain').value,
+                        headlineUtama: $('headlineUtama').value,
+                        subheadlineDesain: $('subheadlineDesain').value,
+                        bonus: $('bonus').value,
+                        jadwal: $('jadwal').value,
+                        ukuranPlatform: $('ukuranPlatform').value,
+                        temaVisual: $('temaVisual').value,
+                        warnaDominan: $('warnaDominan').value,
+                        gayaVisual: $('gayaVisual').value,
+                        namaOrganisasi: $('namaOrganisasi').value,
+                        whatsapp: $('whatsapp').value,
+                        website: $('website').value,
+                        karakterIklan: $('karakterIklan').value,
+                        elemenWajib: $('elemenWajib').value,
+                        efek: {
+                            highContrast: $('highContrast').checked,
+                            boldTypography: $('boldTypography').checked,
+                            clearHierarchy: $('clearHierarchy').checked,
+                            mobileFriendly: $('mobileFriendly').checked,
+                            attentionGrabbing: $('attentionGrabbing').checked,
+                            nuansaIslami: $('nuansaIslami').checked
+                        },
+                        result: currentResult,
+                        type: currentType
+                    };
+                    localStorage.setItem('visualads_poster_pro_state', JSON.stringify(state));
+                } catch (e) {}
+            }
+
+            function loadState() {
+                try {
+                    const raw = localStorage.getItem('visualads_poster_pro_state');
+                    if (!raw) return;
+                    const state = JSON.parse(raw);
+                    $('targetAudience').value = state.targetAudience || '';
+                    $('toneHook').value = state.toneHook || 'Professional';
+                    $('ctaHook').value = state.ctaHook || '';
+                    $('gayaDesain').value = state.gayaDesain || 'Portal Berita Modern';
+                    $('headlineUtama').value = state.headlineUtama || '';
+                    $('subheadlineDesain').value = state.subheadlineDesain || '';
+                    $('bonus').value = state.bonus || '';
+                    $('jadwal').value = state.jadwal || '';
+                    $('ukuranPlatform').value = state.ukuranPlatform || '1:1';
+                    $('temaVisual').value = state.temaVisual || '';
+                    $('warnaDominan').value = state.warnaDominan || '';
+                    $('gayaVisual').value = state.gayaVisual || 'Modern';
+                    $('namaOrganisasi').value = state.namaOrganisasi || '';
+                    $('whatsapp').value = state.whatsapp || '';
+                    $('website').value = state.website || '';
+                    $('karakterIklan').value = state.karakterIklan || 'Profesional';
+                    $('elemenWajib').value = state.elemenWajib || '';
+                    if (state.efek) {
+                        $('highContrast').checked = state.efek.highContrast || false;
+                        $('boldTypography').checked = state.efek.boldTypography || false;
+                        $('clearHierarchy').checked = state.efek.clearHierarchy || false;
+                        $('mobileFriendly').checked = state.efek.mobileFriendly || false;
+                        $('attentionGrabbing').checked = state.efek.attentionGrabbing || false;
+                        $('nuansaIslami').checked = state.efek.nuansaIslami || false;
+                    }
+                    if (state.result) {
+                        currentResult = state.result;
+                        currentType = state.type || 'Poster';
+                        renderResult(currentResult, currentType);
+                    }
+                } catch (e) { console.warn('loadState', e); }
+            }
+
+            document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('change', saveState));
+            document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', saveState));
+
+            // ===== INIT =====
+            loadRiwayat();
+            loadState();
+            setActiveMenu(menuGenerator);
+            generatorContent.style.display = 'block';
+            riwayatContent.style.display = 'none';
+
+        })();
+    </script>
+
+
+
+
+
+</script>
+<!-- Anti Klik Kanan -->
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Block Keys -->
+<script>
+  document.onkeydown = function (e) {
+    // F12
+    if (e.key === "F12") return false;
+
+    // Ctrl+Shift+I / J / C
+    if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) {
+      return false;
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      return false;
+    }
+
+    // Ctrl+S (Save)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      return false;
+    }
+
+    // Ctrl+P (Print)
+    if (e.ctrlKey && (e.key === "p" || e.key === "P")) {
+      return false;
+    }
+    // Ctrl+A (All)
+    if (e.ctrlKey && (e.key === "a" || e.key === "A")) {
+      return false;
+    }
+
+  };
+</script>
+
+<!-- Anti Drag -->
+<script>
+  document.addEventListener("dragstart", e => e.preventDefault());
+</script>
+
+<!-- Anti Inspect Element + Anti Debug Mode -->
+<script>
+(function() {
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() {
+      window.location.href = "about:blank"; // Auto-close halaman
+    }
+  });
+
+  setInterval(() => {
+    console.log(element);
+  }, 1000);
+})();
+</script>
+
+<!-- Detect DevTools via Dimensions -->
+<script>
+setInterval(function() {
+  if (window.outerHeight - window.innerHeight > 200 ||
+      window.outerWidth - window.innerWidth > 200) {
+    window.location.href = "about:blank";
+  }
+}, 800);
+</script>
+
+<!-- JS Code Obfuscation (ringan) -->
+<script>
+  (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+</script>
+
+
+</body>
+</html>
