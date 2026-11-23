@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Carousel Prompt Generator</title>
+	<!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://smartmultitechsolution.github.io/tools/assets/fivicon-ai.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f0f2f5; color: #1a1a2e; min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .auth-container {
+            background: white; padding: 40px; border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1); width: 100%; max-width: 420px; position: relative;
+        }
+        .auth-container .logo { text-align: center; margin-bottom: 30px; }
+        .auth-container .logo img { height: 60px; width: auto; object-fit: contain; display: block; margin: 0 auto; }
+        .auth-container .logo h1 { margin-top: 12px; font-size: 22px; font-weight: 700; color: #1a1a2e; }
+        .auth-container .logo h1 span { color: #f5a623; }
+        .auth-container .logo p { color: #6b7280; font-size: 14px; margin-top: 4px; }
+        .badge-version {
+            position: absolute; top: 16px; right: 16px; background: #eef2ff; color: #4f46e5;
+            font-size: 11px; padding: 4px 12px; border-radius: 40px; font-weight: 600;
+        }
+        .login-error { color: #ef4444; font-size: 13px; margin-top: 8px; display: none; text-align: center; }
+        .login-error.show { display: block; }
+        .login-input {
+            width: 100%; padding: 12px 16px; border: 1.5px solid #e5e7eb; border-radius: 12px;
+            font-size: 14px; background: #fafbfc; transition: border-color 0.3s ease;
+        }
+        .login-input:focus { outline: none; border-color: #1a1a2e; }
+        .login-btn {
+            width: 100%; padding: 12px; background: linear-gradient(135deg, #1a1a2e, #0404f9);
+            color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: transform 0.15s ease;
+        }
+        .login-btn:hover { transform: scale(1.02); }
+        .login-btn:active { transform: scale(0.98); }
+        .app-container { display: none; max-width: 1400px; margin: 0 auto; padding: 20px; width: 100%; }
+        .app-container.active { display: block; }
+        .app-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0602c5 100%); color: white;
+            padding: 30px 40px; border-radius: 20px; margin-bottom: 30px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;
+        }
+        .app-header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 12px; }
+        .app-header h1 .header-icon { width: 36px; height: 36px; object-fit: contain; }
+        .app-header h1 span { color: #f5a623; }
+        .app-header .subtitle { font-size: 14px; opacity: 0.7; margin-top: 4px; }
+        .app-header .header-actions { display: flex; gap: 10px; align-items: center; }
+        .badge {
+            background: rgba(245, 166, 35, 0.2); border: 1px solid #f5a623;
+            padding: 8px 18px; border-radius: 50px; font-size: 13px; font-weight: 500; color: #f5a623;
+        }
+        .btn-logout {
+            background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white; padding: 8px 18px; border-radius: 50px; font-size: 13px; cursor: pointer; transition: all 0.2s;
+        }
+        .btn-logout:hover { background: rgba(255, 255, 255, 0.2); }
+        .main-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        @media (max-width: 1024px) { .main-grid { grid-template-columns: 1fr; } }
+        .card {
+            background: white; border-radius: 16px; padding: 28px 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06); margin-bottom: 24px; transition: box-shadow 0.2s;
+        }
+        .card:hover { box-shadow: 0 6px 30px rgba(0, 0, 0, 0.08); }
+        .card-title { font-size: 16px; font-weight: 600; color: #1a1a2e; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .card-title .step {
+            background: #1a1a2e; color: white; width: 26px; height: 26px; border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700;
+        }
+        .card-title .step.alt { background: #f5a623; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 13px; font-weight: 500; color: #4a4a6a; margin-bottom: 5px; }
+        .form-group label .required { color: #e74c3c; }
+        .form-group .hint { font-size: 12px; color: #8888aa; margin-top: 3px; }
+        input[type="text"], input[type="number"], textarea, select {
+            width: 100%; padding: 10px 14px; border: 2px solid #e8e8f0; border-radius: 10px;
+            font-size: 14px; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; background: #fafafe;
+        }
+        input:focus, textarea:focus, select:focus {
+            outline: none; border-color: #1a1a2e; box-shadow: 0 0 0 4px rgba(26, 26, 46, 0.08); background: white;
+        }
+        textarea { resize: vertical; min-height: 60px; }
+        select {
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%234a4a6a' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center;
+        }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+        @media (max-width: 600px) { .form-row { grid-template-columns: 1fr; } }
+        .toggle-wrapper { display: flex; align-items: center; gap: 12px; padding: 8px 0; }
+        .toggle {
+            position: relative; width: 44px; height: 26px; background: #d0d0e0; border-radius: 50px;
+            cursor: pointer; transition: background 0.3s; flex-shrink: 0;
+        }
+        .toggle.active { background: #1a1a2e; }
+        .toggle .knob {
+            position: absolute; top: 3px; left: 3px; width: 20px; height: 20px; background: white;
+            border-radius: 50%; transition: transform 0.3s; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        }
+        .toggle.active .knob { transform: translateX(18px); }
+        .toggle-label { font-size: 14px; font-weight: 500; color: #4a4a6a; }
+        .color-picker-group { display: flex; align-items: center; gap: 12px; }
+        .color-picker-group input[type="color"] {
+            width: 44px; height: 44px; border: 2px solid #e8e8f0; border-radius: 10px; padding: 2px; cursor: pointer;
+        }
+        .color-picker-group input[type="text"] { flex: 1; }
+        .slide-builder { border: 2px dashed #e0e0ec; border-radius: 12px; padding: 16px; margin-top: 12px; }
+        .slide-builder .slide-item { background: #f8f8fe; border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+        .slide-builder .slide-item:last-child { margin-bottom: 0; }
+        .slide-builder .slide-item .slide-number { font-size: 13px; font-weight: 600; color: #1a1a2e; margin-bottom: 8px; }
+        .output-area {
+            background: #1a1a2e; border-radius: 12px; padding: 20px; border: 2px solid #2a2a4e;
+            margin-top: 16px; max-height: 650px; overflow-y: auto; font-family: 'Courier New', monospace;
+            font-size: 13px; line-height: 1.8; white-space: pre-wrap; color: #c8c8d8;
+        }
+        .output-area .headline-wrapper { display: block; font-size: 17px; font-weight: 700; line-height: 1.6; margin: 4px 0; }
+        .output-area .subheadline-wrapper { display: block; font-size: 14px; font-weight: 600; line-height: 1.6; margin: 4px 0; }
+        .output-area .isi-text { color: #c8c8d8; font-size: 13px; display: block; margin: 2px 0; }
+        .output-area .label-headline { color: #ffd700; font-weight: 700; font-size: 14px; }
+        .output-area .label-subheadline { color: #66d9ff; font-weight: 600; font-size: 13px; }
+        .output-area .label-isi { color: #aaa; font-weight: 500; font-size: 13px; }
+        .output-area .master-title { color: #f5a623; font-weight: 700; font-size: 18px; display: block; margin-bottom: 8px; }
+        .output-area .global-title { color: #ffd700; font-weight: 700; font-size: 16px; display: block; margin: 10px 0 6px; }
+        .output-area .slide-title { color: #ff6b6b; font-weight: 700; font-size: 17px; display: block; margin: 14px 0 8px; }
+        .btn {
+            padding: 10px 24px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary { background: #1a1a2e; color: white; }
+        .btn-primary:hover { background: #2a2a4e; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(26, 26, 46, 0.3); }
+        .btn-secondary { background: #e8e8f0; color: #1a1a2e; }
+        .btn-secondary:hover { background: #d8d8e8; }
+        .btn-sm { padding: 6px 14px; font-size: 12px; }
+        .btn-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+        .btn-group .btn { flex: 1; min-width: 100px; justify-content: center; }
+        .flash {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #1a1a2e;
+            color: white; padding: 12px 28px; border-radius: 50px; font-size: 14px; font-weight: 500;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); opacity: 0; transition: opacity 0.4s;
+            z-index: 999; pointer-events: none;
+        }
+        .flash.show { opacity: 1; }
+        .output-area::-webkit-scrollbar { width: 6px; }
+        .output-area::-webkit-scrollbar-track { background: #2a2a4e; border-radius: 10px; }
+        .output-area::-webkit-scrollbar-thumb { background: #f5a623; border-radius: 10px; }
+        .tabs { display: flex; gap: 4px; margin-bottom: 16px; background: #f0f2f5; padding: 4px; border-radius: 12px; }
+        .tabs .tab {
+            padding: 8px 18px; border-radius: 8px; font-size: 13px; font-weight: 500;
+            cursor: pointer; transition: all 0.2s; background: transparent; border: none; color: #4a4a6a;
+        }
+        .tabs .tab.active { background: white; color: #1a1a2e; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .output-stats { display: flex; gap: 16px; flex-wrap: wrap; padding: 10px 0; font-size: 13px; color: #8888aa; }
+        .output-stats span { background: #f0f2f5; padding: 4px 12px; border-radius: 50px; }
+        .warning-box {
+            background: #fff8e1; border-left: 4px solid #f5a623; padding: 12px 16px;
+            border-radius: 8px; font-size: 12px; color: #6b4d00; margin-bottom: 14px; line-height: 1.6;
+        }
+        .warning-box strong { color: #b87400; }
+        @media (max-width: 600px) {
+            .auth-container { padding: 24px; margin: 16px; }
+            .app-header { padding: 20px; }
+            .app-header h1 { font-size: 20px; }
+            .card { padding: 18px; }
+            .btn-group .btn { flex: 1 1 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="flash" class="flash">✅ Disalin!</div>
+
+    <!-- ===== LOGIN ===== -->
+    <div id="loginContainer" class="auth-container">
+        <div class="badge-version">V.1.5</div>
+        <div class="logo">
+            <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Hitam.png" alt="Logo">
+            <h1><span>Carousel</span> Generator</h1>
+            <p>Masukkan password untuk mengakses</p>
+        </div>
+        <form id="loginForm" onsubmit="handleLogin(event)" style="margin-top: 20px;">
+            <div style="margin-bottom: 16px;">
+                <input type="password" id="loginPassword" class="login-input" placeholder="Masukkan Password" required>
+            </div>
+            <button type="submit" class="login-btn">
+                <i class="fas fa-unlock-alt"></i> Masuk
+            </button>
+            <div id="loginError" class="login-error">
+                <i class="fas fa-exclamation-circle"></i> Password salah! Coba lagi.
+            </div>
+        </form>
+    </div>
+
+    <!-- ===== APP ===== -->
+    <div id="appContainer" class="app-container">
+        <header class="app-header">
+            <div>
+                <h1>
+                    <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png" alt="Logo" class="header-icon" />
+                    <span>Carousel</span> Prompt Generator
+                </h1>
+                <div class="subtitle">Buat carousel Instagram slide-by-slide dengan format prompt profesional</div>
+            </div>
+            <div class="header-actions">
+                <div class="badge">⚡ V.1.5</div>
+                <button class="btn-logout" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </header>
+
+        <div class="main-grid">
+            <!-- LEFT -->
+            <div>
+                <!-- A. Informasi Utama -->
+                <div class="card">
+                    <div class="card-title"><span class="step">1</span> Informasi Utama</div>
+                    <div class="form-group">
+                        <label>Topik Carousel <span class="required">*</span></label>
+                        <textarea id="topik" rows="2" placeholder="Contoh: Bengkel Motor Injeksi">Bengkel Motor Injeksi</textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Headline Utama</label>
+                            <input type="text" id="headline" placeholder="Opsional" value="Bengkel Motor Injeksi" />
+                        </div>
+                        <div class="form-group">
+                            <label>Target Audiens <span class="required">*</span></label>
+                            <input type="text" id="target" placeholder="Contoh: Pemilik motor injeksi" value="Pemilik motor injeksi" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tujuan <span class="required">*</span></label>
+                            <select id="tujuan">
+                                <option value="Edukasi" selected>Edukasi</option>
+                                <option value="Awareness">Awareness</option>
+                                <option value="Engagement">Engagement</option>
+                                <option value="Soft Selling">Soft Selling</option>
+                                <option value="Hard Selling">Hard Selling</option>
+                                <option value="Branding">Branding</option>
+                                <option value="Storytelling">Storytelling</option>
+                                <option value="Promosi Produk">Promosi Produk</option>
+                                <option value="Promosi Jasa">Promosi Jasa</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Jumlah Slide <span class="required">*</span></label>
+                            <select id="jmlSlide">
+                                <option value="3">3 Slide</option>
+                                <option value="4" selected>4 Slide</option>
+                                <option value="5">5 Slide</option>
+                                <option value="6">6 Slide</option>
+                                <option value="7">7 Slide</option>
+                                <option value="8">8 Slide</option>
+                                <option value="9">9 Slide</option>
+                                <option value="10">10 Slide</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Bahasa <span class="required">*</span></label>
+                        <select id="bahasa">
+                            <option value="Indonesia" selected>Indonesia</option>
+                            <option value="English">English</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- B. Storytelling -->
+                <div class="card">
+                    <div class="card-title"><span class="step alt">2</span> Struktur Storytelling</div>
+                    <div class="form-group">
+                        <label>Mode Struktur</label>
+                        <select id="strukturMode">
+                            <option value="otomatis" selected>Otomatis (Hook → Problem → Solution → CTA)</option>
+                            <option value="storytelling">Storytelling</option>
+                            <option value="edukasi">Edukasi</option>
+                            <option value="listicle">Listicle</option>
+                            <option value="beforeafter">Before → After</option>
+                            <option value="pas">Problem → Agitate → Solution</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+                    <div id="customStruktur" style="display:none; margin-top:12px;">
+                        <div class="slide-builder" id="customSlideBuilder"></div>
+                    </div>
+                </div>
+
+                <!-- C. Visual Design -->
+                <div class="card">
+                    <div class="card-title"><span class="step">3</span> Visual Design</div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Gaya Visual</label>
+                            <select id="gayaVisual">
+                                <option value="Modern Minimalist" selected>Modern Minimalist</option>
+                                <option value="Premium">Premium</option>
+                                <option value="Corporate">Corporate</option>
+                                <option value="Editorial">Editorial</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Playful">Playful</option>
+                                <option value="3D">3D</option>
+                                <option value="Photorealistic">Photorealistic</option>
+                                <option value="Flat Illustration">Flat Illustration</option>
+                                <option value="Isometric">Isometric</option>
+                                <option value="Cartoon">Cartoon</option>
+                                <option value="Futuristic">Futuristic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Mood / Tone</label>
+                            <select id="mood">
+                                <option value="Inspiratif, profesional, terpercaya" selected>Inspiratif, Profesional, Terpercaya</option>
+                                <option value="Enerjik">Enerjik</option>
+                                <option value="Tenang">Tenang</option>
+                                <option value="Luxury">Luxury</option>
+                                <option value="Playful">Playful</option>
+                                <option value="Minimalis">Minimalis</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Warna Utama <span class="required">*</span></label>
+                            <div class="color-picker-group">
+                                <input type="color" id="warnaUtama" value="#db0000" />
+                                <input type="text" id="warnaUtamaText" value="#db0000" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Warna Sekunder <span class="required">*</span></label>
+                            <div class="color-picker-group">
+                                <input type="color" id="warnaSekunder" value="#000000" />
+                                <input type="text" id="warnaSekunderText" value="#000000" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Background</label>
+                            <select id="background">
+                                <option value="Light, clean, bright" selected>Light, Clean, Bright</option>
+                                <option value="Dark">Dark</option>
+                                <option value="Gradient">Gradient</option>
+                                <option value="Solid">Solid</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipografi</label>
+                            <select id="font">
+                                <option value="Montserrat" selected>Montserrat</option>
+                                <option value="Poppins">Poppins</option>
+                                <option value="Inter">Inter</option>
+                                <option value="Playfair Display">Playfair Display</option>
+                                <option value="Roboto">Roboto</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Lighting</label>
+                            <select id="lighting">
+                                <option value="Natural Cinematic" selected>Natural Cinematic</option>
+                                <option value="Studio Soft">Studio Soft</option>
+                                <option value="Dramatic">Dramatic</option>
+                                <option value="Golden Hour">Golden Hour</option>
+                                <option value="Neon">Neon</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Rasio</label>
+                            <select id="rasio">
+                                <option value="4:5 portrait" selected>4:5 (Portrait)</option>
+                                <option value="1:1 square">1:1 (Square)</option>
+                                <option value="9:16">9:16 (Stories)</option>
+                                <option value="16:9">16:9 (Landscape)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- D. Brand & CTA -->
+                <div class="card">
+                    <div class="card-title"><span class="step alt">4</span> Brand &amp; CTA</div>
+                    <div class="form-group">
+                        <label>Nama Brand <span class="required">*</span></label>
+                        <input type="text" id="brand" placeholder="Nama brand Anda" value="EduPro" />
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>CTA (Call to Action)</label>
+                            <select id="cta">
+                                <option value="Hubungi kami">Hubungi kami</option>
+                                <option value="Konsultasi sekarang">Konsultasi sekarang</option>
+                                <option value="Pelajari selengkapnya" selected>Pelajari selengkapnya</option>
+                                <option value="Daftar sekarang">Daftar sekarang</option>
+                                <option value="Klik link di bio">Klik link di bio</option>
+                                <option value="WhatsApp sekarang">WhatsApp sekarang</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Produk / Jasa</label>
+                            <input type="text" id="produk" placeholder="Produk atau jasa" value="servis motor injeksi" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Informasi Tambahan</label>
+                        <textarea id="infoTambahan" rows="2" placeholder="Info tambahan (opsional)">Bengkel motor injeksi modern</textarea>
+                    </div>
+                </div>
+
+                <!-- E. Advanced -->
+                <div class="card">
+                    <div class="card-title"><span class="step">5</span> Pengaturan Lanjutan</div>
+
+                    <div class="toggle-wrapper">
+                        <div class="toggle active" id="toggleNomorSlide" onclick="toggleSwitch(this)">
+                            <div class="knob"></div>
+                        </div>
+                        <span class="toggle-label">Tampilkan Nomor Urut Slide (default ON)</span>
+                    </div>
+
+                    <div class="toggle-wrapper">
+                        <div class="toggle active" id="toggleVisualConsistency" onclick="toggleSwitch(this)">
+                            <div class="knob"></div>
+                        </div>
+                        <span class="toggle-label">Visual Consistency (default ON)</span>
+                    </div>
+
+                    <div class="toggle-wrapper">
+                        <div class="toggle active" id="toggleSafeArea" onclick="toggleSwitch(this)">
+                            <div class="knob"></div>
+                        </div>
+                        <span class="toggle-label">Strict Safe Area (default ON)</span>
+                    </div>
+
+                    <div class="toggle-wrapper">
+                        <div class="toggle active" id="toggleNegative" onclick="toggleSwitch(this)">
+                            <div class="knob"></div>
+                        </div>
+                        <span class="toggle-label">Include Negative Prompt (default ON)</span>
+                    </div>
+
+                    <div class="toggle-wrapper">
+                        <div class="toggle active" id="toggleAutoContent" onclick="toggleSwitch(this)">
+                            <div class="knob"></div>
+                        </div>
+                        <span class="toggle-label">Generate Content Per Slide Otomatis</span>
+                    </div>
+
+                    <div id="manualSlideContent" style="display:none; margin-top:14px;">
+                        <div class="slide-builder" id="manualSlideBuilder"></div>
+                    </div>
+                </div>
+
+                <button class="btn btn-primary" style="width:100%; padding:14px; font-size:16px;" onclick="generatePrompts()">
+                    🚀 GENERATE CAROUSEL PROMPT
+                </button>
+            </div>
+
+            <!-- RIGHT -->
+            <div>
+                <div class="card" style="position:sticky; top:20px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:8px;">
+                        <div class="card-title" style="margin-bottom:0;">📋 Output Prompt</div>
+                        <div style="display:flex; gap:6px;">
+                            <button class="btn btn-secondary btn-sm" onclick="clearOutput()">✕ Clear</button>
+                        </div>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ PENTING untuk hasil final:</strong> Generate <strong>satu slide per sesi</strong> di image generator. Gunakan tombol <strong>"📋 Slide X"</strong> di bawah untuk copy prompt 1 slide saja. Jangan paste semua slide sekaligus — model AI cenderung mengulang teks dari prompt sebelumnya.
+                    </div>
+
+                    <div class="output-stats" id="outputStats">
+                        <span id="slideCount">0 slide</span>
+                        <span id="wordCount">0 kata</span>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab active" data-tab="tabMaster" onclick="switchTab(this)">📋 Master Instruction</button>
+                        <button class="tab" data-tab="tabImage" onclick="switchTab(this)">🖼️ Image Prompt</button>
+                    </div>
+
+                    <div class="tab-content active" id="tabMaster">
+                        <div class="output-area" id="outputMaster">
+                            <span style="color:#666;">// Master Instruction akan muncul di sini</span>
+                        </div>
+                        <div class="btn-group" id="slideCopyButtonsMaster"></div>
+                    </div>
+
+                    <div class="tab-content" id="tabImage">
+                        <div class="output-area" id="outputImage">
+                            <span style="color:#666;">// Prompt per slide untuk image generator</span>
+                        </div>
+                        <div class="btn-group" id="slideCopyButtonsImage"></div>
+                    </div>
+
+                    <div style="margin-top:12px; font-size:12px; color:#8888aa; text-align:center;">
+                        ⚡ Setiap slide adalah prompt independen. Copy lalu paste ke ChatGPT atau AI image generator.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script>
+        const CORRECT_PASSWORD = "AIagency6";
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const passwordInput = document.getElementById('loginPassword');
+            const errorDiv = document.getElementById('loginError');
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('appContainer').classList.add('active');
+                errorDiv.classList.remove('show');
+                passwordInput.value = '';
+                initApp();
+                showFlash('✅ Login berhasil! Selamat datang.', 3000);
+            } else {
+                errorDiv.classList.add('show');
+                passwordInput.value = '';
+                passwordInput.focus();
+                showFlash('❌ Password salah!', 2000);
+            }
+        }
+
+        function logout() {
+            document.getElementById('appContainer').classList.remove('active');
+            document.getElementById('loginContainer').style.display = 'block';
+            document.getElementById('loginPassword').value = '';
+            document.getElementById('loginError').classList.remove('show');
+            showFlash('👋 Anda telah logout.', 2000);
+        }
+
+        function $(id) { return document.getElementById(id); }
+
+        function showFlash(msg, duration) {
+            const el = $('flash');
+            el.textContent = msg || '✅ Disalin!';
+            el.classList.add('show');
+            clearTimeout(el._timer);
+            el._timer = setTimeout(() => el.classList.remove('show'), duration || 2000);
+        }
+
+        function toggleSwitch(el) {
+            el.classList.toggle('active');
+            if (el.id === 'toggleAutoContent') {
+                const manual = $('manualSlideContent');
+                manual.style.display = el.classList.contains('active') ? 'none' : 'block';
+                if (!el.classList.contains('active')) buildManualSlides();
+            }
+            updateSlideBuilderVisibility();
+        }
+
+        function updateSlideBuilderVisibility() {
+            const autoOn = $('toggleAutoContent').classList.contains('active');
+            $('manualSlideContent').style.display = autoOn ? 'none' : 'block';
+        }
+
+        $('strukturMode').addEventListener('change', function() {
+            const custom = $('customStruktur');
+            if (this.value === 'custom') {
+                custom.style.display = 'block';
+                buildCustomStructure();
+            } else {
+                custom.style.display = 'none';
+            }
+        });
+
+        function buildCustomStructure() {
+            const container = $('customSlideBuilder');
+            const jml = parseInt($('jmlSlide').value) || 4;
+            let html = '';
+            const functions = ['Hook', 'Problem', 'Solution', 'CTA'];
+            for (let i = 0; i < jml; i++) {
+                const label = functions[i] || `Slide ${i+1}`;
+                html += `
+                    <div class="slide-item">
+                        <div class="slide-number">Slide ${i+1}: ${label}</div>
+                        <input type="text" placeholder="Fungsi / judul slide" value="${label}" style="width:100%; margin-bottom:6px;" />
+                        <textarea rows="2" placeholder="Deskripsi slide..." style="width:100%;"></textarea>
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        function buildManualSlides() {
+            const container = $('manualSlideBuilder');
+            const jml = parseInt($('jmlSlide').value) || 4;
+            let html = '';
+            for (let i = 0; i < jml; i++) {
+                html += `
+                    <div class="slide-item">
+                        <div class="slide-number">Slide ${i+1}</div>
+                        <input type="text" placeholder="Headline slide ${i+1}" style="width:100%; margin-bottom:4px;" />
+                        <input type="text" placeholder="Subheadline" style="width:100%; margin-bottom:4px;" />
+                        <textarea rows="2" placeholder="Isi / konten slide ${i+1}" style="width:100%;"></textarea>
+                        <input type="text" placeholder="Konsep visual" style="width:100%;" />
+                    </div>
+                `;
+            }
+            container.innerHTML = html;
+        }
+
+        ['warnaUtama', 'warnaSekunder'].forEach(id => {
+            const picker = $(id);
+            const text = $(id + 'Text');
+            if (picker && text) {
+                picker.addEventListener('input', () => text.value = picker.value);
+                text.addEventListener('input', () => picker.value = text.value);
+            }
+        });
+
+        function switchTab(el) {
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            $(el.dataset.tab).classList.add('active');
+        }
+
+        function copyText(text) {
+            navigator.clipboard.writeText(text).then(() => showFlash('✅ Disalin!')).catch(() => {
+                const ta = document.createElement('textarea');
+                ta.value = text;
+                document.body.appendChild(ta);
+                ta.select();
+                document.execCommand('copy');
+                ta.remove();
+                showFlash('✅ Disalin!');
+            });
+        }
+
+        function copySlide(idx, mode) {
+            const el = mode === 'master' ? $('outputMaster') : $('outputImage');
+            const plainText = el.getAttribute('data-plain') || el.textContent;
+            const regex = new RegExp(`# SLIDE ${idx + 1}[\\s\\S]*?(?=# SLIDE ${idx + 2}|$)`);
+            const match = plainText.match(regex);
+            if (match) {
+                copyText(match[0].trim());
+            } else {
+                showFlash('❌ Slide tidak ditemukan');
+            }
+        }
+
+        function clearOutput() {
+            $('outputMaster').innerHTML = '<span style="color:#666;">// Master Instruction akan muncul di sini</span>';
+            $('outputImage').innerHTML = '<span style="color:#666;">// Prompt per slide untuk image generator</span>';
+            $('outputMaster').setAttribute('data-plain', '');
+            $('outputImage').setAttribute('data-plain', '');
+            $('slideCopyButtonsMaster').innerHTML = '';
+            $('slideCopyButtonsImage').innerHTML = '';
+            $('slideCount').textContent = '0 slide';
+            $('wordCount').textContent = '0 kata';
+        }
+
+        function splitTextWithColors(text, color1, color2) {
+            const words = text.split(' ');
+            let result = '';
+            let useColor1 = true;
+            let groupSize = 2;
+            let i = 0;
+            while (i < words.length) {
+                let group = [];
+                for (let j = 0; j < groupSize && i < words.length; j++) { group.push(words[i]); i++; }
+                const color = useColor1 ? color1 : color2;
+                result += `<span style="color:${color}; font-weight:inherit;">${group.join(' ')}</span>`;
+                if (i < words.length) result += ' ';
+                useColor1 = !useColor1;
+                if (i % 4 === 0) groupSize = groupSize === 2 ? 3 : 2;
+            }
+            return result;
+        }
+
+        function formatOutput(text, warnaUtama, warnaSekunder) {
+            let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            html = html.replace(/\*\*HEADLINE:\*\*\n([^\n]+)/g, (m, c) =>
+                `<span class="label-headline">HEADLINE:</span>\n<span class="headline-wrapper">${splitTextWithColors(c, warnaUtama, warnaSekunder)}</span>`);
+            html = html.replace(/\*\*SUBHEADLINE:\*\*\n([^\n]+)/g, (m, c) =>
+                `<span class="label-subheadline">SUBHEADLINE:</span>\n<span class="subheadline-wrapper">${splitTextWithColors(c, warnaUtama, warnaSekunder)}</span>`);
+            html = html.replace(/\*\*ISI:\*\*\n([^\n]+)/g, (m, c) =>
+                `<span class="label-isi">ISI:</span>\n<span class="isi-text">${c}</span>`);
+            html = html.replace(/# SLIDE (\d+) — ([^\n]+)/g, (m, n, f) => `<span class="slide-title"># SLIDE ${n} — ${f}</span>`);
+            html = html.replace(/# MASTER INSTRUCTION/g, () => `<span class="master-title"># MASTER INSTRUCTION</span>`);
+            html = html.replace(/## GLOBAL VISUAL SYSTEM/g, () => `<span class="global-title">## GLOBAL VISUAL SYSTEM</span>`);
+            html = html.replace(/\*\*FUNGSI:\*\*/g, () => `<span style="color:#ff6b6b; font-weight:700;">FUNGSI:</span>`);
+            html = html.replace(/\*\*KONSEP VISUAL:\*\*/g, () => `<span style="color:#f5a623; font-weight:700;">KONSEP VISUAL:</span>`);
+            html = html.replace(/\*\*PROMPT VISUAL:\*\*/g, () => `<span style="color:#66d9ff; font-weight:700;">PROMPT VISUAL:</span>`);
+            html = html.replace(/NEGATIVE PROMPT:/g, () => `<span style="color:#ff8a8a; font-weight:700;">NEGATIVE PROMPT:</span>`);
+            html = html.replace(/\*\*SANGAT PENTING:\*\*/g, () => `<span style="color:#ff4444; font-weight:700; background:#3a1a1a; padding:0 4px;">SANGAT PENTING:</span>`);
+            html = html.replace(/\*\*([^*]+)\*\*/g, (m, c) => `<span style="color:#f5a623; font-weight:600;">${c}</span>`);
+            return html;
+        }
+
+        function generatePrompts() {
+            const topik = $('topik').value.trim() || 'Topik tidak diisi';
+            const headline = $('headline').value.trim() || topik;
+            const target = $('target').value.trim() || 'Audiens umum';
+            const tujuan = $('tujuan').value;
+            const jmlSlide = parseInt($('jmlSlide').value) || 4;
+            const bahasa = $('bahasa').value;
+            const gayaVisual = $('gayaVisual').value;
+            const mood = $('mood').value;
+            const warnaUtama = $('warnaUtama').value;
+            const warnaSekunder = $('warnaSekunder').value;
+            const background = $('background').value;
+            const font = $('font').value;
+            const lighting = $('lighting').value;
+            const rasio = $('rasio').value;
+            const brand = $('brand').value.trim() || 'Brand';
+            const cta = $('cta').value;
+            const produk = $('produk').value.trim() || 'produk/jasa';
+            const infoTambahan = $('infoTambahan').value.trim();
+            const strukturMode = $('strukturMode').value;
+
+            const visualConsistency = $('toggleVisualConsistency').classList.contains('active');
+            const strictSafeArea = $('toggleSafeArea').classList.contains('active');
+            const includeNegative = $('toggleNegative').classList.contains('active');
+            const autoContent = $('toggleAutoContent').classList.contains('active');
+
+            const nomorSlide = $('toggleNomorSlide').classList.contains('active') ? 'tampil' : 'sembunyi';
+
+            // ===== AMBIL COPYWRITING MANUAL (jika toggle auto OFF) =====
+            let manualData = null;
+            if (!autoContent) {
+                manualData = [];
+                const items = $('manualSlideBuilder').querySelectorAll('.slide-item');
+                items.forEach(item => {
+                    const inputs = item.querySelectorAll('input, textarea');
+                    manualData.push({
+                        headline: inputs[0] ? inputs[0].value.trim() : '',
+                        subheadline: inputs[1] ? inputs[1].value.trim() : '',
+                        isi: inputs[2] ? inputs[2].value.trim() : '',
+                        visual: inputs[3] ? inputs[3].value.trim() : ''
+                    });
+                });
+            }
+
+            // Fungsi slide
+            let slideFunctions = [];
+            if (strukturMode === 'custom') {
+                const items = $('customSlideBuilder').querySelectorAll('.slide-item');
+                items.forEach((item, idx) => {
+                    const inputs = item.querySelectorAll('input, textarea');
+                    slideFunctions.push(inputs[0] ? inputs[0].value : `Slide ${idx+1}`);
+                });
+                while (slideFunctions.length < jmlSlide) slideFunctions.push(`Slide ${slideFunctions.length+1}`);
+            } else {
+                const defaultMap = {
+                    3: ['Hook', 'Masalah', 'CTA'],
+                    4: ['Hook', 'Masalah', 'Solusi', 'CTA'],
+                    5: ['Hook', 'Masalah', 'Insight', 'Solusi', 'CTA'],
+                    6: ['Hook', 'Masalah', 'Konteks', 'Solusi', 'Manfaat', 'CTA'],
+                    7: ['Hook', 'Masalah', 'Konteks', 'Insight', 'Solusi', 'Manfaat', 'CTA'],
+                    8: ['Hook', 'Masalah', 'Konteks', 'Insight', 'Solusi', 'Manfaat', 'Testimoni', 'CTA'],
+                    9: ['Hook', 'Masalah', 'Konteks', 'Insight', 'Solusi', 'Manfaat', 'Testimoni', 'Penutup', 'CTA'],
+                    10: ['Hook', 'Masalah', 'Konteks', 'Insight', 'Solusi', 'Manfaat', 'Testimoni', 'Penutup', 'Pengingat', 'CTA']
+                };
+                const base = defaultMap[jmlSlide] || defaultMap[4];
+                slideFunctions = base.slice(0, jmlSlide);
+                while (slideFunctions.length < jmlSlide) slideFunctions.push(`Slide ${slideFunctions.length+1}`);
+            }
+            if (!slideFunctions[slideFunctions.length - 1].toLowerCase().includes('cta')) {
+                slideFunctions[slideFunctions.length - 1] = 'CTA';
+            }
+
+            let masterOutput = `# MASTER INSTRUCTION\n\n`;
+            masterOutput += `ROLE: Creative Director, Art Director, Copywriter, Visual Storyteller, dan Prompt Engineer.\n\n`;
+            masterOutput += `BUAT CAROUSEL INSTAGRAM ${jmlSlide} SLIDE untuk brand **${brand}** dengan tema **${topik}**.\n\n`;
+
+            masterOutput += `## ATURAN MEMBUAT HEADLINE DAN SUBHEADLINE\n\n`;
+            masterOutput += `**PENTING:** HEADLINE dan SUBHEADLINE untuk setiap slide HARUS DIBUAT SECARA KREATIF DAN NATURAL sesuai dengan topik, fungsi slide, dan target audiens. JANGAN menggunakan template statis.\n\n`;
+            masterOutput += `* HEADLINE harus menarik perhatian (hook), mengandung kata kunci dari topik, dan sesuai dengan fungsi slide.\n`;
+            masterOutput += `* SUBHEADLINE harus mendukung HEADLINE dengan penjelasan singkat yang relevan.\n`;
+            masterOutput += `* Buat HEADLINE yang variatif untuk setiap slide, JANGAN sama atau mirip.\n`;
+            masterOutput += `* Gunakan gaya bahasa yang sesuai dengan target audiens (${target}).\n`;
+            masterOutput += `* HEADLINE dan SUBHEADLINE harus dalam bahasa ${bahasa}.\n\n`;
+
+            masterOutput += `## CONTOH HEADLINE & SUBHEADLINE YANG BAIK\n\n`;
+            masterOutput += `**Topik: "Belajar Tidak Harus di Kelas"**\n`;
+            masterOutput += `- Hook: HEADLINE: "Belajar di Kelas Itu Membosankan?" | SUBHEADLINE: "Temukan cara belajar yang lebih menyenangkan"\n`;
+            masterOutput += `- Masalah: HEADLINE: "Kenapa Belajar Terasa Sulit?" | SUBHEADLINE: "Banyak orang mengalami hal yang sama"\n`;
+            masterOutput += `- Solusi: HEADLINE: "Belajar Bisa Dimana Saja" | SUBHEADLINE: "Cara praktis menguasai ilmu baru"\n`;
+            masterOutput += `- CTA: HEADLINE: "Mulai Perjalanan Belajarmu" | SUBHEADLINE: "Ambil langkah pertama sekarang"\n\n`;
+
+            masterOutput += `**Topik: "Bengkel Motor Injeksi"**\n`;
+            masterOutput += `- Hook: HEADLINE: "Motor Injeksi Sering Mogok?" | SUBHEADLINE: "Jangan panik, ini solusinya"\n`;
+            masterOutput += `- Masalah: HEADLINE: "Kenapa Motor Injeksi Bermasalah?" | SUBHEADLINE: "Pahami penyebabnya sebelum ke bengkel"\n`;
+            masterOutput += `- Solusi: HEADLINE: "Servis Motor Injeksi Itu Mudah" | SUBHEADLINE: "Dengan perawatan yang tepat"\n`;
+            masterOutput += `- CTA: HEADLINE: "Bawa Motormu ke Bengkel Sekarang" | SUBHEADLINE: "Dapatkan servis terbaik untuk motormu"\n\n`;
+
+            masterOutput += `**SEKARANG, BUAT HEADLINE DAN SUBHEADLINE UNTUK TOPIK: "${topik}" DENGAN FUNGSI DI BAWAH INI.**\n\n`;
+
+            masterOutput += `## GLOBAL VISUAL SYSTEM\n\n`;
+            masterOutput += `* Target audience: ${target}\n`;
+            masterOutput += `* Tujuan: ${tujuan}\n`;
+            masterOutput += `* Style: ${gayaVisual}\n`;
+            masterOutput += `* Mood: ${mood}\n`;
+            masterOutput += `* Primary color: ${warnaUtama}\n`;
+            masterOutput += `* Secondary color: ${warnaSekunder}\n`;
+            masterOutput += `* Background: ${background}\n`;
+            masterOutput += `* Font: ${font}\n`;
+            masterOutput += `* Lighting: ${lighting}\n`;
+            masterOutput += `* Aspect ratio: ${rasio}\n`;
+            masterOutput += `* Brand: ${brand}\n`;
+
+            masterOutput += `* Nama brand "${brand}" WAJIB ditampilkan pada setiap slide (misalnya sebagai wordmark/logo text kecil di pojok atau footer), konsisten posisinya antar-slide.\n`;
+
+            if (infoTambahan) masterOutput += `* Info tambahan: ${infoTambahan}\n`;
+            if (visualConsistency) {
+                masterOutput += `* Visual continuity: karakter, ${topik.toLowerCase()}, ${produk}, warna, lighting, typography, dan art direction harus konsisten antar-slide.\n`;
+            }
+            masterOutput += `* Setiap slide adalah **PROMPT INDEPENDEN**.\n`;
+
+            if (nomorSlide === 'tampil') {
+                masterOutput += `* Nomor urut slide WAJIB berurutan 01, 02, 03, ... sesuai jumlah slide, dan setiap gambar hanya menampilkan SATU nomor sesuai posisinya (Slide 1 = "01", Slide 2 = "02", dst.). JANGAN mengulang "01" di semua slide.\n`;
+                masterOutput += `* Setiap slide WAJIB memakai copywriting (HEADLINE, SUBHEADLINE, ISI) miliknya sendiri. JANGAN mengulang headline hook di slide selain slide Hook.\n`;
+            } else {
+                masterOutput += `* Jangan menampilkan nomor urut slide pada desain.\n`;
+            }
+
+            masterOutput += `* Jangan menggabungkan beberapa slide menjadi satu gambar.\n`;
+            masterOutput += `* Jangan membuat collage.\n`;
+            masterOutput += `* Jangan membuat grid.\n`;
+            masterOutput += `* Jangan membuat multiple panels.\n`;
+            masterOutput += `* Jangan menampilkan preview carousel.\n`;
+            masterOutput += `* Jangan membuat contact sheet.\n`;
+            masterOutput += `* **Satu prompt = satu gambar = satu slide.**\n`;
+            masterOutput += `* Semua objek utama harus terlihat utuh dan tidak terpotong.\n`;
+            masterOutput += `* Berikan ruang kosong yang cukup untuk headline, subheadline, dan body text.\n`;
+            if (strictSafeArea) {
+                masterOutput += `* Semua teks wajib berada di dalam safe area, jauh dari tepi gambar.\n`;
+                masterOutput += `* Prioritaskan keterbacaan teks.\n`;
+            }
+            masterOutput += `* Gunakan komposisi editorial profesional seperti iklan premium.\n`;
+            masterOutput += `* Jangan menambahkan teks selain teks yang diberikan.\n`;
+            masterOutput += `* Jangan mengubah wording headline, subheadline, atau isi.\n`;
+            masterOutput += `* JANGAN PERNAH menulis teks yang mengandung kata "[BUAT", "SESUAIKAN", atau tanda kurung siku [...] pada gambar. Teks kurung siku adalah instruksi untuk Anda, BUKAN untuk digambar.\n`;
+            masterOutput += `* Jangan membuat logo palsu selain nama brand "${brand}" jika diperlukan.\n`;
+            masterOutput += `* Jangan menggunakan watermark.\n\n`;
+            masterOutput += `---\n\n`;
+
+            let imageOutput = '';
+
+            for (let i = 0; i < jmlSlide; i++) {
+                const slideNum = i + 1;
+                const fungsi = slideFunctions[i].toUpperCase();
+                const nomorStr = String(slideNum).padStart(2, '0');
+
+                // Tentukan copywriting: manual (jika ada & terisi) atau placeholder
+                let hFinal, subFinal, isiFinal, visFinal;
+                const md = manualData ? manualData[i] : null;
+                if (md && md.headline) {
+                    hFinal = md.headline;
+                    subFinal = md.subheadline || `[SUBHEADLINE ${fungsi}]`;
+                    isiFinal = md.isi || `[ISI ${fungsi}]`;
+                    visFinal = md.visual || `Visual ${fungsi.toLowerCase()} yang kuat dan relevan dengan topik ${topik}.`;
+                } else {
+                    hFinal = `[BUAT HEADLINE KREATIF UNTUK ${fungsi} - SESUAIKAN DENGAN TOPIK: ${topik}]`;
+                    subFinal = `[BUAT SUBHEADLINE PENDUKUNG UNTUK ${fungsi} - SESUAIKAN DENGAN TOPIK: ${topik}]`;
+                    isiFinal = `[BUAT ISI KONTEN SINGKAT UNTUK SLIDE ${slideNum} - ${fungsi} - SESUAIKAN DENGAN TOPIK: ${topik}]`;
+                    visFinal = `Visual ${fungsi.toLowerCase()} yang kuat dan relevan dengan topik ${topik}. Tampilkan elemen visual yang mendukung pesan slide.`;
+                }
+
+                // ===== PROMPT VISUAL dengan ISOLATION HEADER =====
+                let visualPrompt = `**=== INI ADALAH SLIDE ${nomorStr} DARI ${String(jmlSlide).padStart(2, '0')} ===**\n`;
+                visualPrompt += `**ABAIKAN slide lain. JANGAN menampilkan nomor "${nomorStr}" jika ini bukan slide ${slideNum}. Hasilkan HANYA SATU gambar untuk SLIDE ${nomorStr}.**\n\n`;
+
+                visualPrompt += `Buat gambar **SLIDE ${slideNum} SAJA** untuk carousel Instagram ${rasio}.\n\n`;
+                visualPrompt += `Tema: ${topik}.\n\n`;
+                visualPrompt += `Buat visual ${fungsi.toLowerCase()} yang kuat, profesional, dan inspiratif dengan gaya **${gayaVisual}**. ${visFinal}\n\n`;
+                visualPrompt += `Gunakan warna dominan **${warnaUtama}** dan aksen **${warnaSekunder}**, dengan background ${background}. Gunakan **${lighting} Lighting**, soft realistic shadows, realistic details, premium commercial photography.\n\n`;
+                visualPrompt += `Sisakan area negatif yang cukup untuk headline dan teks pendukung. Pastikan objek utama terlihat utuh, tidak terpotong oleh frame.\n\n`;
+                visualPrompt += `Gunakan font **${font}** untuk seluruh teks.\n\n`;
+
+                if (nomorSlide === 'tampil') {
+                    visualPrompt += `**NOMOR SLIDE INI: ${nomorStr}** (WAJIB tampil di dalam safe area, pojok konsisten, ukuran kecil-sedang, warna mengikuti ${warnaSekunder}). `;
+                    visualPrompt += `JANGAN menampilkan nomor slide lain selain "${nomorStr}". JANGAN menampilkan "01" jika ini bukan slide 01.\n\n`;
+                } else {
+                    visualPrompt += `Jangan menampilkan nomor slide apapun.\n\n`;
+                }
+
+                visualPrompt += `**BRAND YANG WAJIB TAMPIL: "${brand}"** — tampilkan sebagai wordmark/logo text kecil di dalam safe area (pojok atau footer), konsisten dengan slide lain, warna mengikuti ${warnaSekunder} atau ${warnaUtama}.\n\n`;
+
+                if (infoTambahan) {
+                    visualPrompt += `**INFO TAMBAHAN (konteks visual):** "${infoTambahan}"\n\n`;
+                }
+
+                // ===== COPYWRITING LOCKED =====
+                visualPrompt += `**COPYWRITING SLIDE ${slideNum} (WAJIB DIPAKAI PERSIS, JANGAN DIGANTI):**\n`;
+                visualPrompt += `- HEADLINE slide ini: "${hFinal}"\n`;
+                visualPrompt += `- SUBHEADLINE slide ini: "${subFinal}"\n`;
+                visualPrompt += `- ISI slide ini: "${isiFinal}"\n`;
+                visualPrompt += `**LARANGAN:** JANGAN mengulang headline/isi dari slide lain. JANGAN memakai headline hook di slide ini kecuali slide ini memang berfungsi HOOK. Setiap slide harus punya teks berbeda.\n\n`;
+
+                visualPrompt += `Tampilkan teks persis berikut:\n\n`;
+                visualPrompt += `HEADLINE: ${hFinal}\n`;
+                visualPrompt += `SUBHEADLINE: ${subFinal}\n`;
+                visualPrompt += `ISI: ${isiFinal}\n\n`;
+                visualPrompt += `Letakkan seluruh teks di dalam **safe area**, tidak dekat dengan tepi gambar, tidak menutupi objek penting.\n\n`;
+                visualPrompt += `Rasio gambar **${rasio}**.\n\n`;
+                visualPrompt += `**SANGAT PENTING:** Hanya menghasilkan satu gambar untuk SLIDE ${slideNum}. Jangan membuat slide lain.`;
+
+                visualPrompt += `\n\n**ATURAN TEKS:** JANGAN menulis instruksi/kurung siku pada gambar. Jika HEADLINE/SUBHEADLINE/ISI masih berupa placeholder "[...]", ABAIKAN dan ganti dengan teks copywriting yang relevan dan final.`;
+
+                let negativePrompt = `low quality, blurry, pixelated, bad anatomy, deformed, extra limbs, extra fingers, distorted objects, cropped objects, cropped person, text errors, misspelled text, unreadable typography, watermark, signature, collage, multiple panels, grid, contact sheet, split screen, multiple slides, multiple scenes, repeated text from other slides, missing brand logo, no brand name`;
+                if (fungsi.toLowerCase().includes('hook')) {
+                    negativePrompt += `, cluttered composition, excessive objects, distracting background`;
+                } else if (fungsi.toLowerCase().includes('masalah') || fungsi.toLowerCase().includes('problem')) {
+                    negativePrompt += `, happy expression (if not fitting), overly bright, unrealistic workshop`;
+                } else if (fungsi.toLowerCase().includes('solusi')) {
+                    negativePrompt += `, broken objects, dirty environment, unprofessional`;
+                } else if (fungsi.toLowerCase().includes('cta')) {
+                    negativePrompt += `, sad expression, cluttered CTA, excessive CTA elements`;
+                }
+
+                negativePrompt += `, text in brackets, placeholder text, instructional text, "[BUAT", "SESUAIKAN"`;
+
+                // ===== MASTER OUTPUT =====
+                let slideOutput = `# SLIDE ${slideNum} — ${fungsi}\n\n`;
+                slideOutput += `**FUNGSI:** ${fungsi}\n\n`;
+                slideOutput += `**HEADLINE:**\n${hFinal}\n\n`;
+                slideOutput += `**SUBHEADLINE:**\n${subFinal}\n\n`;
+                slideOutput += `**ISI:**\n${isiFinal}\n\n`;
+                slideOutput += `**KONSEP VISUAL:**\n${visFinal}\n\n`;
+                slideOutput += `**PROMPT VISUAL:**\n\n${visualPrompt}\n\n`;
+                if (includeNegative) slideOutput += `NEGATIVE PROMPT: ${negativePrompt}\n\n`;
+                slideOutput += `---\n\n`;
+                masterOutput += slideOutput;
+
+                // ===== IMAGE OUTPUT (compact, 1 prompt = 1 slide) =====
+                let imgPrompt = `SLIDE ${nomorStr} DARI ${String(jmlSlide).padStart(2, '0')} — ${fungsi}\n`;
+                imgPrompt += `(Abaikan slide lain. Hanya hasilkan SLIDE ${nomorStr}.)\n`;
+                imgPrompt += `HEADLINE: "${hFinal}"\n`;
+                imgPrompt += `SUBHEADLINE: "${subFinal}"\n`;
+                imgPrompt += `ISI: "${isiFinal}"\n\n`;
+                imgPrompt += `PROMPT: ${gayaVisual} style, ${mood} mood. ${visFinal} Warna ${warnaUtama} & ${warnaSekunder}. Background ${background}. Lighting ${lighting}. Rasio ${rasio}. `;
+                if (nomorSlide === 'tampil') {
+                    imgPrompt += `Nomor slide: ${nomorStr} (hanya nomor ini). `;
+                } else {
+                    imgPrompt += `Tanpa nomor slide. `;
+                }
+                imgPrompt += `Teks slide ini WAJIB persis: HEADLINE="${hFinal}" | SUBHEADLINE="${subFinal}" | ISI="${isiFinal}". JANGAN ulangi teks slide lain. `;
+                imgPrompt += `JANGAN pernah menggambar teks dalam kurung siku [...] atau kata instruksi. `;
+
+                // === INFO TAMBAHAN & KONTEKS ===
+                if (infoTambahan) imgPrompt += `Info tambahan: "${infoTambahan}". `;
+                imgPrompt += `Tujuan: "${tujuan}". Produk/Jasa: "${produk}". CTA: "${cta}". `;
+                // ==============================
+
+                imgPrompt += `Brand "${brand}" WAJIB tampil sebagai wordmark kecil. `;
+                imgPrompt += `Satu gambar untuk SLIDE ${nomorStr} SAJA. No collage, no multiple panels. `;
+                if (includeNegative) imgPrompt += `\nNegative: ${negativePrompt}`;
+                imgPrompt += `\n---\n`;
+                imageOutput += imgPrompt;
+            }
+
+            const formattedHTML = formatOutput(masterOutput, warnaUtama, warnaSekunder);
+
+            $('outputMaster').setAttribute('data-plain', masterOutput);
+            $('outputImage').setAttribute('data-plain', imageOutput);
+            $('outputMaster').innerHTML = formattedHTML;
+            $('outputImage').textContent = imageOutput;
+
+            const totalWords = masterOutput.split(/\s+/).length;
+            $('slideCount').textContent = `${jmlSlide} slide`;
+            $('wordCount').textContent = `${totalWords} kata`;
+
+            let btnHtmlMaster = '';
+            let btnHtmlImage = '';
+            for (let i = 0; i < jmlSlide; i++) {
+                btnHtmlMaster += `<button class="btn btn-secondary btn-sm" onclick="copySlide(${i}, 'master')">📋 Slide ${i+1}</button>`;
+                btnHtmlImage += `<button class="btn btn-secondary btn-sm" onclick="copySlide(${i}, 'image')">📋 Slide ${i+1}</button>`;
+            }
+            $('slideCopyButtonsMaster').innerHTML = btnHtmlMaster;
+            $('slideCopyButtonsImage').innerHTML = btnHtmlImage;
+
+            showFlash('✅ Carousel prompt berhasil dibuat!');
+        }
+
+        function initApp() {
+            updateSlideBuilderVisibility();
+            if ($('strukturMode').value === 'custom') {
+                $('customStruktur').style.display = 'block';
+                buildCustomStructure();
+            }
+            buildManualSlides();
+        }
+
+        document.getElementById('loginPassword').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('loginForm').dispatchEvent(new Event('submit'));
+            }
+        });
+    </script>
+
+<!-- Anti Klik Kanan -->
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Block Keys -->
+<script>
+  document.onkeydown = function (e) {
+    if (e.key === "F12") return false;
+    if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) return false;
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) return false;
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) return false;
+    if (e.ctrlKey && (e.key === "p" || e.key === "P")) return false;
+    if (e.ctrlKey && (e.key === "a" || e.key === "A")) return false;
+  };
+</script>
+
+<!-- Anti Drag -->
+<script>
+  document.addEventListener("dragstart", e => e.preventDefault());
+</script>
+
+<!-- Anti Inspect Element + Anti Debug Mode -->
+<script>
+(function() {
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() { window.location.href = "about:blank"; }
+  });
+  setInterval(() => { console.log(element); }, 1000);
+})();
+</script>
+
+<!-- Detect DevTools via Dimensions -->
+<script>
+setInterval(function() {
+  if (window.outerHeight - window.innerHeight > 200 ||
+      window.outerWidth - window.innerWidth > 200) {
+    window.location.href = "about:blank";
+  }
+}, 800);
+</script>
+
+<!-- JS Code Obfuscation (ringan) -->
+<script>
+  (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+</script>
+
+
+
+
+
+
+
+
+
+
+</script>
+<!-- Anti Klik Kanan -->
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Block Keys -->
+<script>
+  document.onkeydown = function (e) {
+    // F12
+    if (e.key === "F12") return false;
+
+    // Ctrl+Shift+I / J / C
+    if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) {
+      return false;
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      return false;
+    }
+
+    // Ctrl+S (Save)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      return false;
+    }
+
+    // Ctrl+P (Print)
+    if (e.ctrlKey && (e.key === "p" || e.key === "P")) {
+      return false;
+    }
+    // Ctrl+A (All)
+    if (e.ctrlKey && (e.key === "a" || e.key === "A")) {
+      return false;
+    }
+
+  };
+</script>
+
+<!-- Anti Drag -->
+<script>
+  document.addEventListener("dragstart", e => e.preventDefault());
+</script>
+
+<!-- Anti Inspect Element + Anti Debug Mode -->
+<script>
+(function() {
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() {
+      window.location.href = "about:blank"; // Auto-close halaman
+    }
+  });
+
+  setInterval(() => {
+    console.log(element);
+  }, 1000);
+})();
+</script>
+
+<!-- Detect DevTools via Dimensions -->
+<script>
+setInterval(function() {
+  if (window.outerHeight - window.innerHeight > 200 ||
+      window.outerWidth - window.innerWidth > 200) {
+    window.location.href = "about:blank";
+  }
+}, 800);
+</script>
+
+<!-- JS Code Obfuscation (ringan) -->
+<script>
+  (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+</script>
+
+</body>
+</html>
