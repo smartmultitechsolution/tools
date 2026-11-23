@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analisa Google Search Console · DSS</title>
+
+<!-- Favicon -->
+  <link rel="icon" type="image/png" href="https://smartmultitechsolution.github.io/tools/assets/fivicon-ai.png">
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f1f3f4;
+      color: #202124;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    body.dark {
+      background: #1a1a1a;
+      color: #e8eaed;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 260px;
+      background: linear-gradient(180deg, #1a73e8 0%, #1557b0 100%);
+      color: white;
+      transition: all 0.3s ease;
+      z-index: 1050;
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+
+    body.dark .sidebar {
+      background: linear-gradient(180deg, #0d47a1 0%, #0a3d8f 100%);
+    }
+
+    .sidebar-brand {
+      padding: 24px 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sidebar-brand img {
+      height: 36px;
+      width: auto;
+    }
+
+    .sidebar-brand h3 {
+      font-weight: 800;
+      font-size: 20px;
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .sidebar-brand small {
+      display: block;
+      font-size: 11px;
+      opacity: 0.7;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    .sidebar-menu {
+      padding: 20px 0;
+    }
+
+    .sidebar-menu .menu-label {
+      padding: 8px 24px;
+      font-size: 11px;
+      text-transform: uppercase;
+      opacity: 0.5;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-menu .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 24px;
+      color: rgba(255,255,255,0.7);
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .sidebar-menu .menu-item:hover {
+      background: rgba(255,255,255,0.1);
+      color: white;
+    }
+
+    .sidebar-menu .menu-item.active {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      border-right: 3px solid white;
+    }
+
+    .sidebar-menu .menu-item i {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+    }
+
+    .sidebar-menu .menu-item .badge-menu {
+      margin-left: auto;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+    }
+
+    .sidebar-footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 24px;
+      border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .sidebar-footer .btn-whatsapp-sidebar {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 13px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .sidebar-footer .btn-whatsapp-sidebar:hover {
+      background: #1da851;
+      transform: translateY(-1px);
+      color: white;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 260px;
+      padding: 24px 32px;
+      min-height: 100vh;
+      transition: all 0.3s ease;
+    }
+
+    /* Top Navbar */
+    .top-navbar {
+      background: white;
+      border-radius: 12px;
+      padding: 16px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      border: 1px solid #dadce0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    body.dark .top-navbar {
+      background: #2d2d2d;
+      border-color: #3d3d3d;
+    }
+
+    .top-navbar .page-title {
+      font-weight: 700;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .top-navbar .page-title img {
+      height: 28px;
+      width: auto;
+    }
+
+    .top-navbar .nav-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    /* Card Styles */
+    .card-glass {
+      background: #ffffff;
+      border: 1px solid #dadce0;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      border-radius: 16px;
+      padding: 24px 28px;
+      transition: all 0.2s;
+      margin-bottom: 24px;
+    }
+
+    body.dark .card-glass {
+      background: #2d2d2d;
+      border-color: #3d3d3d;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #202124;
+    }
+
+    body.dark .section-title {
+      color: #e8eaed;
+    }
+
+    .section-title i {
+      color: #1a73e8;
+      font-size: 22px;
+    }
+
+    /* Upload Area */
+    .upload-zone {
+      border: 2px dashed #dadce0;
+      border-radius: 16px;
+      padding: 34px 20px;
+      text-align: center;
+      background: #f8f9fa;
+      transition: 0.2s;
+      cursor: pointer;
+    }
+
+    body.dark .upload-zone {
+      background: #2d2d2d;
+      border-color: #3d3d3d;
+    }
+
+    .upload-zone.dragover {
+      background: #e8f0fe;
+      border-color: #1a73e8;
+    }
+
+    body.dark .upload-zone.dragover {
+      background: #1a2a4a;
+      border-color: #1a73e8;
+    }
+
+    .upload-zone i {
+      font-size: 44px;
+      color: #1a73e8;
+      margin-bottom: 8px;
+    }
+
+    .upload-zone h3 {
+      font-weight: 700;
+      font-size: 20px;
+      color: #202124;
+    }
+
+    body.dark .upload-zone h3 {
+      color: #e8eaed;
+    }
+
+    .upload-zone p {
+      opacity: 0.7;
+      max-width: 480px;
+      margin: 8px auto 12px;
+      color: #5f6368;
+    }
+
+    body.dark .upload-zone p {
+      color: #9aa0a6;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+      justify-content: center;
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 6px;
+    }
+
+    .kpi-item {
+      background: #ffffff;
+      border-radius: 12px;
+      padding: 18px 16px;
+      border: 1px solid #dadce0;
+      transition: 0.15s;
+    }
+
+    body.dark .kpi-item {
+      background: #2d2d2d;
+      border-color: #3d3d3d;
+    }
+
+    .kpi-label {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #5f6368;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    body.dark .kpi-label {
+      color: #9aa0a6;
+    }
+
+    .kpi-number {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 8px 0 4px;
+      letter-spacing: -0.02em;
+      color: #202124;
+    }
+
+    body.dark .kpi-number {
+      color: #e8eaed;
+    }
+
+    .kpi-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 12px;
+      border-radius: 40px;
+      background: #f1f3f4;
+      color: #202124;
+    }
+
+    body.dark .kpi-badge {
+      background: #3d3d3d;
+      color: #e8eaed;
+    }
+
+    .badge-good { background: #e6f4ea; color: #1e8e3e; }
+    .badge-warn { background: #fef7e0; color: #e37400; }
+    .badge-bad { background: #fce8e6; color: #d33426; }
+    .badge-blue { background: #e8f0fe; color: #1a73e8; }
+
+    body.dark .badge-good { background: #1e3a2a; color: #34a853; }
+    body.dark .badge-warn { background: #3a2e1a; color: #fbbc04; }
+    body.dark .badge-bad { background: #3a1e1a; color: #ea4335; }
+    body.dark .badge-blue { background: #1a2a4a; color: #4d8bf7; }
+
+    /* Charts */
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 0.9fr;
+      gap: 24px;
+    }
+
+    .chart-box {
+      background: #ffffff;
+      border: 1px solid #dadce0;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    body.dark .chart-box {
+      background: #2d2d2d;
+      border-color: #3d3d3d;
+    }
+
+    .chart-box h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #202124;
+    }
+
+    body.dark .chart-box h3 {
+      color: #e8eaed;
+    }
+
+    /* Funnel */
+    .funnel-container {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .funnel-chart-wrapper {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .funnel-data-list {
+      flex: 0 0 160px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .funnel-data-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #f8f9fa;
+      border-left: 4px solid #1a73e8;
+    }
+
+    body.dark .funnel-data-item {
+      background: #2d2d2d;
+    }
+
+    .funnel-data-item .label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #5f6368;
+    }
+
+    body.dark .funnel-data-item .label {
+      color: #9aa0a6;
+    }
+
+    .funnel-data-item .value {
+      font-size: 16px;
+      font-weight: 800;
+      color: #202124;
+    }
+
+    body.dark .funnel-data-item .value {
+      color: #e8eaed;
+    }
+
+    .funnel-data-item:nth-child(1) { border-left-color: #1a73e8; }
+    .funnel-data-item:nth-child(2) { border-left-color: #34a853; }
+    .funnel-data-item:nth-child(3) { border-left-color: #fbbc04; }
+
+    /* Insight */
+    .insight-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .insight-card {
+      padding: 18px 22px;
+      border-radius: 12px;
+      background: #f8f9fa;
+      border-left: 6px solid #1a73e8;
+      line-height: 1.6;
+      color: #202124;
+    }
+
+    body.dark .insight-card {
+      background: #2d2d2d;
+      color: #e8eaed;
+    }
+
+    .insight-warning {
+      border-left-color: #ea4335;
+      background: #fce8e6;
+    }
+
+    body.dark .insight-warning {
+      background: #2d1a1a;
+    }
+
+    .insight-success {
+      border-left-color: #34a853;
+      background: #e6f4ea;
+    }
+
+    body.dark .insight-success {
+      background: #1a2d1a;
+    }
+
+    /* Table */
+    .table-wrapper {
+      border-radius: 12px;
+      overflow-x: auto;
+      border: 1px solid #dadce0;
+    }
+
+    body.dark .table-wrapper {
+      border-color: #3d3d3d;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 720px;
+      font-size: 14px;
+    }
+
+    th {
+      text-align: left;
+      padding: 16px 14px;
+      font-weight: 700;
+      background: #f8f9fa;
+      border-bottom: 1px solid #dadce0;
+      color: #202124;
+    }
+
+    body.dark th {
+      background: #2d2d2d;
+      border-bottom-color: #3d3d3d;
+      color: #e8eaed;
+    }
+
+    td {
+      padding: 14px 14px;
+      border-bottom: 1px solid #f1f3f4;
+      color: #202124;
+    }
+
+    body.dark td {
+      border-bottom-color: #3d3d3d;
+      color: #e8eaed;
+    }
+
+    .filter-tool {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .filter-tool input,
+    .filter-tool select {
+      background: #ffffff;
+      border: 1px solid #dadce0;
+      border-radius: 40px;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      flex: 1;
+      min-width: 180px;
+      outline: none;
+      transition: 0.15s;
+      color: #202124;
+    }
+
+    body.dark .filter-tool input,
+    body.dark .filter-tool select {
+      background: #2d2d2d;
+      border-color: #3d3d3d;
+      color: #e8eaed;
+    }
+
+    .filter-tool input:focus,
+    .filter-tool select:focus {
+      border-color: #1a73e8;
+      box-shadow: 0 0 0 3px rgba(26,115,232,0.15);
+    }
+
+    .footer-cta-modern {
+      background: linear-gradient(145deg, #1a73e8, #1557b0);
+      border-radius: 16px;
+      padding: 38px 34px;
+      color: white;
+      margin-top: 32px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-cta-modern h2 {
+      font-weight: 700;
+      font-size: 24px;
+    }
+
+    .footer-cta-modern p {
+      opacity: 0.85;
+      margin-top: 6px;
+      max-width: 500px;
+    }
+
+    .footer-cta-modern .btn-whatsapp {
+      background: #25d366;
+      color: white;
+      border: none;
+      padding: 12px 28px;
+      border-radius: 40px;
+      font-weight: 700;
+      font-size: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .footer-cta-modern .btn-whatsapp:hover {
+      background: #1da851;
+      transform: translateY(-2px);
+      color: white;
+    }
+
+    .loading-spinner {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 4px solid rgba(26,115,232,0.15);
+      border-top-color: #1a73e8;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 10px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Hamburger for mobile */
+    .hamburger-btn {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 28px;
+      color: #202124;
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+
+    body.dark .hamburger-btn {
+      color: #e8eaed;
+    }
+
+    /* Overlay */
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1040;
+    }
+
+    .sidebar-overlay.active {
+      display: block;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .kpi-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .funnel-container {
+        flex-direction: column;
+      }
+      .funnel-data-list {
+        flex: 1;
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+      .funnel-data-item {
+        flex: 1;
+        min-width: 120px;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 16px;
+      }
+      .hamburger-btn {
+        display: block;
+      }
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+      .kpi-grid {
+        grid-template-columns: repeat(2,1fr);
+      }
+      .footer-cta-modern {
+        flex-direction: column;
+        align-items: start;
+        gap: 18px;
+      }
+      .filter-tool {
+        flex-direction: column;
+      }
+      .funnel-data-list {
+        flex-direction: column;
+      }
+      .funnel-data-item {
+        min-width: unset;
+      }
+      .top-navbar .page-title {
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 500px) {
+      .kpi-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media print {
+      .sidebar, .sidebar-overlay, .hamburger-btn, .top-navbar .nav-actions, .upload-zone, .action-row, .btn { display: none !important; }
+      .main-content { margin-left: 0; padding: 0; }
+      body { background: white; }
+      .card-glass { box-shadow: none; border: 1px solid #ddd; background: white !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar Overlay -->
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-AI-Putih.png" alt="Logo GSC" />
+      <div>
+        <h3>AGIO</h3>
+        <small>Decision Support System</small>
+      </div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="menu-label">Menu Utama</div>
+      <a href="#" class="menu-item active" onclick="scrollToSection('dashboard')">
+        <i class="fas fa-tachometer-alt"></i> Dashboard
+      </a>
+      <a href="#" class="menu-item" onclick="scrollToSection('upload')">
+        <i class="fas fa-upload"></i> Upload Data
+      </a>
+      <a href="#" class="menu-item" onclick="scrollToSection('kpi')">
+        <i class="fas fa-chart-simple"></i> KPI Dashboard
+      </a>
+      <a href="#" class="menu-item" onclick="scrollToSection('charts')">
+        <i class="fas fa-chart-pie"></i> Visualisasi
+      </a>
+      <a href="#" class="menu-item" onclick="scrollToSection('insight')">
+        <i class="fas fa-lightbulb"></i> Insight
+        <span class="badge-menu" id="insightBadge">!</span>
+      </a>
+      <a href="#" class="menu-item" onclick="scrollToSection('table')">
+        <i class="fas fa-table"></i> Data Table
+      </a>
+      <a href="#" class="menu-item" onclick="scrollToSection('conclusion')">
+        <i class="fas fa-flag-checkered"></i> Kesimpulan
+      </a>
+    </div>
+    <div class="sidebar-footer">
+      <a href="https://wa.me/628989057305?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20tool%20analisa%20GSC%20yang%20dibuat.%20Boleh%20tanya-tanya%20lebih%20lanjut%3F" target="_blank" class="btn-whatsapp-sidebar">
+        <i class="fab fa-whatsapp"></i> Chat WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="main-content" id="mainContent">
+    <!-- Top Navbar -->
+    <div class="top-navbar">
+      <div class="page-title">
+        <button class="hamburger-btn" onclick="toggleSidebar()">
+          <i class="fas fa-bars"></i>
+        </button>
+        <img src="https://smartmultitechsolution.github.io/tools/assets/Logo-GSC.webp" alt="Google" style="height:28px;" />
+        Google Search Console DSS
+      </div>
+      <div class="nav-actions">
+        <button class="btn btn-outline-secondary btn-sm" onclick="toggleDarkMode()">
+          <i class="fas fa-moon"></i>
+        </button>
+        <button class="btn btn-outline-secondary btn-sm" onclick="printReport()">
+          <i class="fas fa-print"></i>
+        </button>
+        <button class="btn btn-success btn-sm" onclick="exportReport()">
+          <i class="fas fa-file-export"></i> Ekspor
+        </button>
+      </div>
+    </div>
+
+    <div id="dashboard">
+      <!-- HERO - sudah dihilangkan, diganti dengan Top Navbar -->
+    </div>
+
+    <!-- UPLOAD -->
+    <div id="upload" class="card-glass">
+      <div class="section-title"><i class="fas fa-cloud-upload-alt"></i> Upload CSV Google Search Console</div>
+      <div class="upload-zone" id="dropArea">
+        <i class="fas fa-cloud-upload-alt"></i>
+        <h3>Upload CSV Google Search Console</h3>
+        <p>Drag & drop file .csv, atau klik untuk memilih. Kolom yang didukung: Query, Page, Clicks, Impressions, CTR, Position</p>
+        <input type="file" id="csvFile" accept=".csv" style="display: none;" />
+        <div class="action-row">
+          <button class="btn btn-primary" onclick="document.getElementById('csvFile').click()"><i class="fas fa-upload"></i> Pilih CSV</button>
+          <button class="btn btn-danger" onclick="resetData()"><i class="fas fa-undo-alt"></i> Reset</button>
+        </div>
+      </div>
+      <div class="loading-spinner" id="loading">
+        <div class="spinner"></div>
+        <span style="font-weight: 600;">Memproses data...</span>
+      </div>
+    </div>
+
+    <!-- KPI - 4 atas 4 bawah -->
+    <div id="kpi" class="card-glass">
+      <div class="section-title"><i class="fas fa-tachometer-alt"></i> KPI Dashboard</div>
+      <div class="kpi-grid" id="kpiGridTop"></div>
+      <div style="height: 16px;"></div>
+      <div class="kpi-grid" id="kpiGridBottom"></div>
+    </div>
+
+    <!-- CHARTS -->
+    <div id="charts" class="card-glass">
+      <div class="section-title"><i class="fas fa-chart-pie"></i> Visualisasi Funnel & Kinerja</div>
+      <div class="charts-grid">
+        <div class="chart-box">
+          <h3>Funnel Search Console</h3>
+          <div class="funnel-container">
+            <div class="funnel-chart-wrapper">
+              <canvas id="funnelChart" height="180"></canvas>
+            </div>
+            <div class="funnel-data-list" id="funnelDataList">
+              <div class="funnel-data-item">
+                <span class="label">Impression</span>
+                <span class="value" id="funnelImpression">0</span>
+              </div>
+              <div class="funnel-data-item">
+                <span class="label">Klik</span>
+                <span class="value" id="funnelClicks">0</span>
+              </div>
+              <div class="funnel-data-item">
+                <span class="label">Peluang CTR</span>
+                <span class="value" id="funnelOpportunity">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="chart-box">
+          <h3>KPI Performance</h3>
+          <canvas id="kpiChart" height="180"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- INSIGHT -->
+    <div id="insight" class="card-glass">
+      <div class="section-title"><i class="fas fa-lightbulb"></i> Insight, Warning, dan Rekomendasi Otomatis</div>
+      <div class="insight-list" id="insightBox"></div>
+    </div>
+
+    <!-- TABLE -->
+    <div id="table" class="card-glass">
+      <div class="section-title"><i class="fas fa-table"></i> Top Query & Top Page</div>
+
+      <div class="filter-tool">
+        <input type="text" id="searchInput" placeholder="Cari query, page..." onkeyup="renderTable()" />
+        <select id="filterType" onchange="renderTable()">
+          <option value="all">Semua Data</option>
+          <option value="query">Top Query</option>
+          <option value="page">Top Page</option>
+          <option value="lowctr">CTR Rendah</option>
+          <option value="highimp">Impression Tinggi</option>
+        </select>
+      </div>
+
+      <div class="table-wrapper">
+        <table>
+          <thead id="tableHead"></thead>
+          <tbody id="tableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- KESIMPULAN -->
+    <div id="conclusion" class="card-glass" style="border-left: 6px solid #1a73e8;">
+      <div class="section-title"><i class="fas fa-flag-checkered"></i> Kesimpulan Akhir</div>
+      <div id="finalConclusion" style="font-weight: 500; font-size: 16px; line-height: 1.7;"></div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer-cta-modern">
+      <div>
+        <h2><i class="fas fa-rocket" style="margin-right: 12px;"></i> Butuh tool custom?</h2>
+        <p>Dashboard ini bisa disesuaikan untuk SEO, laporan bisnis, AI, iklan, dan UMKM. Hubungi saya.</p>
+      </div>
+      <a href="https://wa.me/628989057305?text=Halo%20Kak%2C%20saya%20tertarik%20dengan%20tool%20analisa%20GSC%20yang%20dibuat.%20Boleh%20tanya-tanya%20lebih%20lanjut%3F" target="_blank" class="btn-whatsapp">
+        <i class="fab fa-whatsapp"></i> Chat WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // ============================
+    // DATA GLOBAL
+    // ============================
+    let rawData = [];
+    let filteredData = [];
+    let funnelChartInstance = null;
+    let kpiChartInstance = null;
+
+    // ============================
+    // DUMMY DATA - Data CSV Asli
+    // ============================
+    function loadDummyData() {
+      rawData = [
+        { "Kueri teratas": "jasa seo bekasi", Page: "/jasa-seo-bekasi", Klik: 120, Tayangan: 9000, CTR: "1.33%", Posisi: 7.8 },
+        { "Kueri teratas": "belajar digital marketing", Page: "/belajar-digital-marketing", Klik: 430, Tayangan: 12000, CTR: "3.58%", Posisi: 4.2 },
+        { "Kueri teratas": "aplikasi pantau seo", Page: "/pantau-seo", Klik: 75, Tayangan: 8500, CTR: "0.88%", Posisi: 10.5 },
+        { "Kueri teratas": "kursus seo online", Page: "/kursus-seo-online", Klik: 220, Tayangan: 6000, CTR: "3.66%", Posisi: 5.1 },
+        { "Kueri teratas": "jasa landing page", Page: "/jasa-landing-page", Klik: 55, Tayangan: 10000, CTR: "0.55%", Posisi: 12.4 },
+        { "Kueri teratas": "ai for direktur", Page: "/ai-for-direktur", Klik: 310, Tayangan: 7200, CTR: "4.30%", Posisi: 3.2 },
+        { "Kueri teratas": "meta ads otak kanan", Page: "/meta-ads-otak-kanan", Klik: 95, Tayangan: 11000, CTR: "0.86%", Posisi: 8.7 }
+      ];
+      processData();
+    }
+
+    // Jalankan dummy data saat awal
+    loadDummyData();
+
+    // ============================
+    // UPLOAD CSV
+    // ============================
+    const csvInput = document.getElementById("csvFile");
+    const dropArea = document.getElementById("dropArea");
+
+    csvInput.addEventListener("change", function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        readCSV(file);
+      }
+    });
+
+    dropArea.addEventListener("click", function(e) {
+      if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'I') {
+        csvInput.click();
+      }
+    });
+
+    dropArea.addEventListener("dragover", function(e) {
+      e.preventDefault();
+      dropArea.classList.add("dragover");
+    });
+
+    dropArea.addEventListener("dragleave", function(e) {
+      e.preventDefault();
+      dropArea.classList.remove("dragover");
+    });
+
+    dropArea.addEventListener("drop", function(e) {
+      e.preventDefault();
+      dropArea.classList.remove("dragover");
+      const file = e.dataTransfer.files[0];
+      if (file && file.name.endsWith(".csv")) {
+        readCSV(file);
+      } else {
+        alert("Mohon upload file format CSV.");
+      }
+    });
+
+    function readCSV(file) {
+      showLoading(true);
+      
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const text = e.target.result;
+          const parsed = parseCSV(text);
+          
+          if (parsed.length === 0) {
+            alert("Tidak ada data yang terbaca. Pastikan format CSV benar.");
+            showLoading(false);
+            return;
+          }
+          
+          rawData = parsed;
+          processData();
+          showLoading(false);
+          alert(`Berhasil upload ${rawData.length} data!`);
+          
+        } catch (error) {
+          console.error("Error membaca CSV:", error);
+          alert("Gagal membaca file CSV. Pastikan formatnya benar.");
+          showLoading(false);
+        }
+      };
+      
+      reader.onerror = function() {
+        alert("Gagal membaca file.");
+        showLoading(false);
+      };
+      
+      reader.readAsText(file);
+    }
+
+    function parseCSV(text) {
+      const lines = text.trim().split(/\r?\n/);
+      if (lines.length < 2) return [];
+      
+      const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+      const result = [];
+      
+      for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+        
+        const values = [];
+        let current = "";
+        let inQuotes = false;
+        
+        for (let char of line) {
+          if (char === '"') {
+            inQuotes = !inQuotes;
+          } else if (char === "," && !inQuotes) {
+            values.push(current.trim());
+            current = "";
+          } else {
+            current += char;
+          }
+        }
+        values.push(current.trim());
+        
+        const obj = {};
+        headers.forEach((header, index) => {
+          obj[header] = values[index] ? values[index].replace(/^"|"$/g, "") : "";
+        });
+        
+        result.push(obj);
+      }
+      
+      return result;
+    }
+
+    // ============================
+    // HELPERS - DIPERBAIKI untuk semua format CSV
+    // ============================
+    function num(v) { 
+      if (v === undefined || v === null || v === "") return 0;
+      return parseFloat(String(v).replace("%", "").replace(",", ".")) || 0; 
+    }
+    
+    function getField(row, names) { 
+      for (let n of names) {
+        if (row[n] !== undefined && row[n] !== "") return row[n];
+      }
+      return ""; 
+    }
+    
+    function getClicks(r) { return num(getField(r, ["Klik","Clicks","Click","klik","clicks"])); }
+    function getImpressions(r) { 
+      return num(getField(r, ["Tayangan","Impressions","Impression","tayangan","impressions"])); 
+    }
+    function getCTR(r) { return num(getField(r, ["CTR","ctr"])); }
+    function getPosition(r) { return num(getField(r, ["Posisi","Position","Average position","posisi","position"])); }
+    function getQuery(r) { 
+      const queryFields = ["Kueri teratas", "Query", "Top queries", "Kueri", "query", "Keyword", "keywords"];
+      for (let field of queryFields) {
+        if (r[field] !== undefined && r[field] !== "") {
+          return r[field];
+        }
+      }
+      return ""; 
+    }
+    function getPage(r) { 
+      const pageFields = ["Halaman teratas", "Page", "Top pages", "Halaman", "page", "URL", "url", "Landing Page"];
+      for (let field of pageFields) {
+        if (r[field] !== undefined && r[field] !== "") {
+          return r[field];
+        }
+      }
+      return ""; 
+    }
+
+    // ============================
+    // PROSES UTAMA
+    // ============================
+    function processData() {
+      if (rawData.length === 0) return;
+      
+      filteredData = [...rawData];
+      renderKPI();
+      renderCharts();
+      renderInsights();
+      renderTable();
+      renderConclusion();
+    }
+
+    function getSummary() {
+      if (rawData.length === 0) {
+        return {
+          totalRows: 0,
+          totalClicks: 0,
+          totalImpressions: 0,
+          avgCTR: 0,
+          avgPosition: 0,
+          highOpportunity: 0,
+          riskCount: 0,
+          score: 0,
+          category: "Tidak Ada Data",
+          bestRow: {}
+        };
+      }
+      
+      const totalRows = rawData.length;
+      const totalClicks = rawData.reduce((s, r) => s + getClicks(r), 0);
+      const totalImpressions = rawData.reduce((s, r) => s + getImpressions(r), 0);
+      const avgCTR = totalImpressions > 0 ? (totalClicks / totalImpressions) * 100 : 0;
+      const avgPosition = totalRows > 0 ? rawData.reduce((s, r) => s + getPosition(r), 0) / totalRows : 0;
+      const highOpportunity = rawData.filter(r => getImpressions(r) >= 5000 && getCTR(r) < 2).length;
+      const riskCount = rawData.filter(r => getCTR(r) < 1 || getPosition(r) > 10).length;
+      
+      let score = 0;
+      score += avgCTR >= 5 ? 35 : avgCTR >= 2 ? 25 : avgCTR >= 1 ? 15 : 5;
+      score += avgPosition <= 3 ? 30 : avgPosition <= 8 ? 22 : avgPosition <= 12 ? 12 : 5;
+      score += highOpportunity <= 2 ? 20 : highOpportunity <= 5 ? 12 : 6;
+      score += riskCount <= 2 ? 15 : riskCount <= 5 ? 8 : 3;
+      
+      let category = "Bahaya";
+      if (score >= 85) category = "Sangat Bagus";
+      else if (score >= 65) category = "Bagus";
+      else if (score >= 45) category = "Cukup";
+      
+      const bestRow = [...rawData].sort((a,b) => getClicks(b) - getClicks(a))[0] || {};
+      
+      return { totalRows, totalClicks, totalImpressions, avgCTR, avgPosition, highOpportunity, riskCount, score, category, bestRow };
+    }
+
+    // ============================
+    // RENDER KPI - 4 ATAS 4 BAWAH
+    // ============================
+    function renderKPI() {
+      const s = getSummary();
+      const badgeClass = s.category === "Bahaya" ? "badge-bad" : s.category === "Cukup" ? "badge-warn" : "badge-good";
+      
+      const topItems = [
+        ["Total Data", s.totalRows, "Data", "badge-blue"],
+        ["Total Klik", s.totalClicks.toLocaleString("id-ID"), "Traffic", "badge-good"],
+        ["Total Impression", s.totalImpressions.toLocaleString("id-ID"), "Potensi", "badge-blue"],
+        ["Rata-rata CTR", s.avgCTR.toFixed(2)+"%", s.avgCTR < 2 ? "Rendah" : "Sehat", s.avgCTR < 2 ? "badge-bad" : "badge-good"]
+      ];
+      
+      const bottomItems = [
+        ["Rata-rata Posisi", s.avgPosition.toFixed(1), s.avgPosition > 10 ? "Risiko" : "Baik", s.avgPosition > 10 ? "badge-bad" : "badge-good"],
+        ["Peluang Besar", s.highOpportunity, "Imp high, CTR low", "badge-warn"],
+        ["Indikator Risiko", s.riskCount, "Perlu tindakan", s.riskCount > 5 ? "badge-bad" : "badge-warn"],
+        ["Skor Kesehatan", s.score+"/100", s.category, badgeClass]
+      ];
+      
+      document.getElementById("kpiGridTop").innerHTML = topItems.map(k => `
+        <div class="kpi-item">
+          <div class="kpi-label">${k[0]}</div>
+          <div class="kpi-number">${k[1]}</div>
+          <span class="kpi-badge ${k[3]}">${k[2]}</span>
+        </div>
+      `).join("");
+      
+      document.getElementById("kpiGridBottom").innerHTML = bottomItems.map(k => `
+        <div class="kpi-item">
+          <div class="kpi-label">${k[0]}</div>
+          <div class="kpi-number">${k[1]}</div>
+          <span class="kpi-badge ${k[3]}">${k[2]}</span>
+        </div>
+      `).join("");
+    }
+
+    // ============================
+    // CHARTS
+    // ============================
+    function renderCharts() {
+      const s = getSummary();
+      
+      document.getElementById("funnelImpression").textContent = s.totalImpressions.toLocaleString("id-ID");
+      document.getElementById("funnelClicks").textContent = s.totalClicks.toLocaleString("id-ID");
+      document.getElementById("funnelOpportunity").textContent = Math.round(s.totalImpressions * 0.05).toLocaleString("id-ID");
+      
+      if (funnelChartInstance) funnelChartInstance.destroy();
+      if (kpiChartInstance) kpiChartInstance.destroy();
+
+      funnelChartInstance = new Chart(document.getElementById("funnelChart"), {
+        type: "bar",
+        data: {
+          labels: ["Impression", "Klik", "Peluang CTR"],
+          datasets: [{
+            label: "Funnel SEO",
+            data: [s.totalImpressions, s.totalClicks, Math.round(s.totalImpressions * 0.05)],
+            backgroundColor: ["#1a73e8", "#34a853", "#fbbc04"],
+            borderRadius: 4
+          }]
+        },
+        options: { 
+          indexAxis: "y", 
+          responsive: true, 
+          plugins: { 
+            legend: { display: false } 
+          },
+          scales: {
+            x: {
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            y: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+
+      kpiChartInstance = new Chart(document.getElementById("kpiChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["Skor SEO", "Sisa Perbaikan"],
+          datasets: [{ 
+            data: [s.score, 100 - s.score], 
+            backgroundColor: ["#1a73e8", "#dadce0"] 
+          }]
+        },
+        options: { 
+          responsive: true, 
+          plugins: { 
+            legend: { 
+              position: "bottom",
+              labels: {
+                font: { weight: 'bold' }
+              }
+            } 
+          }
+        }
+      });
+    }
+
+    // ============================
+    // INSIGHT
+    // ============================
+    function renderInsights() {
+      const s = getSummary();
+      let html = "";
+      
+      if (s.totalRows === 0) {
+        html = `<div class="insight-card">📌 Belum ada data. Upload file CSV.</div>`;
+        document.getElementById("insightBox").innerHTML = html;
+        return;
+      }
+      
+      if (s.avgCTR < 1) html += `<div class="insight-card insight-warning">⚠️ CTR sangat rendah. Artinya halaman sering tampil, tetapi orang belum tertarik klik. Perbaiki judul SEO, meta description, dan angle copywriting.</div>`;
+      else if (s.avgCTR < 2) html += `<div class="insight-card insight-warning">⚠️ CTR masih rendah. Ada peluang besar menaikkan traffic tanpa membuat konten baru, cukup optimasi judul dan deskripsi.</div>`;
+      else html += `<div class="insight-card insight-success">✅ CTR cukup sehat. Artinya judul dan tampilan hasil pencarian sudah mulai menarik perhatian market.</div>`;
+
+      if (s.avgPosition > 10) html += `<div class="insight-card insight-warning">📉 Rata-rata posisi masih di luar halaman pertama Google. Perlu optimasi konten, struktur heading, internal link, dan relevansi query.</div>`;
+      else if (s.avgPosition > 5) html += `<div class="insight-card insight-warning">📊 Rata-rata posisi cukup kompetitif. Fokus berikutnya adalah menaikkan CTR agar klik bertambah.</div>`;
+      else html += `<div class="insight-card insight-success">📈 Rata-rata posisi sangat baik. Fokus berikutnya adalah mempertahankan ranking.</div>`;
+
+      if (s.highOpportunity > 0) html += `<div class="insight-card">💡 Ada ${s.highOpportunity} data dengan impression tinggi tetapi klik rendah. Ini adalah tambang traffic yang belum digarap maksimal.</div>`;
+
+      if (s.bestRow && Object.keys(s.bestRow).length > 0) {
+        const name = getQuery(s.bestRow) || getPage(s.bestRow) || "data terbaik";
+        html += `<div class="insight-card insight-success">⭐ "${name}" adalah aset terbaik berdasarkan klik. Jadikan ini halaman unggulan, tambah internal link, CTA, dan konten pendukung.</div>`;
+      }
+      
+      html += `<div class="insight-card">📌 Catatan DSS: angka bukan sekadar laporan. Data ini harus dipakai untuk mengambil keputusan: mana yang diperbaiki, mana yang didorong, dan mana yang dijadikan mesin traffic utama.</div>`;
+      document.getElementById("insightBox").innerHTML = html;
+      
+      // Update badge
+      document.getElementById("insightBadge").textContent = s.totalRows > 0 ? "✓" : "!";
+    }
+
+    // ============================
+    // TABLE
+    // ============================
+    function renderTable() {
+      if (rawData.length === 0) {
+        document.getElementById("tableHead").innerHTML = "";
+        document.getElementById("tableBody").innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px;">Belum ada data. Upload CSV.</td></tr>`;
+        return;
+      }
+      
+      const search = document.getElementById("searchInput").value.toLowerCase();
+      const filter = document.getElementById("filterType").value;
+      
+      let data = rawData.filter(row => {
+        const text = JSON.stringify(row).toLowerCase();
+        let ok = text.includes(search);
+        if (filter === "query") ok = ok && !!getQuery(row);
+        if (filter === "page") ok = ok && !!getPage(row);
+        if (filter === "lowctr") ok = ok && getCTR(row) < 2;
+        if (filter === "highimp") ok = ok && getImpressions(row) >= 5000;
+        return ok;
+      });
+      
+      filteredData = data;
+
+      const headers = ["Jenis", "Query", "Page", "Clicks", "Impressions", "CTR", "Position", "Status"];
+      document.getElementById("tableHead").innerHTML = `<tr>${headers.map(h => `<th>${h}</th>`).join("")}</tr>`;
+
+      if (data.length === 0) {
+        document.getElementById("tableBody").innerHTML = `<tr><td colspan="8" style="text-align:center; padding: 30px;">Tidak ada data yang cocok dengan filter.</td></tr>`;
+        return;
+      }
+
+      document.getElementById("tableBody").innerHTML = data.slice(0, 150).map(row => {
+        const query = getQuery(row);
+        const page = getPage(row);
+        const clicks = getClicks(row);
+        const imp = getImpressions(row);
+        const ctr = getCTR(row);
+        const pos = getPosition(row);
+        
+        let displayQuery = query || "-";
+        let displayPage = page || "-";
+        
+        if (displayQuery === "-" && row["Top queries"]) displayQuery = row["Top queries"];
+        if (displayQuery === "-" && row["Kueri"]) displayQuery = row["Kueri"];
+        if (displayPage === "-" && row["Top pages"]) displayPage = row["Top pages"];
+        if (displayPage === "-" && row["Halaman"]) displayPage = row["Halaman"];
+        
+        let jenis = "Data";
+        if (query && page) jenis = "Query & Page";
+        else if (query) jenis = "Top Query";
+        else if (page) jenis = "Top Page";
+        
+        let status = "Bagus", badge = "badge-good";
+        if (ctr < 1 || pos > 10) { status = "Bahaya"; badge = "badge-bad"; }
+        else if (ctr < 2 || pos > 7) { status = "Cukup"; badge = "badge-warn"; }
+        
+        return `<tr>
+          <td>${jenis}</td>
+          <td><strong>${displayQuery}</strong></td>
+          <td>${displayPage}</td>
+          <td>${clicks}</td>
+          <td>${imp}</td>
+          <td>${ctr.toFixed(2)}%</td>
+          <td>${pos.toFixed(1)}</td>
+          <td><span class="kpi-badge ${badge}">${status}</span></td>
+        </tr>`;
+      }).join("");
+    }
+
+    // ============================
+    // KESIMPULAN
+    // ============================
+    function renderConclusion() {
+      const s = getSummary();
+      let text = "";
+      
+      if (s.totalRows === 0) {
+        text = "Belum ada data untuk dianalisis. Silakan upload file CSV.";
+      } else if (s.category === "Bahaya") {
+        text = "⚠️ Kesimpulan: performa SEO sedang dalam kondisi rawan. Prioritas utama adalah memperbaiki CTR rendah, meningkatkan kualitas judul/meta description, memperkuat internal link, dan mengoptimasi halaman yang memiliki impression tinggi tetapi klik rendah.";
+      } else if (s.category === "Cukup") {
+        text = "📊 Kesimpulan: performa SEO sudah berjalan, tetapi belum maksimal. Ada peluang traffic yang bisa dinaikkan dari query dan page yang sudah punya impression. Fokus pada optimasi snippet, struktur konten, dan CTA.";
+      } else if (s.category === "Bagus") {
+        text = "✅ Kesimpulan: performa SEO cukup bagus. Sistem sudah memiliki aset traffic yang bisa dikembangkan. Langkah berikutnya adalah scale konten pendukung, tambah internal link, dan dorong halaman unggulan menjadi mesin konversi.";
+      } else {
+        text = "🚀 Kesimpulan: performa SEO sangat bagus. Fokus berikutnya adalah mempertahankan ranking, memperkuat brand authority, dan mengubah traffic menjadi database, leads, serta penjualan.";
+      }
+      
+      document.getElementById("finalConclusion").innerText = text;
+    }
+
+    // ============================
+    // EXTRA FUNCTIONS
+    // ============================
+    function toggleDarkMode() { 
+      document.body.classList.toggle("dark"); 
+    }
+    
+    function resetData() { 
+      if (confirm("Reset ke data awal?")) {
+        loadDummyData(); 
+      }
+    }
+    
+    function printReport() { 
+      window.print(); 
+    }
+
+    function exportReport() {
+      const s = getSummary();
+      const txt = `LAPORAN ANALISA GOOGLE SEARCH CONSOLE
+========================================
+
+Total Data: ${s.totalRows}
+Total Klik: ${s.totalClicks}
+Total Impression: ${s.totalImpressions}
+Rata-rata CTR: ${s.avgCTR.toFixed(2)}%
+Rata-rata Posisi: ${s.avgPosition.toFixed(1)}
+Peluang Besar: ${s.highOpportunity}
+Indikator Risiko: ${s.riskCount}
+Skor Kesehatan: ${s.score}/100
+Kategori: ${s.category}
+
+KESIMPULAN:
+${document.getElementById("finalConclusion").innerText}
+
+CTA:
+Hubungi Saya jika mau bisa bikin tool2 seperti ini
+WhatsApp: https://wa.me/628989057305`;
+      
+      const blob = new Blob([txt], { type: "text/plain;charset=utf-8" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "laporan-analisa-gsc.txt";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }
+
+    function showLoading(show) {
+      document.getElementById("loading").style.display = show ? "block" : "none";
+    }
+
+    // ============================
+    // SIDEBAR FUNCTIONS
+    // ============================
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    function scrollToSection(id) {
+      // Close sidebar on mobile
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebarOverlay');
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+      
+      // Remove active class from all menu items
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      // Add active class to clicked item
+      event.target.closest('.menu-item').classList.add('active');
+      
+      // Scroll to section
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - offset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
+    }
+
+    // Close sidebar when clicking outside on mobile
+    document.addEventListener('click', function(event) {
+      const sidebar = document.getElementById('sidebar');
+      const hamburger = document.querySelector('.hamburger-btn');
+      if (window.innerWidth <= 850) {
+        if (!sidebar.contains(event.target) && !hamburger.contains(event.target)) {
+          sidebar.classList.remove('active');
+          document.getElementById('sidebarOverlay').classList.remove('active');
+        }
+      }
+    });
+  </script>
+</body>
+</html>
