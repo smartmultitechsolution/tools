@@ -1472,5 +1472,85 @@
         console.log('🔑 Password login: AIagency5');
     </script>
 
+
+
+
+
+
+	</script>
+<!-- Anti Klik Kanan -->
+<script>
+  document.addEventListener("contextmenu", e => e.preventDefault());
+</script>
+
+<!-- Block Keys -->
+<script>
+  document.onkeydown = function (e) {
+    // F12
+    if (e.key === "F12") return false;
+
+    // Ctrl+Shift+I / J / C
+    if (e.ctrlKey && e.shiftKey && ["I", "J", "C"].includes(e.key)) {
+      return false;
+    }
+
+    // Ctrl+U (View Source)
+    if (e.ctrlKey && (e.key === "u" || e.key === "U")) {
+      return false;
+    }
+
+    // Ctrl+S (Save)
+    if (e.ctrlKey && (e.key === "s" || e.key === "S")) {
+      return false;
+    }
+
+    // Ctrl+P (Print)
+    if (e.ctrlKey && (e.key === "p" || e.key === "P")) {
+      return false;
+    }
+    // Ctrl+A (All)
+    if (e.ctrlKey && (e.key === "a" || e.key === "A")) {
+      return false;
+    }
+
+  };
+</script>
+
+<!-- Anti Drag -->
+<script>
+  document.addEventListener("dragstart", e => e.preventDefault());
+</script>
+
+<!-- Anti Inspect Element + Anti Debug Mode -->
+<script>
+(function() {
+  const element = new Image();
+  Object.defineProperty(element, 'id', {
+    get: function() {
+      window.location.href = "about:blank"; // Auto-close halaman
+    }
+  });
+
+  setInterval(() => {
+    console.log(element);
+  }, 1000);
+})();
+</script>
+
+<!-- Detect DevTools via Dimensions -->
+<script>
+setInterval(function() {
+  if (window.outerHeight - window.innerHeight > 200 ||
+      window.outerWidth - window.innerWidth > 200) {
+    window.location.href = "about:blank";
+  }
+}, 800);
+</script>
+
+<!-- JS Code Obfuscation (ringan) -->
+<script>
+  (function(_0xabc1){var _0x12f3=["\x64\x65\x76\x74\x6F\x6F\x6C\x73","\x6C\x6F\x67"];console[_0x12f3[1]](_0x12f3[0]);})(this);
+</script>
+
 </body>
 </html>
